@@ -499,7 +499,8 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_addDeviceButtonActionPerformed
 
     private void programmAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_programmAllButtonActionPerformed
-        // TODO add your handling code here:
+        
+        ProgramDialog pd = new ProgramDialog(this);
     }//GEN-LAST:event_programmAllButtonActionPerformed
 
     private void programmDataOnlyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_programmDataOnlyButtonActionPerformed
