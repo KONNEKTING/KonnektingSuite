@@ -223,7 +223,6 @@ public class Main extends javax.swing.JFrame {
     }
 
     public void onEvent(EventDeviceChanged evt) {
-        log.info("Saving: "+eventbus.getStickyEvent(StickyDeviceSelected.class));
         eventbus.post(new EventProjectSave());
         updateProgButtons();
     }
@@ -499,8 +498,11 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_addDeviceButtonActionPerformed
 
     private void programmAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_programmAllButtonActionPerformed
-        
+        StickyDeviceSelected selectdDevice = eventbus.getStickyEvent(StickyDeviceSelected.class);
         ProgramDialog pd = new ProgramDialog(this);
+        pd.prepare(knx);
+        pd.addDeviceToprogram(selectdDevice.getDeviceConfig());
+        pd.setVisible(true);
     }//GEN-LAST:event_programmAllButtonActionPerformed
 
     private void programmDataOnlyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_programmDataOnlyButtonActionPerformed
