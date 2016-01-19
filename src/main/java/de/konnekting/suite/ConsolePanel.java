@@ -37,6 +37,7 @@ public class ConsolePanel extends javax.swing.JPanel {
     
     public void onEvent(EventConsoleMessage ev) {
         consoleArea.append(ev.getMessage()+"\n");
+        consoleArea.setCaretPosition(consoleArea.getText().length());
     }
 
     /**

@@ -33,6 +33,7 @@ public class ProgramDialog extends javax.swing.JDialog {
     public ProgramDialog(JFrame parent) {
         super(parent, false);
         initComponents();
+        setLocationRelativeTo(parent);
     }
 
     /**
