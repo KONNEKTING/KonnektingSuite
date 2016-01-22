@@ -27,8 +27,12 @@ import de.root1.rooteventbus.RootEventBus;
 import de.konnekting.suite.events.EventProjectOpened;
 import de.konnekting.suite.events.EventSaveSettings;
 import de.konnekting.suite.events.StickyDeviceSelected;
+import de.root1.slicknx.GroupAddressEvent;
+import de.root1.slicknx.GroupAddressListener;
 import de.root1.slicknx.Knx;
 import de.root1.slicknx.KnxException;
+import de.root1.slicknx.konnekting.protocol0x00.ProgProtocol0x00;
+import de.root1.slicknx.konnekting.protocol0x00.ProgProtocol0x00Listener;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -65,7 +69,7 @@ public class Main extends javax.swing.JFrame {
     static {
         String level = System.getProperty("debuglevel", "info");
 
-        System.out.println("ENABLING LOGGING with level: "+level);
+        System.out.println("ENABLING LOGGING with level: " + level);
 
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -80,7 +84,7 @@ public class Main extends javax.swing.JFrame {
 
             osw.write(".level= INFO" + "\n");
             osw.write("de.konnekting.level = " + level.toUpperCase() + "\n");
-            
+
             osw.flush();
             ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
             LogManager.getLogManager().readConfiguration(bais);
@@ -160,9 +164,11 @@ public class Main extends javax.swing.JFrame {
             RootEventBus.getDefault().post(new EventConsoleMessage("Fehler beim Öffnen der KNX Verbindung: " + access, ex));
             log.error("Error creating knx access.", ex);
         } catch (UnknownHostException ex) {
-            RootEventBus.getDefault().post(new EventConsoleMessage("Fehler beim Öffnen der KNX Verbindung.",ex));
+            RootEventBus.getDefault().post(new EventConsoleMessage("Fehler beim Öffnen der KNX Verbindung.", ex));
             log.error("Error creating knx access.", ex);
         }
+
+        knx.addGroupAddressListener("15/7/255", new ProgProtocol0x00Listener());
 
         Dimension size = new Dimension();
         size.width = Integer.parseInt(properties.getProperty("windowwidth", "1024"));
@@ -185,7 +191,7 @@ public class Main extends javax.swing.JFrame {
             log.info("Saving settings");
             properties.store(new FileWriter(propertiesFile), "This is KONNEKTING Suite configuration file");
         } catch (IOException ex) {
-            RootEventBus.getDefault().post(new EventConsoleMessage("Fehler beim Schreiben der Einstellungen.",ex));
+            RootEventBus.getDefault().post(new EventConsoleMessage("Fehler beim Schreiben der Einstellungen.", ex));
         }
     }
 
@@ -462,9 +468,9 @@ public class Main extends javax.swing.JFrame {
         try {
             StickyDeviceSelected d = RootEventBus.getDefault().getStickyEvent(StickyDeviceSelected.class);
             deviceList.removeSelectedDevice();
-            RootEventBus.getDefault().post(new EventConsoleMessage("Gerät entfernt: "+d.getDeviceConfig()));
+            RootEventBus.getDefault().post(new EventConsoleMessage("Gerät entfernt: " + d.getDeviceConfig()));
         } catch (JAXBException | SAXException ex) {
-            RootEventBus.getDefault().post(new EventConsoleMessage("Fehler beim Entfernen des Gerätes.",ex));
+            RootEventBus.getDefault().post(new EventConsoleMessage("Fehler beim Entfernen des Gerätes.", ex));
         }
     }//GEN-LAST:event_removeDeviceButtonActionPerformed
 
@@ -491,7 +497,7 @@ public class Main extends javax.swing.JFrame {
                     log.trace("aborted");
                 }
             } catch (JAXBException | SAXException ex) {
-                RootEventBus.getDefault().post(new EventConsoleMessage("Fehler beim Hinzufügen eines Gerätes.",ex));
+                RootEventBus.getDefault().post(new EventConsoleMessage("Fehler beim Hinzufügen eines Gerätes.", ex));
             }
 
         }

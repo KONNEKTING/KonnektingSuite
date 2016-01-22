@@ -20,6 +20,9 @@ package de.konnekting.suite;
 
 import de.konnekting.suite.events.EventBackgroundThread;
 import de.root1.rooteventbus.RootEventBus;
+import java.util.concurrent.atomic.AtomicInteger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -27,20 +30,37 @@ import de.root1.rooteventbus.RootEventBus;
  */
 public abstract class BackgroundTask implements Runnable {
     
+    private final Logger log = LoggerFactory.getLogger(BackgroundTask.class);
+    
     private final RootEventBus eventBus = RootEventBus.getDefault();
     
     private double progress;
     private double step;
     private final String action;
+    private final long start;
+    private static final AtomicInteger COUNTER = new AtomicInteger(0);
+    private final int i;
 
     public BackgroundTask(String action) {
         this(action, Thread.NORM_PRIORITY);
     }
     
     public BackgroundTask(String action, int priority) {
+        i = COUNTER.incrementAndGet();
+        this.start = System.currentTimeMillis();
         this.action = action;
         eventBus.post(new EventBackgroundThread(this));
-        Thread t = new Thread(this, "Background: "+action);
+        Thread t = new Thread(this, "BackgroundTask("+i+") '"+action+"'") {
+
+            
+            @Override
+            public void run() {
+                log.debug("Begin task("+i+") '"+action+"'");
+                super.run();
+                log.debug("Finished task("+i+") '"+action + "' in "+(System.currentTimeMillis()-start)+" ms.");
+            }
+            
+        };
         t.setPriority(priority);
         t.start();
     }
