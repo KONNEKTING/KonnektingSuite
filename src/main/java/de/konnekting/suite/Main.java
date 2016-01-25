@@ -27,12 +27,9 @@ import de.root1.rooteventbus.RootEventBus;
 import de.konnekting.suite.events.EventProjectOpened;
 import de.konnekting.suite.events.EventSaveSettings;
 import de.konnekting.suite.events.StickyDeviceSelected;
-import de.root1.slicknx.GroupAddressEvent;
-import de.root1.slicknx.GroupAddressListener;
 import de.root1.slicknx.Knx;
 import de.root1.slicknx.KnxException;
 import de.root1.slicknx.konnekting.protocol0x00.ProgProtocol0x00;
-import de.root1.slicknx.konnekting.protocol0x00.ProgProtocol0x00Listener;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -84,6 +81,9 @@ public class Main extends javax.swing.JFrame {
 
             osw.write(".level= INFO" + "\n");
             osw.write("de.konnekting.level = " + level.toUpperCase() + "\n");
+            osw.write("de.root1.slicknx.konnekting.protocol0x00.ProgProtocol0x00Listener.level = ALL\n");
+//            osw.write("de.root1.slicknx.level = " + level.toUpperCase() + "\n");
+            
 
             osw.flush();
             ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
@@ -143,6 +143,7 @@ public class Main extends javax.swing.JFrame {
             switch (access.toUpperCase()) {
                 case SettingsDialog.ACCESS_ROUTING:
                     knx = new Knx(individualAddress);
+                    knx.setLoopbackMode(true);
                     log.info("Starting in ROUTING mode");
                     RootEventBus.getDefault().post(new EventConsoleMessage("KNX Verbindung: IP-Router"));
                     break;
@@ -167,8 +168,6 @@ public class Main extends javax.swing.JFrame {
             RootEventBus.getDefault().post(new EventConsoleMessage("Fehler beim Öffnen der KNX Verbindung.", ex));
             log.error("Error creating knx access.", ex);
         }
-
-        knx.addGroupAddressListener("15/7/255", new ProgProtocol0x00Listener());
 
         Dimension size = new Dimension();
         size.width = Integer.parseInt(properties.getProperty("windowwidth", "1024"));

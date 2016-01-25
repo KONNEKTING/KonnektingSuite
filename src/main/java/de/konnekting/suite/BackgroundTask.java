@@ -29,11 +29,11 @@ import org.slf4j.LoggerFactory;
  * @author achristian
  */
 public abstract class BackgroundTask implements Runnable {
-    
+
     private final Logger log = LoggerFactory.getLogger(BackgroundTask.class);
-    
+
     private final RootEventBus eventBus = RootEventBus.getDefault();
-    
+
     private double progress;
     private double step;
     private final String action;
@@ -44,30 +44,32 @@ public abstract class BackgroundTask implements Runnable {
     public BackgroundTask(String action) {
         this(action, Thread.NORM_PRIORITY);
     }
-    
+
     public BackgroundTask(String action, int priority) {
         i = COUNTER.incrementAndGet();
         this.start = System.currentTimeMillis();
         this.action = action;
         eventBus.post(new EventBackgroundThread(this));
-        Thread t = new Thread(this, "BackgroundTask("+i+") '"+action+"'") {
+        Thread t = new Thread(this, "BackgroundTask(" + i + ") '" + action + "'") {
 
-            
             @Override
             public void run() {
-                log.debug("Begin task("+i+") '"+action+"'");
-                super.run();
-                log.debug("Finished task("+i+") '"+action + "' in "+(System.currentTimeMillis()-start)+" ms.");
+                log.debug("Begin task(" + i + ") '" + action + "'");
+                try {
+                    super.run();
+                } finally {
+                    log.debug("Finished task(" + i + ") '" + action + "' in " + (System.currentTimeMillis() - start) + " ms.");
+                }
             }
-            
+
         };
         t.setPriority(priority);
         t.start();
     }
-    
+
     @Override
     public abstract void run();
-    
+
     public void setProgress(double progress) {
         this.progress = progress;
         eventBus.post(new EventBackgroundThread(this));
@@ -76,20 +78,20 @@ public abstract class BackgroundTask implements Runnable {
     public double getProgress() {
         return progress;
     }
-    
+
     public void setStepsToDo(int steps) {
-        step = 1d/steps;
+        step = 1d / steps;
     }
-    
+
     public void stepDone() {
-        setProgress(progress+step);
+        setProgress(progress + step);
     }
-    
+
     public void setDone() {
         progress = 1;
         eventBus.post(new EventBackgroundThread(this));
     }
-    
+
     public boolean isDone() {
         return progress == 1;
     }
