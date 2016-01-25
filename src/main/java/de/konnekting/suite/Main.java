@@ -51,6 +51,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JSplitPane;
 import javax.xml.bind.JAXBException;
 import org.slf4j.Logger;
@@ -101,14 +102,14 @@ public class Main extends javax.swing.JFrame {
     private File projectFolder;
     private final RootEventBus eventbus = RootEventBus.getDefault();
     private Properties properties = new Properties();
-    private File propertiesFile = new File("KonnektingSuite.properties");
+    private File propertiesFile = new File(new File(System.getProperty("user.home")),"KonnektingSuite.properties");
     private Knx knx;
 
     /**
      * Creates new form Main
      */
     public Main() {
-
+        
         try {
             properties.load(new FileReader(propertiesFile));
         } catch (FileNotFoundException ex) {
@@ -127,6 +128,8 @@ public class Main extends javax.swing.JFrame {
             }
 
         });
+        
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         initComponents();
         removeDeviceButton.setEnabled(false);
         programmAllButton.setEnabled(false);
