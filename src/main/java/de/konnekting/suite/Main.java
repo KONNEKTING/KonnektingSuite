@@ -136,8 +136,9 @@ public class Main extends javax.swing.JFrame {
         
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         initComponents();
-        
-        RootEventBus.getDefault().post(new EventConsoleMessage("KONNEKTING Suite - Version "+applicationProperties.getProperty("application.version","n/a")+" Build "+applicationProperties.getProperty("application.build","n/a")));
+        String versionMsg = "KONNEKTING Suite - Version "+applicationProperties.getProperty("application.version","n/a")+" Build "+applicationProperties.getProperty("application.build","n/a");
+        log.info(versionMsg);
+        RootEventBus.getDefault().post(new EventConsoleMessage(versionMsg));
         
         removeDeviceButton.setEnabled(false);
         programmAllButton.setEnabled(false);
