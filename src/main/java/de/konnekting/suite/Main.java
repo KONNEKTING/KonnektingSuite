@@ -29,7 +29,6 @@ import de.konnekting.suite.events.EventSaveSettings;
 import de.konnekting.suite.events.StickyDeviceSelected;
 import de.root1.slicknx.Knx;
 import de.root1.slicknx.KnxException;
-import de.root1.slicknx.konnekting.protocol0x00.ProgProtocol0x00;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -102,6 +101,7 @@ public class Main extends javax.swing.JFrame {
     private File projectFolder;
     private final RootEventBus eventbus = RootEventBus.getDefault();
     private Properties properties = new Properties();
+    private Properties applicationProperties = new Properties();
     private File propertiesFile = new File(new File(System.getProperty("user.home")),"KonnektingSuite.properties");
     private Knx knx;
 
@@ -115,7 +115,12 @@ public class Main extends javax.swing.JFrame {
         } catch (FileNotFoundException ex) {
             log.info("Properties file not found. Skip to defaults.");
         } catch (IOException ex) {
-            log.error(null, ex);
+            log.error("Error reading setting properties", ex);
+        }
+        try {
+            applicationProperties.load(getClass().getResourceAsStream("/properties/application.properties"));
+        } catch (IOException ex) {
+            log.error("Error reading application properties", ex);
         }
         Runtime.getRuntime().addShutdownHook(new Thread() {
 
@@ -131,6 +136,9 @@ public class Main extends javax.swing.JFrame {
         
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         initComponents();
+        
+        RootEventBus.getDefault().post(new EventConsoleMessage("KONNEKTING Suite - Version "+applicationProperties.getProperty("application.version","n/a")+" Build "+applicationProperties.getProperty("application.build","n/a")));
+        
         removeDeviceButton.setEnabled(false);
         programmAllButton.setEnabled(false);
         programmDataOnlyButton.setEnabled(false);

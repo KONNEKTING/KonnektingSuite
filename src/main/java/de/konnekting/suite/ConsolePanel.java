@@ -52,9 +52,9 @@ public class ConsolePanel extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         consoleArea = new javax.swing.JTextArea();
 
+        consoleArea.setEditable(false);
         consoleArea.setColumns(20);
         consoleArea.setRows(5);
-        consoleArea.setText("Welcome to KONNEKTING Suite ...\n");
         jScrollPane1.setViewportView(consoleArea);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
