@@ -136,7 +136,9 @@ public class Main extends javax.swing.JFrame {
         
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         initComponents();
-        String versionMsg = "KONNEKTING Suite - Version "+applicationProperties.getProperty("application.version","n/a")+" Build "+applicationProperties.getProperty("application.build","n/a");
+        
+        boolean debug = Boolean.getBoolean("de.root1.slicknx.konnekting.debug");
+        String versionMsg = "KONNEKTING Suite - Version "+applicationProperties.getProperty("application.version","n/a")+" Build "+applicationProperties.getProperty("application.build","n/a")+(debug?" DEBUG MODE!":"");
         log.info(versionMsg);
         RootEventBus.getDefault().post(new EventConsoleMessage(versionMsg));
         
