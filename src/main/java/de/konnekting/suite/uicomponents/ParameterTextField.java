@@ -275,13 +275,13 @@ public class ParameterTextField extends ValidateableTextField {
 
 
 
-    private boolean checkParamSize(byte[] value, Parameter param1, int size) throws HeadlessException {
+    private boolean checkParamSize(byte[] value, Parameter param, int size) throws HeadlessException {
         if (value == null) {
             return true;
         }
         if (value.length != size) {
             JOptionPane.showMessageDialog(getParent(), "Die geladene XML Datei dieses Geräts hat einen Fehler im Abschnitt:\n\n"
-                    + "<Parameter Id=\"" + param1.getId() + "\">:\n\n"
+                    + "<Parameter Id=\"" + param.getId() + "\">:\n\n"
                     + "Der Werte Default und die optionalen Werte Min und Max müssen\n"
                     + "exakt " + size + " Byte lang sein, sind aber teilw. " + value.length + " Bytes lang.!\n"
                     + "Bitte informiere den Gerätehersteller.", "XML Datei ungültig", JOptionPane.ERROR_MESSAGE);
