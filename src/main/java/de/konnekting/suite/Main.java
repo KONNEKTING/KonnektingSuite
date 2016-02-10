@@ -55,6 +55,7 @@ import java.util.logging.LogManager;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JSplitPane;
+import javax.swing.SwingUtilities;
 import javax.xml.bind.JAXBException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -237,6 +238,23 @@ public class Main extends javax.swing.JFrame {
         
         monitor = new GroupMonitorFrame(this);
         monitor.setKnx(knx);
+        
+        
+        boolean lastFolder = Boolean.parseBoolean(properties.getProperty(SettingsDialog.PROP_STARTUP_LASTFOLDER, "false"));
+        boolean askFolder = Boolean.parseBoolean(properties.getProperty(SettingsDialog.PROP_STARTUP_ASKFOLDER, "true"));
+        
+        if (askFolder) {
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    openProjectButton.doClick();
+                }
+            });
+            
+        } else if (lastFolder) {
+            projectFolder = new File(properties.getProperty("projectfolder", System.getProperty("user.home")));
+            eventbus.post(new EventProjectOpened(projectFolder));
+        }
     }
 
     private void saveSettings() {
@@ -591,7 +609,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_groupmonitorButtonActionPerformed
 
     private void settingsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_settingsButtonActionPerformed
-        SettingsDialog sd = new SettingsDialog(this, properties);
+        SettingsDialog sd = new SettingsDialog(this);
         sd.setLocationRelativeTo(this);
         sd.setVisible(true);
     }//GEN-LAST:event_settingsButtonActionPerformed

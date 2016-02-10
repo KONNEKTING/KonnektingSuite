@@ -30,11 +30,14 @@ import javax.swing.JComponent;
  */
 public class SettingsDialog extends javax.swing.JDialog {
 
-    private final Properties p;
+    private final Properties p = Main.getProperties();
     
     public static final String ACCESS_ROUTING = "ROUTING";
     public static final String ACCESS_TUNNELING = "TUNNELING";
     public static final String ACCESS_TPUART = "TPUART";
+    
+    public static final String PROP_STARTUP_LASTFOLDER = "startup.lastfolder";
+    public static final String PROP_STARTUP_ASKFOLDER = "startup.askfolder";
     
     public static final String PROP_ACCESS = "knx.access";
     public static final String PROP_ROUTING_MULTICASTIP = "knx.routing.multicast";
@@ -45,11 +48,12 @@ public class SettingsDialog extends javax.swing.JDialog {
     /**
      * Creates new form SettingsDialog
      */
-    public SettingsDialog(java.awt.Frame parent, Properties p) {
+    public SettingsDialog(java.awt.Frame parent) {
         super(parent, true);
         initComponents();
         
-        this.p = p;
+        boolean lastFolder = Boolean.parseBoolean(p.getProperty(PROP_STARTUP_LASTFOLDER, "false"));
+        boolean askFolder = Boolean.parseBoolean(p.getProperty(PROP_STARTUP_ASKFOLDER, "true"));
         
         String access = p.getProperty(PROP_ACCESS, ACCESS_ROUTING);
         String routingMulticast = p.getProperty(PROP_ROUTING_MULTICASTIP, "224.0.23.12");
@@ -80,6 +84,9 @@ public class SettingsDialog extends javax.swing.JDialog {
         setEnableAll(ipInterfacePanel, ipInterfaceRadioButton.isSelected());
         setEnableAll(tpuartPanel, tpuartRadioButton.isSelected());
         
+        askFolderCheckbox.setSelected(askFolder);
+        lastFolderCheckbox.setSelected(lastFolder);
+        
     }
 
     /**
@@ -95,8 +102,8 @@ public class SettingsDialog extends javax.swing.JDialog {
         jPanel3 = new javax.swing.JPanel();
         settingsTabbedPane = new javax.swing.JTabbedPane();
         generalPanel = new javax.swing.JPanel();
-        autoOpenProjectfolderCheckbox = new javax.swing.JCheckBox();
-        askForProjectFolderCheckbox = new javax.swing.JCheckBox();
+        lastFolderCheckbox = new javax.swing.JCheckBox();
+        askFolderCheckbox = new javax.swing.JCheckBox();
         knxPanel = new javax.swing.JPanel();
         ipRouterPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -133,16 +140,19 @@ public class SettingsDialog extends javax.swing.JDialog {
         settingsTabbedPane.setTabPlacement(javax.swing.JTabbedPane.LEFT);
         settingsTabbedPane.setToolTipText("");
 
-        autoOpenProjectfolderCheckbox.setText("Letzten Projektordner automatisch öffnen?");
-        autoOpenProjectfolderCheckbox.setEnabled(false);
-        autoOpenProjectfolderCheckbox.addActionListener(new java.awt.event.ActionListener() {
+        lastFolderCheckbox.setText("Letzten Projektordner automatisch öffnen?");
+        lastFolderCheckbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                autoOpenProjectfolderCheckboxActionPerformed(evt);
+                lastFolderCheckboxActionPerformed(evt);
             }
         });
 
-        askForProjectFolderCheckbox.setText("Beim Start nach Projektordner fragen?");
-        askForProjectFolderCheckbox.setEnabled(false);
+        askFolderCheckbox.setText("Beim Start nach Projektordner fragen?");
+        askFolderCheckbox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                askFolderCheckboxActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout generalPanelLayout = new javax.swing.GroupLayout(generalPanel);
         generalPanel.setLayout(generalPanelLayout);
@@ -151,17 +161,17 @@ public class SettingsDialog extends javax.swing.JDialog {
             .addGroup(generalPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(autoOpenProjectfolderCheckbox)
-                    .addComponent(askForProjectFolderCheckbox))
+                    .addComponent(lastFolderCheckbox)
+                    .addComponent(askFolderCheckbox))
                 .addContainerGap(277, Short.MAX_VALUE))
         );
         generalPanelLayout.setVerticalGroup(
             generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(generalPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(autoOpenProjectfolderCheckbox)
+                .addComponent(lastFolderCheckbox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(askForProjectFolderCheckbox)
+                .addComponent(askFolderCheckbox)
                 .addContainerGap(426, Short.MAX_VALUE))
         );
 
@@ -171,6 +181,7 @@ public class SettingsDialog extends javax.swing.JDialog {
 
         jLabel1.setText("Multicast IP");
 
+        ipRouterMulticasttextField.setEditable(false);
         ipRouterMulticasttextField.setText("224.0.23.12");
         ipRouterMulticasttextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -389,14 +400,9 @@ public class SettingsDialog extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void autoOpenProjectfolderCheckboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_autoOpenProjectfolderCheckboxActionPerformed
-        if (autoOpenProjectfolderCheckbox.isSelected()) {
-            askForProjectFolderCheckbox.setEnabled(false);
-            askForProjectFolderCheckbox.setSelected(false);
-        } else {
-            askForProjectFolderCheckbox.setEnabled(true);
-        }
-    }//GEN-LAST:event_autoOpenProjectfolderCheckboxActionPerformed
+    private void lastFolderCheckboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lastFolderCheckboxActionPerformed
+        updateOpenCheckboxes();
+    }//GEN-LAST:event_lastFolderCheckboxActionPerformed
 
     private void setEnableAll(JComponent c, boolean enabled) {
         c.setEnabled(enabled);
@@ -443,19 +449,30 @@ public class SettingsDialog extends javax.swing.JDialog {
     private void tpuartDevicetextFieldPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_tpuartDevicetextFieldPropertyChange
     }//GEN-LAST:event_tpuartDevicetextFieldPropertyChange
 
-    private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
+    private void doSave() {
         p.setProperty(PROP_ROUTING_MULTICASTIP, ipRouterMulticasttextField.getText());
         p.setProperty(PROP_TPUART_DEVICE, tpuartDevicetextField.getText());
         p.setProperty(PROP_TUNNELING_IP, ipInterfaceIpTextField.getText());
         p.setProperty(PROP_INDIVIDUALADDRESS, individualAddressTextField.getText());
+        
+        p.setProperty(PROP_STARTUP_LASTFOLDER, lastFolderCheckbox.isSelected()+"");
+        p.setProperty(PROP_STARTUP_ASKFOLDER, askFolderCheckbox.isSelected()+"");
+        
         RootEventBus.getDefault().post(new EventSaveSettings());
+    }
+    
+    private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
+        doSave();
         dispose();
     }//GEN-LAST:event_saveButtonActionPerformed
 
+    private void askFolderCheckboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_askFolderCheckboxActionPerformed
+        updateOpenCheckboxes();
+    }//GEN-LAST:event_askFolderCheckboxActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JCheckBox askForProjectFolderCheckbox;
-    private javax.swing.JCheckBox autoOpenProjectfolderCheckbox;
+    private javax.swing.JCheckBox askFolderCheckbox;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JPanel generalPanel;
     private javax.swing.JTextField individualAddressTextField;
@@ -472,10 +489,25 @@ public class SettingsDialog extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel knxPanel;
+    private javax.swing.JCheckBox lastFolderCheckbox;
     private javax.swing.JButton saveButton;
     private javax.swing.JTabbedPane settingsTabbedPane;
     private javax.swing.JTextField tpuartDevicetextField;
     private javax.swing.JPanel tpuartPanel;
     private javax.swing.JRadioButton tpuartRadioButton;
     // End of variables declaration//GEN-END:variables
+
+    private void updateOpenCheckboxes() {
+        if (askFolderCheckbox.isSelected()) {
+            lastFolderCheckbox.setEnabled(false);
+            lastFolderCheckbox.setSelected(false);
+        } else
+        if (lastFolderCheckbox.isSelected()) {
+            askFolderCheckbox.setEnabled(false);
+            askFolderCheckbox.setSelected(false);
+        } else {
+            askFolderCheckbox.setEnabled(true);
+            lastFolderCheckbox.setEnabled(true);
+        }
+    }
 }

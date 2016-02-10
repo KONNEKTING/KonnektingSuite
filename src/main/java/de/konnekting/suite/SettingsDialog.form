@@ -98,8 +98,8 @@
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="autoOpenProjectfolderCheckbox" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="askForProjectFolderCheckbox" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="lastFolderCheckbox" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="askFolderCheckbox" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace pref="277" max="32767" attributes="0"/>
                   </Group>
@@ -109,29 +109,30 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="autoOpenProjectfolderCheckbox" min="-2" max="-2" attributes="0"/>
+                      <Component id="lastFolderCheckbox" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="askForProjectFolderCheckbox" min="-2" max="-2" attributes="0"/>
+                      <Component id="askFolderCheckbox" min="-2" max="-2" attributes="0"/>
                       <EmptySpace pref="426" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JCheckBox" name="autoOpenProjectfolderCheckbox">
+            <Component class="javax.swing.JCheckBox" name="lastFolderCheckbox">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Letzten Projektordner automatisch &#xf6;ffnen?"/>
-                <Property name="enabled" type="boolean" value="false"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="autoOpenProjectfolderCheckboxActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="lastFolderCheckboxActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JCheckBox" name="askForProjectFolderCheckbox">
+            <Component class="javax.swing.JCheckBox" name="askFolderCheckbox">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Beim Start nach Projektordner fragen?"/>
-                <Property name="enabled" type="boolean" value="false"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="askFolderCheckboxActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
@@ -246,6 +247,7 @@
                 </Component>
                 <Component class="javax.swing.JTextField" name="ipRouterMulticasttextField">
                   <Properties>
+                    <Property name="editable" type="boolean" value="false"/>
                     <Property name="text" type="java.lang.String" value="224.0.23.12"/>
                   </Properties>
                   <Events>

@@ -46,7 +46,7 @@ public class StatusPanel extends javax.swing.JPanel {
     }
     
     public void onEvent(EventBackgroundThread event) {
-        lastStatusMsgLabel.setText(event.getTask().getAction()+" "+(event.getTask().getProgress()*100d)+"%");
+        lastStatusMsgLabel.setText(event.getTask().getAction()+" "+String.format("% 3d",(int)(event.getTask().getProgress()*100d))+"%");
     }
 
     /**

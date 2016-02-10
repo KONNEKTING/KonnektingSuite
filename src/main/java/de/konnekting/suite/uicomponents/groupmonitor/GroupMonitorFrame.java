@@ -6,6 +6,8 @@
 package de.konnekting.suite.uicomponents.groupmonitor;
 
 import de.konnekting.suite.Main;
+import de.konnekting.suite.events.EventSaveSettings;
+import de.root1.rooteventbus.RootEventBus;
 import de.root1.slicknx.GroupAddressEvent;
 import de.root1.slicknx.GroupAddressListener;
 import de.root1.slicknx.Knx;
@@ -114,8 +116,9 @@ public class GroupMonitorFrame extends javax.swing.JFrame {
     public void setVisible(boolean visible) {
         super.setVisible(visible); 
         if (!visible) {
-            properties.put("groupmonitor.startSelected", startButton.isSelected());
+            saveSettings();
             startButton.setSelected(false);
+            RootEventBus.getDefault().post(new EventSaveSettings());
         } else {
             startButton.setSelected(Boolean.parseBoolean(properties.getProperty("groupmonitor.startSelected", "false")));
         }
@@ -244,25 +247,32 @@ public class GroupMonitorFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_clearButtonActionPerformed
 
     private void formComponentMoved(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentMoved
-        Point location = getLocation();
-        properties.put("groupmonitor.windowx", Integer.toString(location.x));
-        properties.put("groupmonitor.windowy", Integer.toString(location.y));
+        saveSettings();
     }//GEN-LAST:event_formComponentMoved
 
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
-        Dimension size = getSize();
-        properties.put("groupmonitor.windowwidth", Integer.toString(size.width));
-        properties.put("groupmonitor.windowheight", Integer.toString(size.height));
+        saveSettings();
     }//GEN-LAST:event_formComponentResized
 
     private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
-        properties.put("groupmonitor.startSelected", startButton.isSelected());
+        saveSettings();
     }//GEN-LAST:event_startButtonActionPerformed
 
     private void autoscrollButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_autoscrollButtonActionPerformed
-        properties.put("groupmonitor.autoscrollSelected", autoscrollButton.isSelected());
+        saveSettings();
     }//GEN-LAST:event_autoscrollButtonActionPerformed
 
+    private void saveSettings() {
+        Point location = getLocation();
+        properties.put("groupmonitor.windowx", Integer.toString(location.x));
+        properties.put("groupmonitor.windowy", Integer.toString(location.y));
+        Dimension size = getSize();
+        properties.put("groupmonitor.windowwidth", Integer.toString(size.width));
+        properties.put("groupmonitor.windowheight", Integer.toString(size.height));
+        
+        properties.put("groupmonitor.startSelected", startButton.isSelected()+"");
+        properties.put("groupmonitor.autoscrollSelected", autoscrollButton.isSelected()+"");
+    }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton autoscrollButton;
