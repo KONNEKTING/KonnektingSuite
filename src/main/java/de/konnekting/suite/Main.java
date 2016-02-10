@@ -103,11 +103,17 @@ public class Main extends javax.swing.JFrame {
 
     private File projectFolder;
     private final RootEventBus eventbus = RootEventBus.getDefault();
-    private Properties properties = new Properties();
+    private static Properties properties = new Properties();
     private Properties applicationProperties = new Properties();
     private File propertiesFile = new File(new File(System.getProperty("user.home")),"KonnektingSuite.properties");
     private Knx knx;
+    private final GroupMonitorFrame monitor;
 
+    
+    public static Properties getProperties() {
+        return properties;
+    }
+     
     /**
      * Creates new form Main
      */
@@ -150,6 +156,7 @@ public class Main extends javax.swing.JFrame {
         programmDataOnlyButton.setEnabled(false);
         addDeviceButton.setEnabled(false);
         eventbus.register(this);
+        
         String access = properties.getProperty(SettingsDialog.PROP_ACCESS, SettingsDialog.ACCESS_ROUTING);
         String routingMulticast = properties.getProperty(SettingsDialog.PROP_ROUTING_MULTICASTIP, "224.0.23.12");
         String tunnelingIp = properties.getProperty(SettingsDialog.PROP_TUNNELING_IP, "192.168.0.100");
@@ -226,6 +233,10 @@ public class Main extends javax.swing.JFrame {
         }
         topSplitPane.setDividerLocation(Integer.parseInt(properties.getProperty("topsplitpanedividerlocation", "180")));
         bottomSplitPane.setDividerLocation(Integer.parseInt(properties.getProperty("bottomsplitpanedividerlocation", "300")));
+        
+        
+        monitor = new GroupMonitorFrame(this);
+        monitor.setKnx(knx);
     }
 
     private void saveSettings() {
@@ -292,17 +303,18 @@ public class Main extends javax.swing.JFrame {
         jSeparator2 = new javax.swing.JToolBar.Separator();
         programmAllButton = new javax.swing.JButton();
         programmDataOnlyButton = new javax.swing.JButton();
+        jSeparator3 = new javax.swing.JToolBar.Separator();
+        groupmonitorButton = new javax.swing.JButton();
+        settingsButton = new javax.swing.JButton();
+        jSeparator4 = new javax.swing.JToolBar.Separator();
+        filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
+        exitButton = new javax.swing.JButton();
         statusPanel = new de.konnekting.suite.StatusPanel();
         bottomSplitPane = new javax.swing.JSplitPane();
         topSplitPane = new javax.swing.JSplitPane();
         deviceList = new de.konnekting.suite.DeviceList();
         deviceEditor = new de.konnekting.suite.DeviceEditor();
         consolePanel = new de.konnekting.suite.ConsolePanel();
-        jMenuBar = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
-        settingsMenuItem = new javax.swing.JMenuItem();
-        groupMonitorItem = new javax.swing.JMenuItem();
-        exitMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle"); // NOI18N
@@ -380,6 +392,48 @@ public class Main extends javax.swing.JFrame {
             }
         });
         jToolBar.add(programmDataOnlyButton);
+        jToolBar.add(jSeparator3);
+
+        groupmonitorButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/konnekting/suite/icons/display.png"))); // NOI18N
+        groupmonitorButton.setText(bundle.getString("Main.groupmonitorButton.text")); // NOI18N
+        groupmonitorButton.setToolTipText(bundle.getString("Main.groupmonitorButton.toolTipText")); // NOI18N
+        groupmonitorButton.setFocusable(false);
+        groupmonitorButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        groupmonitorButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        groupmonitorButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                groupmonitorButtonActionPerformed(evt);
+            }
+        });
+        jToolBar.add(groupmonitorButton);
+
+        settingsButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/konnekting/suite/icons/kcontrol.png"))); // NOI18N
+        settingsButton.setText(bundle.getString("Main.settingsButton.text")); // NOI18N
+        settingsButton.setToolTipText(bundle.getString("Main.settingsButton.toolTipText")); // NOI18N
+        settingsButton.setFocusable(false);
+        settingsButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        settingsButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        settingsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                settingsButtonActionPerformed(evt);
+            }
+        });
+        jToolBar.add(settingsButton);
+        jToolBar.add(jSeparator4);
+        jToolBar.add(filler1);
+
+        exitButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/konnekting/suite/icons/exit.png"))); // NOI18N
+        exitButton.setText(bundle.getString("Main.exitButton.text")); // NOI18N
+        exitButton.setToolTipText(bundle.getString("Main.exitButton.toolTipText")); // NOI18N
+        exitButton.setFocusable(false);
+        exitButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        exitButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        exitButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exitButtonActionPerformed(evt);
+            }
+        });
+        jToolBar.add(exitButton);
 
         bottomSplitPane.setDividerLocation(300);
         bottomSplitPane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
@@ -414,36 +468,6 @@ public class Main extends javax.swing.JFrame {
         consolePanel.setPreferredSize(new java.awt.Dimension(80, 300));
         bottomSplitPane.setRightComponent(consolePanel);
 
-        jMenu1.setText(bundle.getString("Main.jMenu1.text")); // NOI18N
-
-        settingsMenuItem.setText(bundle.getString("Main.settingsMenuItem.text")); // NOI18N
-        settingsMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                settingsMenuItemActionPerformed(evt);
-            }
-        });
-        jMenu1.add(settingsMenuItem);
-
-        groupMonitorItem.setText(bundle.getString("Main.groupMonitorItem.text")); // NOI18N
-        groupMonitorItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                groupMonitorItemActionPerformed(evt);
-            }
-        });
-        jMenu1.add(groupMonitorItem);
-
-        exitMenuItem.setText(bundle.getString("Main.exitMenuItem.text")); // NOI18N
-        exitMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                exitApplication(evt);
-            }
-        });
-        jMenu1.add(exitMenuItem);
-
-        jMenuBar.add(jMenu1);
-
-        setJMenuBar(jMenuBar);
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -457,7 +481,7 @@ public class Main extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(bottomSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 495, Short.MAX_VALUE)
+                .addComponent(bottomSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 518, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(statusPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(4, 4, 4))
@@ -491,10 +515,6 @@ public class Main extends javax.swing.JFrame {
         properties.put("windowx", Integer.toString(location.x));
         properties.put("windowy", Integer.toString(location.y));
     }//GEN-LAST:event_windowMoved
-
-    private void exitApplication(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitApplication
-        System.exit(0);
-    }//GEN-LAST:event_exitApplication
 
     private void openProjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openProjectButtonActionPerformed
         JFileChooser jfc;
@@ -566,19 +586,19 @@ public class Main extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_programmDataOnlyButtonActionPerformed
 
-    private void settingsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_settingsMenuItemActionPerformed
+    private void groupmonitorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_groupmonitorButtonActionPerformed
+        monitor.setVisible(true);
+    }//GEN-LAST:event_groupmonitorButtonActionPerformed
+
+    private void settingsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_settingsButtonActionPerformed
         SettingsDialog sd = new SettingsDialog(this, properties);
         sd.setLocationRelativeTo(this);
         sd.setVisible(true);
-    }//GEN-LAST:event_settingsMenuItemActionPerformed
+    }//GEN-LAST:event_settingsButtonActionPerformed
 
-    private void groupMonitorItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_groupMonitorItemActionPerformed
-        GroupMonitorFrame monitor = new GroupMonitorFrame();
-        monitor.setKnx(knx);
-        monitor.setSize(700, 400);
-        monitor.setLocationRelativeTo(this);
-        monitor.setVisible(true);
-    }//GEN-LAST:event_groupMonitorItemActionPerformed
+    private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_exitButtonActionPerformed
 
     
     static void renderSplashFrame(Graphics2D g, int frame) {
@@ -671,18 +691,19 @@ public class Main extends javax.swing.JFrame {
     private de.konnekting.suite.ConsolePanel consolePanel;
     private de.konnekting.suite.DeviceEditor deviceEditor;
     private de.konnekting.suite.DeviceList deviceList;
-    private javax.swing.JMenuItem exitMenuItem;
-    private javax.swing.JMenuItem groupMonitorItem;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenuBar jMenuBar;
+    private javax.swing.JButton exitButton;
+    private javax.swing.Box.Filler filler1;
+    private javax.swing.JButton groupmonitorButton;
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JToolBar.Separator jSeparator2;
+    private javax.swing.JToolBar.Separator jSeparator3;
+    private javax.swing.JToolBar.Separator jSeparator4;
     private javax.swing.JToolBar jToolBar;
     private javax.swing.JButton openProjectButton;
     private javax.swing.JButton programmAllButton;
     private javax.swing.JButton programmDataOnlyButton;
     private javax.swing.JButton removeDeviceButton;
-    private javax.swing.JMenuItem settingsMenuItem;
+    private javax.swing.JButton settingsButton;
     private de.konnekting.suite.StatusPanel statusPanel;
     private javax.swing.JSplitPane topSplitPane;
     // End of variables declaration//GEN-END:variables

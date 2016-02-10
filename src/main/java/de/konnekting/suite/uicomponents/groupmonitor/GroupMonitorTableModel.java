@@ -38,7 +38,7 @@ public class GroupMonitorTableModel extends DefaultTableModel {
             events.remove(0);
         }
         
-        fireTableDataChanged();
+        fireTableRowsInserted(events.size(), events.size());
     }
 
     @Override
@@ -149,6 +149,13 @@ public class GroupMonitorTableModel extends DefaultTableModel {
                 throw new IllegalArgumentException("Column " + columnIndex + " not known");
         }
     }
+
+    void clear() {
+        events.clear();
+        fireTableDataChanged();
+    }
+    
+    
 
 
 }
