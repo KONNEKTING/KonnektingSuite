@@ -80,6 +80,7 @@ public class GroupMonitorFrame extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Gruppenmonitor");
 
         jTable1.setModel(groupMonitorTableModel1);
         jScrollPane1.setViewportView(jTable1);
