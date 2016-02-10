@@ -196,7 +196,7 @@ public class Main extends javax.swing.JFrame {
                 }
                 
                 public void process(){
-                    RootEventBus.getDefault().post(new EventConsoleMessage("KNX Telegramm entdeckt. Verbindung schein in Ordnung zu sein."));
+                    RootEventBus.getDefault().post(new EventConsoleMessage("KNX Telegramm entdeckt. Verbindung scheint in Ordnung zu sein."));
                     knx.removeGroupAddressListener("*", this);
                 }
             });
