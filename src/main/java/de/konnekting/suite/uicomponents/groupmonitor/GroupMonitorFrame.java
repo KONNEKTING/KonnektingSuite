@@ -49,7 +49,7 @@ public class GroupMonitorFrame extends javax.swing.JFrame {
         }
 
         private void process(GroupAddressEvent gae) {
-            if (startButton.isSelected()) {
+            if (startButton.isSelected() && isVisible()) {
                 groupMonitorTableModel1.addEvent(new GroupAddressEventContainer(count.getAndIncrement(), new Date(), gae));
                 updateCountLabel();
             }
