@@ -10,6 +10,7 @@ import de.root1.slicknx.GroupAddressListener;
 import de.root1.slicknx.Knx;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
+import javax.swing.JFrame;
 
 /**
  *
@@ -48,6 +49,7 @@ public class GroupMonitorFrame extends javax.swing.JFrame {
      */
     public GroupMonitorFrame() {
         initComponents();
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
     
     public void setKnx(Knx knx) {
@@ -59,6 +61,7 @@ public class GroupMonitorFrame extends javax.swing.JFrame {
     @Override
     public void dispose() {
         knx.removeGroupAddressListener("*", gal);
+        super.dispose();
     }
     
     

@@ -17,7 +17,7 @@ import java.util.Date;
  */
 public class GroupAddressEventContainer {
     
-    private static final SimpleDateFormat sdf = new SimpleDateFormat("YYYY-mm-dd hh:mm:ss.SSS");
+    private static final SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd hh:mm:ss.SSS");
     
     private final int number;
     private final Date timestamp;
