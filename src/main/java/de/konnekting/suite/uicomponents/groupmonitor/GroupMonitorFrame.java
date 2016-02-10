@@ -25,13 +25,13 @@ import javax.swing.JFrame;
  * @author achristian
  */
 public class GroupMonitorFrame extends javax.swing.JFrame {
+
     private Knx knx;
-    
+
     public final AtomicInteger count = new AtomicInteger(0);
     private Properties properties = Main.getProperties();
-    
+
     private final GroupAddressListener gal = new GroupAddressListener() {
-        
 
         @Override
         public void readRequest(GroupAddressEvent event) {
@@ -47,22 +47,19 @@ public class GroupMonitorFrame extends javax.swing.JFrame {
         public void write(GroupAddressEvent event) {
             process(event);
         }
-        
-        private void process(GroupAddressEvent gae){
+
+        private void process(GroupAddressEvent gae) {
             if (startButton.isSelected()) {
                 groupMonitorTableModel1.addEvent(new GroupAddressEventContainer(count.getAndIncrement(), new Date(), gae));
                 updateCountLabel();
             }
         }
     };
-    
+
     private void updateCountLabel() {
         telegramCount.setText(String.format("Telegramme: % 6d", groupMonitorTableModel1.getRowCount()));
     }
 
-    
-    
-    
     /**
      * Creates new form GroupMonitorFrame
      */
@@ -77,21 +74,20 @@ public class GroupMonitorFrame extends javax.swing.JFrame {
         eventTable.getColumnModel().getColumn(5).setPreferredWidth(160);
         
         setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-        
+
         // autoscroll feature
         eventTable.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
                 if (autoscrollButton.isSelected()) {
-                    eventTable.scrollRectToVisible(eventTable.getCellRect(eventTable.getRowCount()-1, 0, true));
+                    eventTable.scrollRectToVisible(eventTable.getCellRect(eventTable.getRowCount() - 1, 0, true));
                 }
             }
-            
+
         });
-        
-        
+
         setSize(Integer.parseInt(properties.getProperty("groupmonitor.windowwidth", "700")), Integer.parseInt(properties.getProperty("groupmonitor.windowheight", "400")));
-        
+
         Point groupMonitorLocation = new Point();
         groupMonitorLocation.x = Integer.parseInt(properties.getProperty("groupmonitor.windowx", "" + Integer.MIN_VALUE));
         groupMonitorLocation.y = Integer.parseInt(properties.getProperty("groupmonitor.windowy", "" + Integer.MIN_VALUE));
@@ -100,21 +96,21 @@ public class GroupMonitorFrame extends javax.swing.JFrame {
         } else {
             setLocation(groupMonitorLocation);
         }
-        
+
         startButton.setSelected(Boolean.parseBoolean(properties.getProperty("groupmonitor.startSelected", "false")));
         autoscrollButton.setSelected(Boolean.parseBoolean(properties.getProperty("groupmonitor.autoscrollSelected", "true")));
     }
-    
+
     public void setKnx(Knx knx) {
         this.knx = knx;
         count.set(0);
-        
+
         knx.addGroupAddressListener("*", gal);
     }
 
     @Override
     public void setVisible(boolean visible) {
-        super.setVisible(visible); 
+        super.setVisible(visible);
         if (!visible) {
             saveSettings();
             startButton.setSelected(false);
@@ -123,16 +119,12 @@ public class GroupMonitorFrame extends javax.swing.JFrame {
             startButton.setSelected(Boolean.parseBoolean(properties.getProperty("groupmonitor.startSelected", "false")));
         }
     }
-    
-    
 
     @Override
     public void dispose() {
         knx.removeGroupAddressListener("*", gal);
         super.dispose();
     }
-    
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -239,7 +231,7 @@ public class GroupMonitorFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void clearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButtonActionPerformed
-        synchronized(count) {
+        synchronized (count) {
             groupMonitorTableModel1.clear();
             count.set(0);
             updateCountLabel();
@@ -269,11 +261,11 @@ public class GroupMonitorFrame extends javax.swing.JFrame {
         Dimension size = getSize();
         properties.put("groupmonitor.windowwidth", Integer.toString(size.width));
         properties.put("groupmonitor.windowheight", Integer.toString(size.height));
-        
-        properties.put("groupmonitor.startSelected", startButton.isSelected()+"");
-        properties.put("groupmonitor.autoscrollSelected", autoscrollButton.isSelected()+"");
+
+        properties.put("groupmonitor.startSelected", startButton.isSelected() + "");
+        properties.put("groupmonitor.autoscrollSelected", autoscrollButton.isSelected() + "");
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton autoscrollButton;
     private javax.swing.ButtonGroup buttonGroup1;
