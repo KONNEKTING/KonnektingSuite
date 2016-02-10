@@ -28,6 +28,8 @@ import de.konnekting.suite.events.EventProjectOpened;
 import de.konnekting.suite.events.EventSaveSettings;
 import de.konnekting.suite.events.StickyDeviceSelected;
 import de.konnekting.suite.uicomponents.groupmonitor.GroupMonitorFrame;
+import de.root1.slicknx.GroupAddressEvent;
+import de.root1.slicknx.GroupAddressListener;
 import de.root1.slicknx.Knx;
 import de.root1.slicknx.KnxException;
 import java.awt.AlphaComposite;
@@ -176,6 +178,30 @@ public class Main extends javax.swing.JFrame {
                     log.info("Error. Unknown ACCESS TYPE: " + access);
                     System.exit(1);
             }
+            
+            knx.addGroupAddressListener("*", new GroupAddressListener() {
+                @Override
+                public void readRequest(GroupAddressEvent event) {
+                    process();
+                }
+
+                @Override
+                public void readResponse(GroupAddressEvent event) {
+                    process();
+                }
+
+                @Override
+                public void write(GroupAddressEvent event) {
+                    process();
+                }
+                
+                public void process(){
+                    RootEventBus.getDefault().post(new EventConsoleMessage("KNX Telegramm entdeckt. Verbindung schein in Ordnung zu sein."));
+                    knx.removeGroupAddressListener("*", this);
+                }
+            });
+            
+            
         } catch (KnxException ex) {
             RootEventBus.getDefault().post(new EventConsoleMessage("Fehler beim Öffnen der KNX Verbindung: " + access, ex));
             log.error("Error creating knx access.", ex);
@@ -183,6 +209,8 @@ public class Main extends javax.swing.JFrame {
             RootEventBus.getDefault().post(new EventConsoleMessage("Fehler beim Öffnen der KNX Verbindung.", ex));
             log.error("Error creating knx access.", ex);
         }
+        
+        
 
         Dimension size = new Dimension();
         size.width = Integer.parseInt(properties.getProperty("windowwidth", "1024"));
