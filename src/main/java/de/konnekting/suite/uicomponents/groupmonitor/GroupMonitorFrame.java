@@ -165,7 +165,6 @@ public class GroupMonitorFrame extends javax.swing.JFrame {
         jToolBar1.setRollover(true);
 
         buttonGroup1.add(startButton);
-        startButton.setSelected(true);
         startButton.setText("Start");
         startButton.setFocusable(false);
         startButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -178,6 +177,7 @@ public class GroupMonitorFrame extends javax.swing.JFrame {
         jToolBar1.add(startButton);
 
         buttonGroup1.add(stopButton);
+        stopButton.setSelected(true);
         stopButton.setText("Stop");
         stopButton.setFocusable(false);
         stopButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
