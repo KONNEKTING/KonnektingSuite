@@ -27,6 +27,7 @@ import de.root1.rooteventbus.RootEventBus;
 import de.konnekting.suite.events.EventProjectOpened;
 import de.konnekting.suite.events.EventSaveSettings;
 import de.konnekting.suite.events.StickyDeviceSelected;
+import de.konnekting.suite.uicomponents.groupmonitor.GroupMonitorFrame;
 import de.root1.slicknx.Knx;
 import de.root1.slicknx.KnxException;
 import java.awt.AlphaComposite;
@@ -272,6 +273,7 @@ public class Main extends javax.swing.JFrame {
         jMenuBar = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         settingsMenuItem = new javax.swing.JMenuItem();
+        groupMonitorItem = new javax.swing.JMenuItem();
         exitMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -393,6 +395,14 @@ public class Main extends javax.swing.JFrame {
             }
         });
         jMenu1.add(settingsMenuItem);
+
+        groupMonitorItem.setText(bundle.getString("Main.groupMonitorItem.text")); // NOI18N
+        groupMonitorItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                groupMonitorItemActionPerformed(evt);
+            }
+        });
+        jMenu1.add(groupMonitorItem);
 
         exitMenuItem.setText(bundle.getString("Main.exitMenuItem.text")); // NOI18N
         exitMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -534,6 +544,15 @@ public class Main extends javax.swing.JFrame {
         sd.setVisible(true);
     }//GEN-LAST:event_settingsMenuItemActionPerformed
 
+    private void groupMonitorItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_groupMonitorItemActionPerformed
+        GroupMonitorFrame monitor = new GroupMonitorFrame();
+        monitor.setKnx(knx);
+        monitor.setSize(700, 400);
+        monitor.setLocationRelativeTo(this);
+        monitor.setVisible(true);
+    }//GEN-LAST:event_groupMonitorItemActionPerformed
+
+    
     static void renderSplashFrame(Graphics2D g, int frame) {
         g.setComposite(AlphaComposite.Clear);
         g.fillRect(0, 0, 400, 300);
@@ -625,6 +644,7 @@ public class Main extends javax.swing.JFrame {
     private de.konnekting.suite.DeviceEditor deviceEditor;
     private de.konnekting.suite.DeviceList deviceList;
     private javax.swing.JMenuItem exitMenuItem;
+    private javax.swing.JMenuItem groupMonitorItem;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar;
     private javax.swing.JToolBar.Separator jSeparator1;
