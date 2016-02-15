@@ -40,6 +40,8 @@ public class SaveDeviceAsDialog extends javax.swing.JDialog {
     private final DeviceConfigContainer device;
     private final File projectDir;
     private File newFile;
+    
+    private static final String CONFIG_EXTENSION = ".kconfig.xml";
 
     /**
      * Creates new form SaveDeviceAsDialog
@@ -174,11 +176,11 @@ public class SaveDeviceAsDialog extends javax.swing.JDialog {
         name = name.replace("/", "_");
         name = name.replace("\\", "_");
         name = name.replace("#", "_");
-        newFile = new File(projectDir, name + ".kdevice.xml");
+        newFile = new File(projectDir, name + CONFIG_EXTENSION);
         int i = 0;
         while (newFile.exists()) {
             i++;
-            newFile = new File(projectDir, name + "_"+i+".kdevice.xml");
+            newFile = new File(projectDir, name + "_"+i+CONFIG_EXTENSION);
         }
 
         device.setDescription(deviceDescriptionTextField.getText());

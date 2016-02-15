@@ -39,6 +39,7 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.SplashScreen;
+import java.awt.Toolkit;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -52,10 +53,12 @@ import java.net.UnknownHostException;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
+import javax.swing.filechooser.FileFilter;
 import javax.xml.bind.JAXBException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -255,6 +258,11 @@ public class Main extends javax.swing.JFrame {
             projectFolder = new File(properties.getProperty("projectfolder", System.getProperty("user.home")));
             eventbus.post(new EventProjectOpened(projectFolder));
         }
+        
+        ImageIcon icon = new ImageIcon(getClass().getClassLoader().getResource("de/konnekting/suite/icons/konnekting-icon.png"));
+        setIconImage(icon.getImage());
+                
+        setVisible(true);
     }
 
     private void saveSettings() {
@@ -543,6 +551,7 @@ public class Main extends javax.swing.JFrame {
             jfc = new JFileChooser();
         }
         jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        jfc.setDialogTitle("Projektordner auswählen");
         int returnVal = jfc.showOpenDialog(this);
 
         if (returnVal != JFileChooser.ABORT && jfc.getSelectedFile() != null) {
@@ -572,6 +581,19 @@ public class Main extends javax.swing.JFrame {
             jfc = new JFileChooser();
         }
         jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        jfc.setDialogTitle("Gerät hinzufügen");
+        jfc.setFileFilter(new FileFilter() {
+
+            @Override
+            public boolean accept(File f) {
+                return f.isFile() && (f.getName().endsWith(".kdevice.xml") || f.getName().endsWith(".kconfig.xml"));
+            }
+
+            @Override
+            public String getDescription() {
+                return "Gerätedefinition (.kdevice.xml), Gerätekonfiguration (.kconfig.xml)";
+            }
+        });
         int returnVal = jfc.showOpenDialog(this);
 
         if (returnVal != JFileChooser.ABORT && jfc.getSelectedFile() != null) {
@@ -698,7 +720,7 @@ public class Main extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                new Main().setVisible(true);
+                new Main();
             }
         });
     }

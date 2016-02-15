@@ -76,7 +76,7 @@ public class DeviceList extends javax.swing.JPanel {
             @Override
             public void run() {
                 deviceListModel.clear();
-                File[] deviceFiles = projectFolder.listFiles((File pathname) -> pathname.isFile() && pathname.getName().endsWith(".kdevice.xml"));
+                File[] deviceFiles = projectFolder.listFiles((File pathname) -> pathname.isFile() && pathname.getName().endsWith(".kconfig.xml"));
 
                 setStepsToDo(deviceFiles.length);
                 for (File deviceFile : deviceFiles) {
