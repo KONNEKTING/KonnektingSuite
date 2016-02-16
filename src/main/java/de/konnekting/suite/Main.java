@@ -88,6 +88,7 @@ public class Main extends javax.swing.JFrame {
 
             osw.write(".level= INFO" + "\n");
             osw.write("de.konnekting.level = " + level.toUpperCase() + "\n");
+            osw.write("tuwien.auto.calimero.log.LogService.level = " + "ALL" + "\n");
             osw.write("de.root1.slicknx.konnekting.protocol0x00.ProgProtocol0x00Listener.level = ALL\n");
 //            osw.write("de.root1.slicknx.level = " + level.toUpperCase() + "\n");
             
@@ -240,7 +241,9 @@ public class Main extends javax.swing.JFrame {
         
         
         monitor = new GroupMonitorFrame(this);
-        monitor.setKnx(knx);
+        if (knx!=null) {
+            monitor.setKnx(knx);
+        }
         
         
         boolean lastFolder = Boolean.parseBoolean(properties.getProperty(SettingsDialog.PROP_STARTUP_LASTFOLDER, "false"));
