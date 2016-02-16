@@ -69,6 +69,11 @@
             <version>4.10</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>de.root1</groupId>
+            <artifactId>rxtx-rebundled</artifactId>
+            <version>2.1-7r2-6</version>
+        </dependency>
     </dependencies>
     
     <build>
@@ -80,7 +85,7 @@
         </resources>    
             
         <plugins>
-<!--            <plugin>
+            <!--            <plugin>
                 <groupId>
             </plugin>-->
             <plugin>
@@ -114,5 +119,17 @@
             </plugin>
         </plugins>
     </build>
-    
+    <!-- upload informations for deploying the jar -->
+    <distributionManagement>
+        <repository>
+            <id>root1-releases</id>
+            <name>internal releases</name>
+            <url>ftp://maven.root1.de/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>root1-snapshots</id>
+            <name>internal snapshots</name>
+            <url>ftp://maven.root1.de/snapshots/</url>
+        </snapshotRepository>      
+    </distributionManagement> 
 </project>
