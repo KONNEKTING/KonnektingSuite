@@ -259,7 +259,7 @@ public class Main extends javax.swing.JFrame {
             eventbus.post(new EventProjectOpened(projectFolder));
         }
         
-        ImageIcon icon = new ImageIcon(getClass().getClassLoader().getResource("de/konnekting/suite/icons/konnekting-icon.png"));
+        ImageIcon icon = new ImageIcon(getClass().getClassLoader().getResource("de/konnekting/suite/icons/KONNEKTING-16x16-Icon.png"));
         setIconImage(icon.getImage());
                 
         setVisible(true);
