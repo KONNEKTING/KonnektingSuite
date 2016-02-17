@@ -24,6 +24,11 @@ import de.konnekting.suite.events.EventAddDevice;
 import de.konnekting.suite.utils.Utils;
 import de.root1.rooteventbus.RootEventBus;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.CopyOption;
+import java.nio.file.Files;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import java.util.logging.Level;
 import javax.xml.bind.JAXBException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +42,7 @@ public class SaveDeviceAsDialog extends javax.swing.JDialog {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    private final DeviceConfigContainer device;
+    private DeviceConfigContainer device;
     private final File projectDir;
     private File newFile;
     
@@ -56,7 +61,16 @@ public class SaveDeviceAsDialog extends javax.swing.JDialog {
         super.setLocationRelativeTo(parent);
         initComponents();
         this.projectDir = projectDir;
-        this.device = Utils.cloneDeviceConfig(device);
+               
+        try {
+            newFile = new File(projectDir, Utils.getTempFilename());
+            device.cloneFile(newFile);
+            this.device = new DeviceConfigContainer(newFile);
+        } catch (IOException | JAXBException | SAXException ex) {
+            log.error("Error cloning file " + newFile.getAbsolutePath(), ex);
+        }
+        
+        
         deviceInformationPanel.setDeviceConfig(this.device);
         
         if (device.hasConfiguration()) {
@@ -66,10 +80,9 @@ public class SaveDeviceAsDialog extends javax.swing.JDialog {
         }
     }
 
-    public static File showDialog(java.awt.Frame parent, File projectDir, DeviceConfigContainer device) {
+    public static void showDialog(java.awt.Frame parent, File projectDir, DeviceConfigContainer device) {
         SaveDeviceAsDialog dialog = new SaveDeviceAsDialog(parent, projectDir, device);
         dialog.setVisible(true);
-        return dialog.newFile;
     }
 
     /**
@@ -171,26 +184,15 @@ public class SaveDeviceAsDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void addDeviceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addDeviceButtonActionPerformed
-        String name = deviceDescriptionTextField.getText();
-        name = name.replace(" ", "_");
-        name = name.replace("/", "_");
-        name = name.replace("\\", "_");
-        name = name.replace("#", "_");
-        newFile = new File(projectDir, name + CONFIG_EXTENSION);
-        int i = 0;
-        while (newFile.exists()) {
-            i++;
-            newFile = new File(projectDir, name + "_"+i+CONFIG_EXTENSION);
-        }
-
+        
         device.setDescription(deviceDescriptionTextField.getText());
         
         try {
             device.setIndividualAddress("1.1.");
             try {
-                device.writeConfig(newFile);
+                device.writeConfig();
             } catch (JAXBException | SAXException ex) {
-                log.error("Error writing file " + newFile.getAbsolutePath(), ex);
+                log.error("Error writing file " + device.toString(), ex);
             }
             RootEventBus.getDefault().post(new EventAddDevice(device));
         } catch (InvalidAddressFormatException ex) {

@@ -604,12 +604,8 @@ public class Main extends javax.swing.JFrame {
             File selectedFile = jfc.getSelectedFile();
             try {
                 DeviceConfigContainer device = new DeviceConfigContainer(selectedFile);
-                File newFile = SaveDeviceAsDialog.showDialog(this, projectFolder, device);
-                if (newFile != null) {
-                    log.trace("cloned config");
-                } else {
-                    log.trace("aborted");
-                }
+                SaveDeviceAsDialog.showDialog(this, projectFolder, device);
+                
             } catch (JAXBException | SAXException ex) {
                 RootEventBus.getDefault().post(new EventConsoleMessage("Fehler beim Hinzufügen eines Gerätes.", ex));
             }

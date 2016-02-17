@@ -21,6 +21,8 @@ package de.konnekting.suite.utils;
 import java.awt.Color;
 import com.rits.cloning.Cloner;
 import de.konnekting.deviceconfig.DeviceConfigContainer;
+import java.io.File;
+import java.io.IOException;
 
 /**
  *
@@ -28,7 +30,6 @@ import de.konnekting.deviceconfig.DeviceConfigContainer;
  */
 public class Utils {
 
-    public static final Cloner cloner = new Cloner();
     public static double FACTOR = 0.95d;
 
     public static Color darker(Color c) {
@@ -70,8 +71,12 @@ public class Utils {
         }
         return -1;
     }
-
-    public static DeviceConfigContainer cloneDeviceConfig(DeviceConfigContainer device) {
-        return cloner.deepClone(device);
+    
+    public static String getTempFilename() throws IOException {
+        File createTempFile = File.createTempFile("KonnektingSuite", "FileClone");
+        createTempFile.delete();
+        createTempFile.deleteOnExit();
+        return createTempFile.getName();
     }
+
 }
