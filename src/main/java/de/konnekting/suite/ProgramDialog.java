@@ -26,6 +26,9 @@ public class ProgramDialog extends javax.swing.JDialog {
     
     private final List<DeviceConfigContainer> deviceList = new ArrayList<>();
     private Program p;
+    private boolean doIndividualAddress;
+    private boolean doComObjects;
+    private boolean doParams;
 
     /**
      * Creates new form ProgramDialog
@@ -123,7 +126,10 @@ public class ProgramDialog extends javax.swing.JDialog {
         cancelButton.setEnabled(false);
     }//GEN-LAST:event_cancelButtonActionPerformed
     
-    public void prepare(Knx knx) {
+    public void prepare(Knx knx, boolean doIndividualAddress, boolean doComObjects, boolean doParams) {
+        this.doIndividualAddress = doIndividualAddress;
+        this.doComObjects = doComObjects;
+        this.doParams = doParams;
         p = new Program(knx);
     }
     
@@ -163,7 +169,7 @@ public class ProgramDialog extends javax.swing.JDialog {
                         RootEventBus.getDefault().post(new EventConsoleMessage("[Programmieren] Programmiere: " + name));
                         deviceNameLabel.setText(name);
                         start = System.currentTimeMillis();
-                        p.programAll(deviceList.get(0));
+                        p.program(deviceList.get(0), doIndividualAddress, doComObjects, doParams);
                     } catch (ProgramException ex) {
                         RootEventBus.getDefault().post(new EventConsoleMessage("Fehler beim Programmieren.", ex));
                     } finally {
