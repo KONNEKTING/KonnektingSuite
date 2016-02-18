@@ -87,6 +87,8 @@ public class SettingsDialog extends javax.swing.JDialog {
         askFolderCheckbox.setSelected(askFolder);
         lastFolderCheckbox.setSelected(lastFolder);
         
+        updateOpenCheckboxes();
+        
     }
 
     /**

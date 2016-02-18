@@ -37,9 +37,9 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.SplashScreen;
-import java.awt.Toolkit;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -50,9 +50,12 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -262,8 +265,18 @@ public class Main extends javax.swing.JFrame {
             eventbus.post(new EventProjectOpened(projectFolder));
         }
         
-        ImageIcon icon = new ImageIcon(getClass().getClassLoader().getResource("de/konnekting/suite/icons/KONNEKTING-16x16-Icon.png"));
-        setIconImage(icon.getImage());
+        List<Image> iconList = new ArrayList<>();
+        try {
+            iconList.add(ImageIO.read(getClass().getClassLoader().getResource("de/konnekting/suite/icons/KONNEKTING-Suite-16x16-Icon.png")));
+            iconList.add(ImageIO.read(getClass().getClassLoader().getResource("de/konnekting/suite/icons/KONNEKTING-Suite-32x32-Icon.png")));
+            iconList.add(ImageIO.read(getClass().getClassLoader().getResource("de/konnekting/suite/icons/KONNEKTING-Suite-64x64-Icon.png")));
+            iconList.add(ImageIO.read(getClass().getClassLoader().getResource("de/konnekting/suite/icons/KONNEKTING-Suite-128x128-Icon.png")));
+            iconList.add(ImageIO.read(getClass().getClassLoader().getResource("de/konnekting/suite/icons/KONNEKTING-Suite-256x256-Icon.png")));
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        setIconImages(iconList);
+        
                 
         setVisible(true);
     }
