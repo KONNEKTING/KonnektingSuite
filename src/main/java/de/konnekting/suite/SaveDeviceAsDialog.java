@@ -25,10 +25,6 @@ import de.konnekting.suite.utils.Utils;
 import de.root1.rooteventbus.RootEventBus;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.CopyOption;
-import java.nio.file.Files;
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
-import java.util.logging.Level;
 import javax.xml.bind.JAXBException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +39,6 @@ public class SaveDeviceAsDialog extends javax.swing.JDialog {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     private DeviceConfigContainer device;
-    private final File projectDir;
     private File newFile;
     
     private static final String CONFIG_EXTENSION = ".kconfig.xml";
@@ -60,16 +55,13 @@ public class SaveDeviceAsDialog extends javax.swing.JDialog {
         super.setModal(true);
         super.setLocationRelativeTo(parent);
         initComponents();
-        this.projectDir = projectDir;
                
         try {
-            newFile = new File(projectDir, Utils.getTempFilename());
-            device.cloneFile(newFile);
+            newFile = device.cloneFile(projectDir);
             this.device = new DeviceConfigContainer(newFile);
         } catch (IOException | JAXBException | SAXException ex) {
             log.error("Error cloning file " + newFile.getAbsolutePath(), ex);
         }
-        
         
         deviceInformationPanel.setDeviceConfig(this.device);
         

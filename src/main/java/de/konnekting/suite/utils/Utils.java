@@ -72,11 +72,4 @@ public class Utils {
         return -1;
     }
     
-    public static String getTempFilename() throws IOException {
-        File createTempFile = File.createTempFile("KonnektingSuite", "FileClone");
-        createTempFile.delete();
-        createTempFile.deleteOnExit();
-        return createTempFile.getName();
-    }
-
 }
