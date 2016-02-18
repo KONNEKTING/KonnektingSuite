@@ -12,6 +12,8 @@ import de.konnekting.deviceconfig.ProgramProgressListener;
 import de.konnekting.suite.events.EventConsoleMessage;
 import de.root1.rooteventbus.RootEventBus;
 import de.root1.slicknx.Knx;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFrame;
@@ -21,7 +23,7 @@ import javax.swing.JFrame;
  * @author achristian
  */
 public class ProgramDialog extends javax.swing.JDialog {
-
+    
     private final List<DeviceConfigContainer> deviceList = new ArrayList<>();
     private Program p;
 
@@ -34,6 +36,15 @@ public class ProgramDialog extends javax.swing.JDialog {
         super(parent, false);
         initComponents();
         setLocationRelativeTo(parent);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                cancelButton.doClick();
+            }
+            
+        });
     }
 
     /**
@@ -107,38 +118,38 @@ public class ProgramDialog extends javax.swing.JDialog {
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         p.abort();
-        RootEventBus.getDefault().post(new EventConsoleMessage("[Programmieren] "+"Abbruch angefordert."));
-        cancelButton.setText(cancelButton.getText()+"...");
+        RootEventBus.getDefault().post(new EventConsoleMessage("[Programmieren] " + "Abbruch angefordert."));
+        cancelButton.setText(cancelButton.getText() + "...");
         cancelButton.setEnabled(false);
     }//GEN-LAST:event_cancelButtonActionPerformed
-
+    
     public void prepare(Knx knx) {
         p = new Program(knx);
     }
-
+    
     void addDeviceToprogram(DeviceConfigContainer device) {
         deviceList.add(device);
     }
-
+    
     @Override
     public void setVisible(boolean b) {
         if (b) {
             super.setVisible(b); //To change body of generated methods, choose Tools | Templates.
 
             progressBar.setDoubleBuffered(true);
-
+            
             ProgramProgressListener ppl = new ProgramProgressListener() {
                 @Override
                 public void onStatusMessage(String statusMsg) {
                     statusMessageLabel.setText(statusMsg);
-                    RootEventBus.getDefault().post(new EventConsoleMessage("[Programmieren] "+statusMsg));
+                    RootEventBus.getDefault().post(new EventConsoleMessage("[Programmieren] " + statusMsg));
                 }
-
+                
                 @Override
                 public void onProgressUpdate(int currentStep, int steps) {
                     progressBar.setMaximum(steps);
                     progressBar.setValue(currentStep);
-                    RootEventBus.getDefault().post(new EventConsoleMessage("[Programmieren] Fortschritt: "+currentStep+"/"+steps));
+                    RootEventBus.getDefault().post(new EventConsoleMessage("[Programmieren] Fortschritt: " + currentStep + "/" + steps));
                 }
             };
             new BackgroundTask("Programmieren") {
@@ -148,8 +159,8 @@ public class ProgramDialog extends javax.swing.JDialog {
                     try {
                         p.addProgressListener(ppl);
                         
-                        String name = deviceList.get(0).getIndividualAddress()+" "+deviceList.get(0).getDescription();
-                        RootEventBus.getDefault().post(new EventConsoleMessage("[Programmieren] Programmiere: "+name));
+                        String name = deviceList.get(0).getIndividualAddress() + " " + deviceList.get(0).getDescription();
+                        RootEventBus.getDefault().post(new EventConsoleMessage("[Programmieren] Programmiere: " + name));
                         deviceNameLabel.setText(name);
                         start = System.currentTimeMillis();
                         p.programAll(deviceList.get(0));
@@ -159,13 +170,13 @@ public class ProgramDialog extends javax.swing.JDialog {
                         long stop = System.currentTimeMillis();
                         p.removeProgressListener(ppl);
                         dispose();
-                        RootEventBus.getDefault().post(new EventConsoleMessage("[Programmieren] Fertig! Dauer: "+(stop-start)+"ms"));
+                        RootEventBus.getDefault().post(new EventConsoleMessage("[Programmieren] Fertig! Dauer: " + (stop - start) + "ms"));
                     }
                 }
             };
             
         }
-
+        
     }
 
 
