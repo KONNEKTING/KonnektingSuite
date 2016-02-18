@@ -21,7 +21,6 @@ package de.konnekting.suite;
 import de.konnekting.deviceconfig.DeviceConfigContainer;
 import de.konnekting.deviceconfig.exception.InvalidAddressFormatException;
 import de.konnekting.suite.events.EventAddDevice;
-import de.konnekting.suite.utils.Utils;
 import de.root1.rooteventbus.RootEventBus;
 import java.io.File;
 import java.io.IOException;

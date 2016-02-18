@@ -106,6 +106,10 @@ public class ProgramDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+        p.abort();
+        RootEventBus.getDefault().post(new EventConsoleMessage("[Programmieren] "+"Abbruch angefordert."));
+        cancelButton.setText(cancelButton.getText()+"...");
+        cancelButton.setEnabled(false);
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     public void prepare(Knx knx) {

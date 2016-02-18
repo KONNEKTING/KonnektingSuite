@@ -56,7 +56,6 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JSplitPane;
