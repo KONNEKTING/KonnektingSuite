@@ -34,9 +34,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author achristian
  */
-public class ParameterTextField extends ValidateableTextField {
+public class NumberParameterTextField extends ValidateableTextField {
     
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     private long min = 0;
     private long max = 0;
@@ -48,12 +48,11 @@ public class ParameterTextField extends ValidateableTextField {
     private String validationError = "";
     private String lastText;
     
-        public ParameterTextField(DeviceConfigContainer device, Parameter param, ParameterConfiguration conf) {
+        public NumberParameterTextField(DeviceConfigContainer device, Parameter param, ParameterConfiguration conf) {
         this.device = device;
         this.param = param;
 
         String type = param.getValue().getType().toUpperCase();
-
         paramType = ParameterType.valueOf(type);
 
         // if min is set, max must also be set --> ensure and catch exception?!
@@ -66,7 +65,7 @@ public class ParameterTextField extends ValidateableTextField {
             device.setParameterValue(param.getId(), value);
         }
 
-        minMaxSet = minRaw != null && maxRaw != null && Helper.isNumberType(paramType);
+        minMaxSet = minRaw != null && maxRaw != null;
 
         // parse/read MIN/MAX values
         Bytes2ReadableValue b2r = new Bytes2ReadableValue();

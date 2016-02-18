@@ -20,10 +20,12 @@ package de.konnekting.suite;
 
 import de.konnekting.deviceconfig.DeviceConfigContainer;
 import de.konnekting.deviceconfig.utils.Helper;
-import de.konnekting.suite.uicomponents.ParameterTextField;
+//import de.konnekting.suite.uicomponents.FloatParameterTextField;
+import de.konnekting.suite.uicomponents.NumberParameterTextField;
 import de.konnekting.xml.konnektingdevice.v0.Parameter;
 import de.konnekting.xml.konnektingdevice.v0.Parameter.Value;
 import de.konnekting.xml.konnektingdevice.v0.ParameterConfiguration;
+import de.konnekting.xml.konnektingdevice.v0.ParameterType;
 import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -40,12 +42,12 @@ import org.slf4j.LoggerFactory;
  * @author achristian
  */
 public class ParameterListItem extends javax.swing.JPanel {
-    
+
     private final Logger log = LoggerFactory.getLogger(getClass());
-    
+
     private short id;
     private DeviceConfigContainer device;
-    
+
     class ComboboxItem {
 
         private final String representation;
@@ -64,9 +66,8 @@ public class ParameterListItem extends javax.swing.JPanel {
         public String getValue() {
             return value;
         }
-        
+
     }
-    
 
     /**
      * Creates new form ParameterListItem
@@ -74,7 +75,6 @@ public class ParameterListItem extends javax.swing.JPanel {
     public ParameterListItem() {
         initComponents();
     }
-
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -112,7 +112,6 @@ public class ParameterListItem extends javax.swing.JPanel {
     private javax.swing.JLabel descriptionLabel;
     // End of variables declaration//GEN-END:variables
 
-    
 //    private void save(JTextField field) {
 //    private void save(ValueTextField field) {
 //        String rawbyteText = field.getText();
@@ -123,58 +122,71 @@ public class ParameterListItem extends javax.swing.JPanel {
     private void save(JComboBox<ComboboxItem> combobox) {
         int selectedIndex = combobox.getSelectedIndex();
         ComboboxItem cbi = combobox.getItemAt(selectedIndex);
-        log.info("Changing combo param #"+id+" to '"+cbi.getValue()+"'");
+        log.info("Changing combo param #" + id + " to '" + cbi.getValue() + "'");
         device.setParameterValue(id, Helper.hexToBytes(cbi.getValue()));
     }
 
-    
     void setParam(short id, DeviceConfigContainer device) {
         this.id = id;
         this.device = device;
-        
+
         Parameter param = device.getParameter(id);
-        
+
         String desc = param.getDescription();
         Value valueObject = param.getValue();
         String options = valueObject.getOptions();
-        
-        descriptionLabel.setText("<html>"+desc+"</html>");
-        
+
+        descriptionLabel.setText("<html>" + desc + "</html>");
+
         ParameterConfiguration conf = device.getParameterConfig(id);
         byte[] currentValRaw = conf.getValue();
-        
-        if (currentValRaw==null) {
+
+        if (currentValRaw == null) {
             // set to default
             currentValRaw = valueObject.getDefault();
-        } 
-        
-        log.info("Setting param #"+id+" to '"+Helper.bytesToHex(currentValRaw)+"'");
-        
+        }
+
+        log.info("Setting param #" + id + " to '" + Helper.bytesToHex(currentValRaw) + "'");
+
         JComponent comp;
         GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
-        if (options==null || options.isEmpty()) {
-            comp = new ParameterTextField(device, param, conf);
+        if (options == null || options.isEmpty()) {
+
+            String type = param.getValue().getType().toUpperCase();
+            ParameterType paramType = ParameterType.valueOf(type);
+            switch (paramType) {
+//                case FLOAT32:
+//                    comp = new FloatParameterTextField(device, param, conf);
+//                    break;
+                case INT8:
+                case UINT8:
+                case INT16:
+                case UINT16:
+                case INT32:
+                case UINT32:
+                default: 
+                    comp = new NumberParameterTextField(device, param, conf);
+            }
         } else {
             List<ComboboxItem> cbitems = new ArrayList<>();
-            
+
             StringTokenizer st = new StringTokenizer(options, "=|");
-            int i=-1;
+            int i = -1;
             int selectedIndex = -1;
-            while(st.hasMoreTokens()) {
+            while (st.hasMoreTokens()) {
                 i++;
                 String val = st.nextToken();
                 String representation = st.nextToken();
                 ComboboxItem cbi = new ComboboxItem(val, representation);
                 cbitems.add(cbi);
-                if (val.equals(Helper.bytesToHex(currentValRaw))){
+                if (val.equals(Helper.bytesToHex(currentValRaw))) {
                     selectedIndex = i;
                 }
             }
-            
+
             JComboBox<ComboboxItem> combobox = new JComboBox(cbitems.toArray());
             combobox.setSelectedIndex(selectedIndex);
-            
-            
+
             combobox.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -182,20 +194,20 @@ public class ParameterListItem extends javax.swing.JPanel {
                 }
             });
             save(combobox); // ensure that default value is stored
-            
-            comp=combobox;
+
+            comp = combobox;
         }
-        
+
         comp.setMaximumSize(new java.awt.Dimension(230, 27));
         comp.setMinimumSize(new java.awt.Dimension(230, 27));
         comp.setPreferredSize(new java.awt.Dimension(230, 27));
-        
+
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
         gridBagConstraints.weighty = 0.1;
         gridBagConstraints.insets = new java.awt.Insets(2, 0, 1, 3);
         add(comp, gridBagConstraints);
-                
+
     }
 }
