@@ -170,10 +170,10 @@ public class DeviceList extends javax.swing.JPanel {
         // kleinster Index wird als Button ganz rechts angeordnet, größter ganz links
         Object[] options = {
             /* 0 */"Abbrechen",
-            /* 1 */ "Datei löschen",
-            /* 2 */ "Konfiguration löschen",};
+            /* 1 */ "Löschen",
+            };
         int result = JOptionPane.showOptionDialog(getParent(),
-            "Löschen, okay.\nNur die Konfiguration oder auch die Datei?",
+            "Soll die Gerätekonfiguration gelöscht werden?",
             "Löschen bestätigen",
             JOptionPane.YES_NO_CANCEL_OPTION,
             JOptionPane.QUESTION_MESSAGE,
@@ -181,10 +181,6 @@ public class DeviceList extends javax.swing.JPanel {
             options, options[0]);
 
         switch (result) {
-            case 2:
-                device.removeConfig();
-                deviceListModel.remove(selectedIndex);
-                break;
             case 1:
                 device.remove();
                 deviceListModel.remove(selectedIndex);
