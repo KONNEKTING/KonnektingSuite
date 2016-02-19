@@ -157,6 +157,7 @@ public class Main extends javax.swing.JFrame {
         String versionMsg = "KONNEKTING Suite - Version "+applicationProperties.getProperty("application.version","n/a")+" Build "+applicationProperties.getProperty("application.build","n/a")+(debug?" DEBUG MODE!":"");
         log.info(versionMsg);
         RootEventBus.getDefault().post(new EventConsoleMessage(versionMsg));
+        RootEventBus.getDefault().post(new EventConsoleMessage("Running on "+System.getProperty("os.name")));
         
         removeDeviceButton.setEnabled(false);
         programmAllButton.setEnabled(false);

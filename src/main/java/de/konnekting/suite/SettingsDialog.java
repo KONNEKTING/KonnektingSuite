@@ -19,6 +19,7 @@
 package de.konnekting.suite;
 
 import de.konnekting.suite.events.EventSaveSettings;
+import de.konnekting.suite.utils.Utils;
 import de.root1.rooteventbus.RootEventBus;
 import java.awt.Component;
 import java.util.Properties;
@@ -86,6 +87,11 @@ public class SettingsDialog extends javax.swing.JDialog {
         
         askFolderCheckbox.setSelected(askFolder);
         lastFolderCheckbox.setSelected(lastFolder);
+        
+        if (Utils.isLinux()) {
+            tpuartRadioButton.setEnabled(false);
+            setEnableAll(tpuartPanel, false);
+        }
         
         updateOpenCheckboxes();
         

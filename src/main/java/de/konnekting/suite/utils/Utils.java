@@ -72,4 +72,8 @@ public class Utils {
         return -1;
     }
     
+    public static boolean isLinux() {
+        return System.getProperty("os.name").toUpperCase().contains("LINUX");
+    }
+    
 }
