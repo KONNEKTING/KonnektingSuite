@@ -82,7 +82,7 @@ public class Main extends javax.swing.JFrame {
             OutputStreamWriter osw = new OutputStreamWriter(baos);
             osw.write("handlers= java.util.logging.FileHandler, java.util.logging.ConsoleHandler" + "\n");
             osw.write("java.util.logging.FileHandler.pattern = KonnektingSuite.log" + "\n");
-            osw.write("java.util.logging.FileHandler.limit = 10000" + "\n");
+            osw.write("java.util.logging.FileHandler.limit = 10000000" + "\n");
             osw.write("java.util.logging.FileHandler.count = 10" + "\n");
             osw.write("java.util.logging.FileHandler.formatter = de.root1.logging.JulFormatter" + "\n");
             osw.write("java.util.logging.ConsoleHandler.level = ALL" + "\n");
