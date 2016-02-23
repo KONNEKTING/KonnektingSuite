@@ -602,7 +602,7 @@ public class Main extends javax.swing.JFrame {
 
             @Override
             public boolean accept(File f) {
-                return f.isFile() && (f.getName().endsWith(".kdevice.xml") || f.getName().endsWith(".kconfig.xml"));
+                return (f.isFile() && (f.getName().endsWith(".kdevice.xml") || f.getName().endsWith(".kconfig.xml"))) || f.isDirectory();
             }
 
             @Override
