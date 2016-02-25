@@ -19,10 +19,6 @@
 package de.konnekting.suite.utils;
 
 import java.awt.Color;
-import com.rits.cloning.Cloner;
-import de.konnekting.deviceconfig.DeviceConfigContainer;
-import java.io.File;
-import java.io.IOException;
 
 /**
  *
