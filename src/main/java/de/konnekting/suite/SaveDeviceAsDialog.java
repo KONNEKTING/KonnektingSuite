@@ -24,6 +24,7 @@ import de.konnekting.suite.events.EventAddDevice;
 import de.root1.rooteventbus.RootEventBus;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
 import javax.xml.bind.JAXBException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,8 +39,8 @@ public class SaveDeviceAsDialog extends javax.swing.JDialog {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     private DeviceConfigContainer device;
-    private File newFile;
-    
+    private File configFile;
+
     private static final String CONFIG_EXTENSION = ".kconfig.xml";
 
     /**
@@ -54,20 +55,19 @@ public class SaveDeviceAsDialog extends javax.swing.JDialog {
         super.setModal(true);
         super.setLocationRelativeTo(parent);
         initComponents();
-               
+
         try {
-            newFile = device.cloneFile(projectDir);
-            this.device = new DeviceConfigContainer(newFile);
-        } catch (IOException | JAXBException | SAXException ex) {
-            log.error("Error cloning file " + newFile.getAbsolutePath(), ex);
-        }
-        
-        deviceInformationPanel.setDeviceConfig(this.device);
-        
-        if (device.hasConfiguration()) {
-            deviceDescriptionTextField.setText("KOPIE VON " + device.getDescription());
-        } else {
-            deviceDescriptionTextField.setText(device.getManufacturerName()+" "+device.getDeviceName());
+            this.device = device.makeConfigFile(projectDir);
+
+            deviceInformationPanel.setDeviceConfig(this.device);
+
+            if (device.hasConfiguration()) {
+                deviceDescriptionTextField.setText("KOPIE VON " + device.getDescription());
+            } else {
+                deviceDescriptionTextField.setText(device.getManufacturerName() + " " + device.getDeviceName());
+            }
+        } catch (IOException ex) {
+            log.error("Error creating configuration file", ex);
         }
     }
 
@@ -175,9 +175,9 @@ public class SaveDeviceAsDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void addDeviceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addDeviceButtonActionPerformed
-        
+
         device.setDescription(deviceDescriptionTextField.getText());
-        
+
         try {
             device.setIndividualAddress("1.1.");
             try {
