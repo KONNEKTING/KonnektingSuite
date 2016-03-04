@@ -162,6 +162,8 @@ public class Main extends javax.swing.JFrame {
         removeDeviceButton.setEnabled(false);
         programmAllButton.setEnabled(false);
         programmDataOnlyButton.setEnabled(false);
+        programComObjOnlyButton.setEnabled(false);
+        programParamOnlyButton.setEnabled(false);
         addDeviceButton.setEnabled(false);
         eventbus.register(this);
         
@@ -321,6 +323,8 @@ public class Main extends javax.swing.JFrame {
         boolean programmable = deviceConfig != null && Helper.checkValidPa(deviceConfig.getIndividualAddress());
         programmAllButton.setEnabled(programmable);
         programmDataOnlyButton.setEnabled(programmable);
+        programComObjOnlyButton.setEnabled(programmable);
+        programParamOnlyButton.setEnabled(programmable);
     }
 
     public void onEvent(EventDeviceChanged evt) {
@@ -345,8 +349,8 @@ public class Main extends javax.swing.JFrame {
         jSeparator2 = new javax.swing.JToolBar.Separator();
         programmAllButton = new javax.swing.JButton();
         programmDataOnlyButton = new javax.swing.JButton();
-        programComObjOnly = new javax.swing.JButton();
-        programParamOnly = new javax.swing.JButton();
+        programComObjOnlyButton = new javax.swing.JButton();
+        programParamOnlyButton = new javax.swing.JButton();
         jSeparator3 = new javax.swing.JToolBar.Separator();
         groupmonitorButton = new javax.swing.JButton();
         settingsButton = new javax.swing.JButton();
@@ -437,31 +441,31 @@ public class Main extends javax.swing.JFrame {
         });
         jToolBar.add(programmDataOnlyButton);
 
-        programComObjOnly.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/konnekting/suite/icons/ledyellow.png"))); // NOI18N
-        programComObjOnly.setText(bundle.getString("Main.programComObjOnly.text")); // NOI18N
-        programComObjOnly.setToolTipText(bundle.getString("Main.programComObjOnly.toolTipText")); // NOI18N
-        programComObjOnly.setFocusable(false);
-        programComObjOnly.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        programComObjOnly.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        programComObjOnly.addActionListener(new java.awt.event.ActionListener() {
+        programComObjOnlyButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/konnekting/suite/icons/ledyellow.png"))); // NOI18N
+        programComObjOnlyButton.setText(bundle.getString("Main.programComObjOnlyButton.text")); // NOI18N
+        programComObjOnlyButton.setToolTipText(bundle.getString("Main.programComObjOnlyButton.toolTipText")); // NOI18N
+        programComObjOnlyButton.setFocusable(false);
+        programComObjOnlyButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        programComObjOnlyButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        programComObjOnlyButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                programComObjOnlyActionPerformed(evt);
+                programComObjOnlyButtonActionPerformed(evt);
             }
         });
-        jToolBar.add(programComObjOnly);
+        jToolBar.add(programComObjOnlyButton);
 
-        programParamOnly.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/konnekting/suite/icons/ledgreen.png"))); // NOI18N
-        programParamOnly.setText(bundle.getString("Main.programParamOnly.text")); // NOI18N
-        programParamOnly.setToolTipText(bundle.getString("Main.programParamOnly.toolTipText")); // NOI18N
-        programParamOnly.setFocusable(false);
-        programParamOnly.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        programParamOnly.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        programParamOnly.addActionListener(new java.awt.event.ActionListener() {
+        programParamOnlyButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/konnekting/suite/icons/ledgreen.png"))); // NOI18N
+        programParamOnlyButton.setText(bundle.getString("Main.programParamOnlyButton.text")); // NOI18N
+        programParamOnlyButton.setToolTipText(bundle.getString("Main.programParamOnlyButton.toolTipText")); // NOI18N
+        programParamOnlyButton.setFocusable(false);
+        programParamOnlyButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        programParamOnlyButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        programParamOnlyButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                programParamOnlyActionPerformed(evt);
+                programParamOnlyButtonActionPerformed(evt);
             }
         });
-        jToolBar.add(programParamOnly);
+        jToolBar.add(programParamOnlyButton);
         jToolBar.add(jSeparator3);
 
         groupmonitorButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/konnekting/suite/icons/display.png"))); // NOI18N
@@ -684,21 +688,21 @@ public class Main extends javax.swing.JFrame {
         System.exit(0);
     }//GEN-LAST:event_exitButtonActionPerformed
 
-    private void programComObjOnlyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_programComObjOnlyActionPerformed
+    private void programComObjOnlyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_programComObjOnlyButtonActionPerformed
         StickyDeviceSelected selectdDevice = eventbus.getStickyEvent(StickyDeviceSelected.class);
         ProgramDialog pd = new ProgramDialog(this);
         pd.prepare(knx, false, true, false);
         pd.addDeviceToprogram(selectdDevice.getDeviceConfig());
         pd.setVisible(true);
-    }//GEN-LAST:event_programComObjOnlyActionPerformed
+    }//GEN-LAST:event_programComObjOnlyButtonActionPerformed
 
-    private void programParamOnlyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_programParamOnlyActionPerformed
+    private void programParamOnlyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_programParamOnlyButtonActionPerformed
         StickyDeviceSelected selectdDevice = eventbus.getStickyEvent(StickyDeviceSelected.class);
         ProgramDialog pd = new ProgramDialog(this);
         pd.prepare(knx, false, false, true);
         pd.addDeviceToprogram(selectdDevice.getDeviceConfig());
         pd.setVisible(true);
-    }//GEN-LAST:event_programParamOnlyActionPerformed
+    }//GEN-LAST:event_programParamOnlyButtonActionPerformed
 
     
     static void renderSplashFrame(Graphics2D g, int frame) {
@@ -800,8 +804,8 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JToolBar.Separator jSeparator4;
     private javax.swing.JToolBar jToolBar;
     private javax.swing.JButton openProjectButton;
-    private javax.swing.JButton programComObjOnly;
-    private javax.swing.JButton programParamOnly;
+    private javax.swing.JButton programComObjOnlyButton;
+    private javax.swing.JButton programParamOnlyButton;
     private javax.swing.JButton programmAllButton;
     private javax.swing.JButton programmDataOnlyButton;
     private javax.swing.JButton removeDeviceButton;
