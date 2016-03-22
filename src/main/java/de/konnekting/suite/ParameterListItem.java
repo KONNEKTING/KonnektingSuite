@@ -22,6 +22,7 @@ import de.konnekting.deviceconfig.DeviceConfigContainer;
 import de.konnekting.deviceconfig.utils.Helper;
 //import de.konnekting.suite.uicomponents.FloatParameterTextField;
 import de.konnekting.suite.uicomponents.NumberParameterTextField;
+import de.konnekting.suite.uicomponents.RawParameterTextField;
 import de.konnekting.xml.konnektingdevice.v0.Parameter;
 import de.konnekting.xml.konnektingdevice.v0.Parameter.Value;
 import de.konnekting.xml.konnektingdevice.v0.ParameterConfiguration;
@@ -155,16 +156,26 @@ public class ParameterListItem extends javax.swing.JPanel {
             String type = param.getValue().getType().toUpperCase();
             ParameterType paramType = ParameterType.valueOf(type);
             switch (paramType) {
-//                case FLOAT32:
-//                    comp = new FloatParameterTextField(device, param, conf);
-//                    break;
+                case RAW1:
+                case RAW2:
+                case RAW3:
+                case RAW4:
+                case RAW5:
+                case RAW6:
+                case RAW7:
+                case RAW8:
+                case RAW9:
+                case RAW10:
+                case RAW11:
+                    comp = new RawParameterTextField(device, param, conf);
+                    break;
                 case INT8:
                 case UINT8:
                 case INT16:
                 case UINT16:
                 case INT32:
                 case UINT32:
-                default: 
+                default:
                     comp = new NumberParameterTextField(device, param, conf);
             }
         } else {
