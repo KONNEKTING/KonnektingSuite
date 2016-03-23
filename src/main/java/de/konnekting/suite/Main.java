@@ -58,6 +58,9 @@ import java.util.logging.LogManager;
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
@@ -93,7 +96,6 @@ public class Main extends javax.swing.JFrame {
             osw.write("tuwien.auto.calimero.log.LogService.level = " + "ALL" + "\n");
             osw.write("de.root1.slicknx.konnekting.protocol0x00.ProgProtocol0x00Listener.level = ALL\n");
 //            osw.write("de.root1.slicknx.level = " + level.toUpperCase() + "\n");
-            
 
             osw.flush();
             ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
@@ -111,33 +113,20 @@ public class Main extends javax.swing.JFrame {
     private File projectFolder;
     private final RootEventBus eventbus = RootEventBus.getDefault();
     private static Properties properties = new Properties();
-    private Properties applicationProperties = new Properties();
-    private File propertiesFile = new File(new File(System.getProperty("user.home")),"KonnektingSuite.properties");
+    static Properties applicationProperties = new Properties();
+    static File propertiesFile = new File(new File(System.getProperty("user.home")), "KonnektingSuite.properties");
     private Knx knx;
     private final GroupMonitorFrame monitor;
 
-    
     public static Properties getProperties() {
         return properties;
     }
-     
+
     /**
      * Creates new form Main
      */
     public Main() {
-        
-        try {
-            properties.load(new FileReader(propertiesFile));
-        } catch (FileNotFoundException ex) {
-            log.info("Properties file not found. Skip to defaults.");
-        } catch (IOException ex) {
-            log.error("Error reading setting properties", ex);
-        }
-        try {
-            applicationProperties.load(getClass().getResourceAsStream("/properties/application.properties"));
-        } catch (IOException ex) {
-            log.error("Error reading application properties", ex);
-        }
+
         Runtime.getRuntime().addShutdownHook(new Thread() {
 
             @Override
@@ -149,16 +138,16 @@ public class Main extends javax.swing.JFrame {
             }
 
         });
-        
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         initComponents();
-        
+
         boolean debug = Boolean.getBoolean("de.root1.slicknx.konnekting.debug");
-        String versionMsg = "KONNEKTING Suite - Version "+applicationProperties.getProperty("application.version","n/a")+" Build "+applicationProperties.getProperty("application.build","n/a")+(debug?" DEBUG MODE!":"");
+        String versionMsg = "KONNEKTING Suite - Version " + applicationProperties.getProperty("application.version", "n/a") + " Build " + applicationProperties.getProperty("application.build", "n/a") + (debug ? " DEBUG MODE!" : "");
         log.info(versionMsg);
         RootEventBus.getDefault().post(new EventConsoleMessage(versionMsg));
-        RootEventBus.getDefault().post(new EventConsoleMessage("Running on "+System.getProperty("os.name")));
-        
+        RootEventBus.getDefault().post(new EventConsoleMessage("Running on " + System.getProperty("os.name")));
+
         removeDeviceButton.setEnabled(false);
         programmAllButton.setEnabled(false);
         programmDataOnlyButton.setEnabled(false);
@@ -166,7 +155,7 @@ public class Main extends javax.swing.JFrame {
         programParamOnlyButton.setEnabled(false);
         addDeviceButton.setEnabled(false);
         eventbus.register(this);
-        
+
         String access = properties.getProperty(SettingsDialog.PROP_ACCESS, SettingsDialog.ACCESS_ROUTING);
         String routingMulticast = properties.getProperty(SettingsDialog.PROP_ROUTING_MULTICASTIP, "224.0.23.12");
         String tunnelingIp = properties.getProperty(SettingsDialog.PROP_TUNNELING_IP, "192.168.0.100");
@@ -195,7 +184,7 @@ public class Main extends javax.swing.JFrame {
                     log.info("Error. Unknown ACCESS TYPE: " + access);
                     System.exit(1);
             }
-            
+
             knx.addGroupAddressListener("*", new GroupAddressListener() {
                 @Override
                 public void readRequest(GroupAddressEvent event) {
@@ -211,14 +200,13 @@ public class Main extends javax.swing.JFrame {
                 public void write(GroupAddressEvent event) {
                     process();
                 }
-                
-                public void process(){
+
+                public void process() {
                     RootEventBus.getDefault().post(new EventConsoleMessage("KNX Telegramm entdeckt. Verbindung scheint in Ordnung zu sein."));
                     knx.removeGroupAddressListener("*", this);
                 }
             });
-            
-            
+
         } catch (KnxException ex) {
             RootEventBus.getDefault().post(new EventConsoleMessage("Fehler beim Öffnen der KNX Verbindung: " + access, ex));
             log.error("Error creating knx access.", ex);
@@ -226,8 +214,6 @@ public class Main extends javax.swing.JFrame {
             RootEventBus.getDefault().post(new EventConsoleMessage("Fehler beim Öffnen der KNX Verbindung.", ex));
             log.error("Error creating knx access.", ex);
         }
-        
-        
 
         Dimension size = new Dimension();
         size.width = Integer.parseInt(properties.getProperty("windowwidth", "1024"));
@@ -243,17 +229,15 @@ public class Main extends javax.swing.JFrame {
         }
         topSplitPane.setDividerLocation(Integer.parseInt(properties.getProperty("topsplitpanedividerlocation", "180")));
         bottomSplitPane.setDividerLocation(Integer.parseInt(properties.getProperty("bottomsplitpanedividerlocation", "300")));
-        
-        
+
         monitor = new GroupMonitorFrame(this);
-        if (knx!=null) {
+        if (knx != null) {
             monitor.setKnx(knx);
         }
-        
-        
+
         boolean lastFolder = Boolean.parseBoolean(properties.getProperty(SettingsDialog.PROP_STARTUP_LASTFOLDER, "false"));
         boolean askFolder = Boolean.parseBoolean(properties.getProperty(SettingsDialog.PROP_STARTUP_ASKFOLDER, "true"));
-        
+
         if (askFolder) {
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
@@ -261,12 +245,12 @@ public class Main extends javax.swing.JFrame {
                     openProjectButton.doClick();
                 }
             });
-            
+
         } else if (lastFolder) {
             projectFolder = new File(properties.getProperty("projectfolder", System.getProperty("user.home")));
             eventbus.post(new EventProjectOpened(projectFolder));
         }
-        
+
         List<Image> iconList = new ArrayList<>();
         try {
             iconList.add(ImageIO.read(getClass().getClassLoader().getResource("de/konnekting/suite/icons/KONNEKTING-Suite-16x16-Icon.png")));
@@ -278,8 +262,7 @@ public class Main extends javax.swing.JFrame {
             ex.printStackTrace();
         }
         setIconImages(iconList);
-        
-                
+
         setVisible(true);
     }
 
@@ -356,6 +339,7 @@ public class Main extends javax.swing.JFrame {
         settingsButton = new javax.swing.JButton();
         jSeparator4 = new javax.swing.JToolBar.Separator();
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
+        aboutButton = new javax.swing.JButton();
         exitButton = new javax.swing.JButton();
         statusPanel = new de.konnekting.suite.StatusPanel();
         bottomSplitPane = new javax.swing.JSplitPane();
@@ -495,6 +479,19 @@ public class Main extends javax.swing.JFrame {
         jToolBar.add(settingsButton);
         jToolBar.add(jSeparator4);
         jToolBar.add(filler1);
+
+        aboutButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/konnekting/suite/icons/help.png"))); // NOI18N
+        aboutButton.setText(bundle.getString("Main.aboutButton.text")); // NOI18N
+        aboutButton.setToolTipText(bundle.getString("Main.aboutButton.toolTipText")); // NOI18N
+        aboutButton.setFocusable(false);
+        aboutButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        aboutButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        aboutButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                aboutButtonActionPerformed(evt);
+            }
+        });
+        jToolBar.add(aboutButton);
 
         exitButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/konnekting/suite/icons/exit.png"))); // NOI18N
         exitButton.setText(bundle.getString("Main.exitButton.text")); // NOI18N
@@ -650,7 +647,7 @@ public class Main extends javax.swing.JFrame {
             try {
                 DeviceConfigContainer device = new DeviceConfigContainer(selectedFile);
                 SaveDeviceAsDialog.showDialog(this, projectFolder, device);
-                
+
             } catch (JAXBException | SAXException ex) {
                 RootEventBus.getDefault().post(new EventConsoleMessage("Fehler beim Hinzufügen eines Gerätes.", ex));
             }
@@ -704,79 +701,61 @@ public class Main extends javax.swing.JFrame {
         pd.setVisible(true);
     }//GEN-LAST:event_programParamOnlyButtonActionPerformed
 
-    
-    static void renderSplashFrame(Graphics2D g, int frame) {
-        g.setComposite(AlphaComposite.Clear);
-        g.fillRect(0, 0, 400, 300);
-        g.setPaintMode();
-        g.setColor(Color.BLACK);
-        g.setFont(Font.decode(Font.MONOSPACED));
-        String s = "[";
-
-        for (int i = 0; i < frame; i++) {
-            s += "\u2589";
-        }
-        for (int i = frame - 1; i < 10; i++) {
-            s += " ";
-        }
-
-        s += "]";
-
-        g.drawString(s, 10, 290);
-    }
+    private void aboutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutButtonActionPerformed
+        new AboutDialog(this).setVisible(true);
+    }//GEN-LAST:event_aboutButtonActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
 
-        final SplashScreen splash = SplashScreen.getSplashScreen();
-        if (splash == null) {
-            log.info("No splashscreen available");
-        } else {
-            Graphics2D g = splash.createGraphics();
-            if (g == null) {
-                log.info("g is null");
-                return;
-            }
-            for (int i = 0; i < 10; i++) {
-                renderSplashFrame(g, i);
-                splash.update();
-                try {
-                    Thread.sleep(150);
-                } catch (InterruptedException e) {
-                }
-            }
-            splash.close();
-        }
-
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 log.info("LaF Name: '" + info.getName() + "'");
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
+                    break;
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             System.err.println("Error setting Nimbus LaF. Continue with default.");
         }
-//        try {
-//            // Set System L&F
-//            UIManager.setLookAndFeel(
-//                    UIManager.getSystemLookAndFeelClassName());
-//        } catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-//            // handle exception
-//        }
-        // handle exception
-        // handle exception
-        // handle exception
-        //</editor-fold>
+
+        final SplashPanel splashPanel = new SplashPanel();
+        
+        Thread t = new Thread("Load properties") {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(300);
+                } catch (InterruptedException ex) {
+
+                }
+                try {
+                    properties.load(new FileReader(propertiesFile));
+                } catch (FileNotFoundException ex) {
+                    log.info("Properties file not found. Skip to defaults.");
+                } catch (IOException ex) {
+                    log.error("Error reading setting properties", ex);
+                }
+                try {
+                    applicationProperties.load(getClass().getResourceAsStream("/properties/application.properties"));
+                } catch (IOException ex) {
+                    log.error("Error reading application properties", ex);
+                }
+                splashPanel.setVersionText("Version " + applicationProperties.getProperty("application.version", "n/a") + " Build " + applicationProperties.getProperty("application.build", "n/a") + (Boolean.getBoolean("de.root1.slicknx.konnekting.debug") ? " DEBUG MODE!" : ""));
+            }
+        };
+        t.start();
+
+        for (int i = 1; i <= 100; i++) {
+            splashPanel.setProgress(i);
+            try {
+                Thread.sleep(30);
+            } catch (InterruptedException e) {
+            }
+        }
 
         //</editor-fold>
 
@@ -790,6 +769,7 @@ public class Main extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton aboutButton;
     private javax.swing.JButton addDeviceButton;
     private javax.swing.JSplitPane bottomSplitPane;
     private de.konnekting.suite.ConsolePanel consolePanel;
