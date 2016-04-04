@@ -19,26 +19,33 @@
 package de.konnekting.suite;
 
 import de.konnekting.deviceconfig.utils.Helper;
+import de.konnekting.suite.events.StickyDeviceSelected;
 import de.konnekting.suite.uicomponents.GroupAddressTextField;
+import de.root1.rooteventbus.RootEventBus;
 import javax.swing.DefaultCellEditor;
 import javax.swing.InputVerifier;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.table.TableCellEditor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author achristian
  */
 public class CommObjectTable extends javax.swing.JPanel {
+    
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
-    DefaultCellEditor gaEditor;
+    private final DefaultCellEditor gaEditor;
 
     /**
      * Creates new form CommObjectTable
      */
     public CommObjectTable() {
+        RootEventBus.getDefault().registerSticky(this);
         InputVerifier gaVerifier = getGaInputVerifier();
         gaEditor = getGaTableCellEditor(gaVerifier);
 
@@ -50,6 +57,20 @@ public class CommObjectTable extends javax.swing.JPanel {
         table.getColumnModel().getColumn(3).setPreferredWidth(60);
         table.getColumnModel().getColumn(4).setPreferredWidth(150);
         table.getColumnModel().getColumn(5).setPreferredWidth(150);
+        
+        
+    }
+    
+    public void onEvent(StickyDeviceSelected ev) {
+        
+        // save all current data, end input
+        if (table.isEditing()) {
+            table.getCellEditor().stopCellEditing();
+            log.debug("Stopping cell editing before aplying new device to table");
+        }
+        
+        // set new device data
+        dataModel.setDeviceData(ev.getDeviceConfig());
     }
 
     private InputVerifier getGaInputVerifier() {

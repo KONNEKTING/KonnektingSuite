@@ -40,7 +40,7 @@ import org.xml.sax.SAXException;
  */
 public class DeviceList extends javax.swing.JPanel {
     
-    Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LoggerFactory.getLogger(getClass());
 
     private final RootEventBus eventBus = RootEventBus.getDefault();
     private File projectFolder;

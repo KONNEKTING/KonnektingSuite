@@ -37,7 +37,6 @@ public class CommObjectTableModel extends DefaultTableModel {
     private final List<CommObject> commObjects = new ArrayList<>();
 
     public CommObjectTableModel() {
-        RootEventBus.getDefault().registerSticky(this);
     }
 
     public void setDeviceData(DeviceConfigContainer device) {
@@ -196,8 +195,6 @@ public class CommObjectTableModel extends DefaultTableModel {
         }
     }
 
-    public void onEvent(StickyDeviceSelected ev) {
-        setDeviceData(ev.getDeviceConfig());
-    }
+    
 
 }
