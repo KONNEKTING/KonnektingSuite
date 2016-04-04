@@ -65,8 +65,8 @@ public class CommObjectTable extends javax.swing.JPanel {
         
         // save all current data, end input
         if (table.isEditing()) {
-            table.getCellEditor().stopCellEditing();
-            log.debug("Stopping cell editing before aplying new device to table");
+            table.getCellEditor().cancelCellEditing();
+            log.debug("Cancel cell editing before aplying new device to table");
         }
         
         // set new device data
