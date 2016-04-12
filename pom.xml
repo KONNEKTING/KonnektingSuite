@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.konnekting</groupId>
     <artifactId>konnekting-suite</artifactId>
-    <version>1.0.0-BETA3-SNAPSHOT</version>
+    <version>1.0.0-BETA3</version>
     <packaging>jar</packaging>
     <name>KONNEKTING Suite ${project.version}</name>
     <properties>
@@ -102,9 +102,6 @@
                         <manifest>
                             <mainClass>de.konnekting.suite.Main</mainClass>
                         </manifest>
-                        <manifestEntries>
-                            <SplashScreen-Image>splash/splash.png</SplashScreen-Image>
-                        </manifestEntries>
                     </archive>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
