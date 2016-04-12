@@ -169,17 +169,17 @@ public class Main extends javax.swing.JFrame {
                     knx = new Knx(individualAddress);
                     knx.setLoopbackMode(true);
                     log.info("Starting in ROUTING mode");
-                    RootEventBus.getDefault().post(new EventConsoleMessage(bundle.getString("MainWindow.ConsoleMsg.KnxConnection")+": IP-Router"));
+                    RootEventBus.getDefault().post(new EventConsoleMessage(bundle.getString("MainWindow.ConsoleMsg.knxConnection")+"IP-Router"));
                     break;
                 case SettingsDialog.ACCESS_TUNNELING:
                     knx = new Knx(InetAddress.getByName(tunnelingIp));
                     log.info("Starting in TUNNELING mode");
-                    RootEventBus.getDefault().post(new EventConsoleMessage(bundle.getString("MainWindow.ConsoleMsg.KnxConnection")+": IP-Interface"));
+                    RootEventBus.getDefault().post(new EventConsoleMessage(bundle.getString("MainWindow.ConsoleMsg.knxConnection")+"IP-Interface"));
                     break;
                 case SettingsDialog.ACCESS_TPUART:
                     knx = new Knx(Knx.SerialType.TPUART, tpuartDevice);
                     log.info("Starting in TPUART mode");
-                    RootEventBus.getDefault().post(new EventConsoleMessage(bundle.getString("MainWindow.ConsoleMsg.KnxConnection")+": TPUART"));
+                    RootEventBus.getDefault().post(new EventConsoleMessage(bundle.getString("MainWindow.ConsoleMsg.knxConnection")+"TPUART"));
                     break;
                 default:
                     log.info("Error. Unknown ACCESS TYPE: " + access);
@@ -203,7 +203,7 @@ public class Main extends javax.swing.JFrame {
                 }
 
                 public void process() {
-                    RootEventBus.getDefault().post(new EventConsoleMessage("KNX Telegramm entdeckt. Verbindung scheint in Ordnung zu sein."));
+                    RootEventBus.getDefault().post(new EventConsoleMessage(bundle.getString("MainWindow.ConsoleMsg.detectedTelegram")));
                     knx.removeGroupAddressListener("*", this);
                 }
             });
