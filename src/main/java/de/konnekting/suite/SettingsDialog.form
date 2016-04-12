@@ -238,9 +238,7 @@
                 <Component class="javax.swing.JTextField" name="ipRouterMulticasttextField">
                   <Properties>
                     <Property name="editable" type="boolean" value="false"/>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="de/konnekting/suite/Bundle.properties" key="SettingsDialog.ipRouterMulticasttextField.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="224.0.23.12" noResource="true"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ipRouterMulticasttextFieldActionPerformed"/>
@@ -319,9 +317,7 @@
                 </Component>
                 <Component class="javax.swing.JTextField" name="ipInterfaceIpTextField">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="de/konnekting/suite/Bundle.properties" key="SettingsDialog.ipInterfaceIpTextField.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="192.168.0.100" noResource="true"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ipInterfaceIpTextFieldActionPerformed"/>
@@ -386,9 +382,7 @@
                 </Component>
                 <Component class="javax.swing.JTextField" name="tpuartDevicetextField">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="de/konnekting/suite/Bundle.properties" key="SettingsDialog.tpuartDevicetextField.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="COM3" noResource="true"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tpuartDevicetextFieldActionPerformed"/>
@@ -406,9 +400,7 @@
             </Component>
             <Component class="javax.swing.JTextField" name="individualAddressTextField">
               <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="de/konnekting/suite/Bundle.properties" key="SettingsDialog.individualAddressTextField.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
-                </Property>
+                <Property name="text" type="java.lang.String" value="1.0.255" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="individualAddressTextFieldActionPerformed"/>

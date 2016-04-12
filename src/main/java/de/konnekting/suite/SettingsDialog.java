@@ -177,7 +177,7 @@ public class SettingsDialog extends javax.swing.JDialog {
         multicastipLabel.setText(bundle.getString("SettingsDialog.multicastipLabel.text")); // NOI18N
 
         ipRouterMulticasttextField.setEditable(false);
-        ipRouterMulticasttextField.setText(bundle.getString("SettingsDialog.ipRouterMulticasttextField.text")); // NOI18N
+        ipRouterMulticasttextField.setText("224.0.23.12"); // NOI18N
         ipRouterMulticasttextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ipRouterMulticasttextFieldActionPerformed(evt);
@@ -226,7 +226,7 @@ public class SettingsDialog extends javax.swing.JDialog {
 
         ipAddressLabel.setText(bundle.getString("SettingsDialog.ipAddressLabel.text")); // NOI18N
 
-        ipInterfaceIpTextField.setText(bundle.getString("SettingsDialog.ipInterfaceIpTextField.text")); // NOI18N
+        ipInterfaceIpTextField.setText("192.168.0.100"); // NOI18N
         ipInterfaceIpTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ipInterfaceIpTextFieldActionPerformed(evt);
@@ -266,7 +266,7 @@ public class SettingsDialog extends javax.swing.JDialog {
 
         tpuartinterfaceLabel.setText(bundle.getString("SettingsDialog.tpuartinterfaceLabel.text")); // NOI18N
 
-        tpuartDevicetextField.setText(bundle.getString("SettingsDialog.tpuartDevicetextField.text")); // NOI18N
+        tpuartDevicetextField.setText("COM3"); // NOI18N
         tpuartDevicetextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tpuartDevicetextFieldActionPerformed(evt);
@@ -301,7 +301,7 @@ public class SettingsDialog extends javax.swing.JDialog {
 
         individualAddressLabel.setText(bundle.getString("SettingsDialog.individualAddressLabel.text")); // NOI18N
 
-        individualAddressTextField.setText(bundle.getString("SettingsDialog.individualAddressTextField.text")); // NOI18N
+        individualAddressTextField.setText("1.0.255"); // NOI18N
         individualAddressTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 individualAddressTextFieldActionPerformed(evt);
