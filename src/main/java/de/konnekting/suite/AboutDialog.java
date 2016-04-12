@@ -37,9 +37,9 @@ public class AboutDialog extends javax.swing.JDialog {
     private void initComponents() {
 
         versionLabel = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        donateButton = new javax.swing.JButton();
         logoLabel = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
+        websiteButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setMaximumSize(null);
@@ -49,39 +49,40 @@ public class AboutDialog extends javax.swing.JDialog {
 
         versionLabel.setFont(new java.awt.Font("Monospaced", 0, 9)); // NOI18N
         versionLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        versionLabel.setText("loading ...");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle"); // NOI18N
+        versionLabel.setText(bundle.getString("AboutDialog.versionLabel.text")); // NOI18N
         getContentPane().add(versionLabel);
         versionLabel.setBounds(10, 280, 380, 12);
 
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/konnekting/suite/btn_donateCC_LG.gif"))); // NOI18N
-        jButton1.setMaximumSize(new java.awt.Dimension(140, 47));
-        jButton1.setMinimumSize(new java.awt.Dimension(140, 47));
-        jButton1.setPreferredSize(new java.awt.Dimension(140, 47));
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        donateButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/konnekting/suite/btn_donateCC_LG.gif"))); // NOI18N
+        donateButton.setMaximumSize(new java.awt.Dimension(140, 47));
+        donateButton.setMinimumSize(new java.awt.Dimension(140, 47));
+        donateButton.setPreferredSize(new java.awt.Dimension(140, 47));
+        donateButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                donateButtonActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton1);
-        jButton1.setBounds(10, 310, 120, 60);
+        getContentPane().add(donateButton);
+        donateButton.setBounds(10, 310, 120, 60);
 
         logoLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/splash/splash.png"))); // NOI18N
         getContentPane().add(logoLabel);
         logoLabel.setBounds(0, 0, 400, 300);
 
-        jButton2.setText("KONNEKTING Website");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        websiteButton.setText(bundle.getString("AboutDialog.websiteButton.text")); // NOI18N
+        websiteButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                websiteButtonActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton2);
-        jButton2.setBounds(140, 310, 250, 60);
+        getContentPane().add(websiteButton);
+        websiteButton.setBounds(140, 310, 250, 60);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void donateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_donateButtonActionPerformed
 
         Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
         if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
@@ -90,9 +91,9 @@ public class AboutDialog extends javax.swing.JDialog {
             } catch (Exception e) {
             }
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_donateButtonActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void websiteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_websiteButtonActionPerformed
         Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
         if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
             try {
@@ -100,12 +101,12 @@ public class AboutDialog extends javax.swing.JDialog {
             } catch (Exception e) {
             }
         }
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_websiteButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton donateButton;
     private javax.swing.JLabel logoLabel;
     private javax.swing.JLabel versionLabel;
+    private javax.swing.JButton websiteButton;
     // End of variables declaration//GEN-END:variables
 }

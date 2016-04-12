@@ -70,11 +70,11 @@ public class DeviceInformationPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         deviceInfoPanel = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
+        manufacturerIdLabel = new javax.swing.JLabel();
+        deviceIdLabel = new javax.swing.JLabel();
+        deviceRevisionLabel = new javax.swing.JLabel();
+        manufacturerNameLabel = new javax.swing.JLabel();
+        deviceNameLabel = new javax.swing.JLabel();
         manufacturerIdTextField = new javax.swing.JTextField();
         deviceIdTextField = new javax.swing.JTextField();
         revisionTextField = new javax.swing.JTextField();
@@ -84,15 +84,15 @@ public class DeviceInformationPanel extends javax.swing.JPanel {
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle"); // NOI18N
         deviceInfoPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("DeviceInformationPanel.deviceInfoPanel.border.title"))); // NOI18N
 
-        jLabel1.setText(bundle.getString("DeviceInformationPanel.jLabel1.text")); // NOI18N
+        manufacturerIdLabel.setText(bundle.getString("DeviceInformationPanel.manufacturerIdLabel.text")); // NOI18N
 
-        jLabel2.setText(bundle.getString("DeviceInformationPanel.jLabel2.text")); // NOI18N
+        deviceIdLabel.setText(bundle.getString("DeviceInformationPanel.deviceIdLabel.text")); // NOI18N
 
-        jLabel3.setText(bundle.getString("DeviceInformationPanel.jLabel3.text")); // NOI18N
+        deviceRevisionLabel.setText(bundle.getString("DeviceInformationPanel.deviceRevisionLabel.text")); // NOI18N
 
-        jLabel4.setText(bundle.getString("DeviceInformationPanel.jLabel4.text")); // NOI18N
+        manufacturerNameLabel.setText(bundle.getString("DeviceInformationPanel.manufacturerNameLabel.text")); // NOI18N
 
-        jLabel5.setText(bundle.getString("DeviceInformationPanel.jLabel5.text")); // NOI18N
+        deviceNameLabel.setText(bundle.getString("DeviceInformationPanel.deviceNameLabel.text")); // NOI18N
 
         manufacturerIdTextField.setEditable(false);
 
@@ -112,19 +112,19 @@ public class DeviceInformationPanel extends javax.swing.JPanel {
             deviceInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(deviceInfoPanelLayout.createSequentialGroup()
                 .addGroup(deviceInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(manufacturerIdLabel)
+                    .addComponent(manufacturerNameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(deviceNameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(deviceInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(deviceInfoPanelLayout.createSequentialGroup()
                         .addComponent(manufacturerIdTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel2)
+                        .addComponent(deviceIdLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(deviceIdTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel3)
+                        .addComponent(deviceRevisionLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(revisionTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 57, Short.MAX_VALUE))
                     .addComponent(devicenameTextField)
@@ -134,19 +134,19 @@ public class DeviceInformationPanel extends javax.swing.JPanel {
             deviceInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(deviceInfoPanelLayout.createSequentialGroup()
                 .addGroup(deviceInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
+                    .addComponent(manufacturerIdLabel)
                     .addComponent(manufacturerIdTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2)
+                    .addComponent(deviceIdLabel)
                     .addComponent(deviceIdTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3)
+                    .addComponent(deviceRevisionLabel)
                     .addComponent(revisionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(deviceInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
+                    .addComponent(manufacturerNameLabel)
                     .addComponent(manufacturernameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(deviceInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
+                    .addComponent(deviceNameLabel)
                     .addComponent(devicenameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -165,15 +165,15 @@ public class DeviceInformationPanel extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel deviceIdLabel;
     private javax.swing.JTextField deviceIdTextField;
     private javax.swing.JPanel deviceInfoPanel;
+    private javax.swing.JLabel deviceNameLabel;
+    private javax.swing.JLabel deviceRevisionLabel;
     private javax.swing.JTextField devicenameTextField;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel manufacturerIdLabel;
     private javax.swing.JTextField manufacturerIdTextField;
+    private javax.swing.JLabel manufacturerNameLabel;
     private javax.swing.JTextField manufacturernameTextField;
     private javax.swing.JTextField revisionTextField;
     // End of variables declaration//GEN-END:variables

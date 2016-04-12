@@ -103,12 +103,12 @@ public class IndividualAddressInputPanel extends javax.swing.JPanel implements C
         lineTextField = new de.konnekting.suite.uicomponents.NumberTextField();
         memberTextField = new de.konnekting.suite.uicomponents.NumberTextField();
 
-        jLabel1.setText(".");
+        jLabel1.setText("."); // NOI18N
 
-        jLabel2.setText(".");
+        jLabel2.setText("."); // NOI18N
 
-        parkButton.setText("Parken");
-        parkButton.setActionCommand("Parken");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle"); // NOI18N
+        parkButton.setText(bundle.getString("IndividualAddressInputPanel.parkButton.text")); // NOI18N
         parkButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 parkButtonActionPerformed(evt);
@@ -116,10 +116,10 @@ public class IndividualAddressInputPanel extends javax.swing.JPanel implements C
         });
 
         areaTextField.setColumns(3);
-        areaTextField.setText("1");
+        areaTextField.setText("1"); // NOI18N
 
         lineTextField.setColumns(3);
-        lineTextField.setText("1");
+        lineTextField.setText("1"); // NOI18N
 
         memberTextField.setColumns(4);
 

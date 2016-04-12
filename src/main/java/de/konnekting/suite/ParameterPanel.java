@@ -49,13 +49,13 @@ public class ParameterPanel extends javax.swing.JPanel {
         device = ev.getDeviceConfig();
 
         if (device==null) {
-            deviceDescriptionLabel.setText("Gerät: ");  
+            deviceDescriptionLabel.setText(java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle").getString("ParameterPanel.deviceDescriptionLabel.text"));  
             groupList.setListData(new String[]{});
             return;
         } 
         parameterList.setDevice(device);
         
-        deviceDescriptionLabel.setText("Gerät: "+device.getIndividualAddress() +" "+ device.getDescription());
+        deviceDescriptionLabel.setText(java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle").getString("ParameterPanel.deviceDescriptionLabel.text")+device.getIndividualAddress() +" "+ device.getDescription());
 
         List<ParameterGroup> groups = device.getParameterGroups();
 

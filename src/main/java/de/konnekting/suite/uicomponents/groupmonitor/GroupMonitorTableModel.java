@@ -20,6 +20,7 @@ package de.konnekting.suite.uicomponents.groupmonitor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -28,6 +29,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class GroupMonitorTableModel extends DefaultTableModel {
 
+    private final ResourceBundle rb = java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle");
     private final List<GroupAddressEventContainer> events = new ArrayList<>();
 
     public void addEvent(GroupAddressEventContainer event) {
@@ -64,17 +66,17 @@ public class GroupMonitorTableModel extends DefaultTableModel {
         // 5 data
         switch (columnIndex) {
             case 0:
-                return "Nr";
+                return rb.getString(getClass().getSimpleName()+".tableheader.number");// Nr
             case 1:
-                return "Zeit";
+                return rb.getString(getClass().getSimpleName()+".tableheader.time");// "Zeit";
             case 2:
-                return "Sender";
+                return rb.getString(getClass().getSimpleName()+".tableheader.sender");// "Sender";
             case 3:
-                return "Telegramm";            
+                return rb.getString(getClass().getSimpleName()+".tableheader.telegram");// "Telegramm";            
             case 4:
-                return "Gruppenadresse";
+                return rb.getString(getClass().getSimpleName()+".tableheader.groupaddress");// "Gruppenadresse";
             case 5:
-                return "Daten";
+                return rb.getString(getClass().getSimpleName()+".tableheader.data");// "Daten";
             default:
                 throw new IllegalArgumentException("Column " + columnIndex + " not known");
         }

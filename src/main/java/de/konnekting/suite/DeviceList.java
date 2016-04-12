@@ -116,9 +116,6 @@ public class DeviceList extends javax.swing.JPanel {
         jScrollPane = new javax.swing.JScrollPane();
         deviceList = new javax.swing.JList();
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle"); // NOI18N
-        deviceListCellRenderer.setText(bundle.getString("DeviceList.deviceListCellRenderer.text")); // NOI18N
-
         deviceList.setModel(deviceListModel);
         deviceList.setCellRenderer(deviceListCellRenderer);
         deviceList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {

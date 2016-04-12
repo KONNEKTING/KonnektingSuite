@@ -90,7 +90,6 @@ public class SaveDeviceAsDialog extends javax.swing.JDialog {
         newDeviceNamePanel = new javax.swing.JPanel();
         descriptionLabel = new javax.swing.JLabel();
         deviceDescriptionTextField = new javax.swing.JTextField();
-        noteLabel = new javax.swing.JLabel();
         deviceInformationPanel = new de.konnekting.suite.DeviceInformationPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -115,8 +114,6 @@ public class SaveDeviceAsDialog extends javax.swing.JDialog {
 
         descriptionLabel.setText(bundle.getString("SaveDeviceAsDialog.descriptionLabel.text")); // NOI18N
 
-        noteLabel.setText(bundle.getString("SaveDeviceAsDialog.noteLabel.text")); // NOI18N
-
         javax.swing.GroupLayout newDeviceNamePanelLayout = new javax.swing.GroupLayout(newDeviceNamePanel);
         newDeviceNamePanel.setLayout(newDeviceNamePanelLayout);
         newDeviceNamePanelLayout.setHorizontalGroup(
@@ -124,18 +121,13 @@ public class SaveDeviceAsDialog extends javax.swing.JDialog {
             .addGroup(newDeviceNamePanelLayout.createSequentialGroup()
                 .addComponent(descriptionLabel)
                 .addGap(10, 10, 10)
-                .addComponent(deviceDescriptionTextField))
-            .addComponent(noteLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addComponent(deviceDescriptionTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 369, Short.MAX_VALUE))
         );
         newDeviceNamePanelLayout.setVerticalGroup(
             newDeviceNamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(newDeviceNamePanelLayout.createSequentialGroup()
-                .addGroup(newDeviceNamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(descriptionLabel)
-                    .addComponent(deviceDescriptionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(noteLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 35, Short.MAX_VALUE))
+            .addGroup(newDeviceNamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(descriptionLabel)
+                .addComponent(deviceDescriptionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -146,12 +138,12 @@ public class SaveDeviceAsDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(newDeviceNamePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(deviceInformationPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 493, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(addDeviceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cancelButton))
-                    .addComponent(deviceInformationPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 485, Short.MAX_VALUE))
+                        .addComponent(cancelButton)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -159,9 +151,9 @@ public class SaveDeviceAsDialog extends javax.swing.JDialog {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(deviceInformationPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(newDeviceNamePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelButton)
                     .addComponent(addDeviceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -201,6 +193,5 @@ public class SaveDeviceAsDialog extends javax.swing.JDialog {
     private javax.swing.JTextField deviceDescriptionTextField;
     private de.konnekting.suite.DeviceInformationPanel deviceInformationPanel;
     private javax.swing.JPanel newDeviceNamePanel;
-    private javax.swing.JLabel noteLabel;
     // End of variables declaration//GEN-END:variables
 }

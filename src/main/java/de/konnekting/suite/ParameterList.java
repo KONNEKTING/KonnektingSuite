@@ -49,7 +49,7 @@ public class ParameterList extends javax.swing.JPanel {
 
             removeAll();
             initComponents();
-            jLabel1.setText("Anzahl Parameter: " + list.size());
+            numberOfParamsLabel.setText(java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle").getString("ParameterList.numberOfParamsLabel.text") + list.size());
             
             GridBagConstraints gridBagConstraints;
 
@@ -91,30 +91,30 @@ public class ParameterList extends javax.swing.JPanel {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        jLabel1 = new javax.swing.JLabel();
+        numberOfParamsLabel = new javax.swing.JLabel();
 
         setLayout(new java.awt.GridBagLayout());
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle"); // NOI18N
-        jLabel1.setText(bundle.getString("ParameterList.jLabel1.text")); // NOI18N
+        numberOfParamsLabel.setText(bundle.getString("ParameterList.numberOfParamsLabel.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 16, 0);
-        add(jLabel1, gridBagConstraints);
+        add(numberOfParamsLabel, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel numberOfParamsLabel;
     // End of variables declaration//GEN-END:variables
 
     void setDevice(DeviceConfigContainer device) {
         this.device = device;
         removeAll();
         initComponents();
-        jLabel1.setText("Anzahl Parameter: ");
+        numberOfParamsLabel.setText(java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle").getString("ParameterList.numberOfParamsLabel.text"));
     }
 }

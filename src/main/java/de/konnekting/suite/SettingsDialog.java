@@ -107,41 +107,27 @@ public class SettingsDialog extends javax.swing.JDialog {
     private void initComponents() {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
-        jPanel3 = new javax.swing.JPanel();
         settingsTabbedPane = new javax.swing.JTabbedPane();
         generalPanel = new javax.swing.JPanel();
         lastFolderCheckbox = new javax.swing.JCheckBox();
         askFolderCheckbox = new javax.swing.JCheckBox();
         knxPanel = new javax.swing.JPanel();
         ipRouterPanel = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        multicastipLabel = new javax.swing.JLabel();
         ipRouterMulticasttextField = new javax.swing.JTextField();
         ipRouterRadioButton = new javax.swing.JRadioButton();
         ipInterfaceRadioButton = new javax.swing.JRadioButton();
         ipInterfacePanel = new javax.swing.JPanel();
-        jLabel3 = new javax.swing.JLabel();
+        ipAddressLabel = new javax.swing.JLabel();
         ipInterfaceIpTextField = new javax.swing.JTextField();
         tpuartRadioButton = new javax.swing.JRadioButton();
         tpuartPanel = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
+        tpuartinterfaceLabel = new javax.swing.JLabel();
         tpuartDevicetextField = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
+        individualAddressLabel = new javax.swing.JLabel();
         individualAddressTextField = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
+        changesApplyOnRestartLabel = new javax.swing.JLabel();
         saveButton = new javax.swing.JButton();
-
-        jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
-        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -188,7 +174,7 @@ public class SettingsDialog extends javax.swing.JDialog {
 
         ipRouterPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jLabel1.setText(bundle.getString("SettingsDialog.jLabel1.text")); // NOI18N
+        multicastipLabel.setText(bundle.getString("SettingsDialog.multicastipLabel.text")); // NOI18N
 
         ipRouterMulticasttextField.setEditable(false);
         ipRouterMulticasttextField.setText(bundle.getString("SettingsDialog.ipRouterMulticasttextField.text")); // NOI18N
@@ -204,7 +190,7 @@ public class SettingsDialog extends javax.swing.JDialog {
             ipRouterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(ipRouterPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
+                .addComponent(multicastipLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ipRouterMulticasttextField, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -214,7 +200,7 @@ public class SettingsDialog extends javax.swing.JDialog {
             .addGroup(ipRouterPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(ipRouterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
+                    .addComponent(multicastipLabel)
                     .addComponent(ipRouterMulticasttextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -238,7 +224,7 @@ public class SettingsDialog extends javax.swing.JDialog {
 
         ipInterfacePanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jLabel3.setText(bundle.getString("SettingsDialog.jLabel3.text")); // NOI18N
+        ipAddressLabel.setText(bundle.getString("SettingsDialog.ipAddressLabel.text")); // NOI18N
 
         ipInterfaceIpTextField.setText(bundle.getString("SettingsDialog.ipInterfaceIpTextField.text")); // NOI18N
         ipInterfaceIpTextField.addActionListener(new java.awt.event.ActionListener() {
@@ -253,7 +239,7 @@ public class SettingsDialog extends javax.swing.JDialog {
             ipInterfacePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(ipInterfacePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel3)
+                .addComponent(ipAddressLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ipInterfaceIpTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -263,7 +249,7 @@ public class SettingsDialog extends javax.swing.JDialog {
             .addGroup(ipInterfacePanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(ipInterfacePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
+                    .addComponent(ipAddressLabel)
                     .addComponent(ipInterfaceIpTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -278,7 +264,7 @@ public class SettingsDialog extends javax.swing.JDialog {
 
         tpuartPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jLabel2.setText(bundle.getString("SettingsDialog.jLabel2.text")); // NOI18N
+        tpuartinterfaceLabel.setText(bundle.getString("SettingsDialog.tpuartinterfaceLabel.text")); // NOI18N
 
         tpuartDevicetextField.setText(bundle.getString("SettingsDialog.tpuartDevicetextField.text")); // NOI18N
         tpuartDevicetextField.addActionListener(new java.awt.event.ActionListener() {
@@ -298,7 +284,7 @@ public class SettingsDialog extends javax.swing.JDialog {
             tpuartPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(tpuartPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel2)
+                .addComponent(tpuartinterfaceLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tpuartDevicetextField, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -308,12 +294,12 @@ public class SettingsDialog extends javax.swing.JDialog {
             .addGroup(tpuartPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(tpuartPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
+                    .addComponent(tpuartinterfaceLabel)
                     .addComponent(tpuartDevicetextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jLabel4.setText(bundle.getString("SettingsDialog.jLabel4.text")); // NOI18N
+        individualAddressLabel.setText(bundle.getString("SettingsDialog.individualAddressLabel.text")); // NOI18N
 
         individualAddressTextField.setText(bundle.getString("SettingsDialog.individualAddressTextField.text")); // NOI18N
         individualAddressTextField.addActionListener(new java.awt.event.ActionListener() {
@@ -322,8 +308,8 @@ public class SettingsDialog extends javax.swing.JDialog {
             }
         });
 
-        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel5.setText(bundle.getString("SettingsDialog.jLabel5.text")); // NOI18N
+        changesApplyOnRestartLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        changesApplyOnRestartLabel.setText(bundle.getString("SettingsDialog.changesApplyOnRestartLabel.text")); // NOI18N
 
         javax.swing.GroupLayout knxPanelLayout = new javax.swing.GroupLayout(knxPanel);
         knxPanel.setLayout(knxPanelLayout);
@@ -332,7 +318,7 @@ public class SettingsDialog extends javax.swing.JDialog {
             .addGroup(knxPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(knxPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 560, Short.MAX_VALUE)
+                    .addComponent(changesApplyOnRestartLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 560, Short.MAX_VALUE)
                     .addGroup(knxPanelLayout.createSequentialGroup()
                         .addGap(22, 22, 22)
                         .addGroup(knxPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -345,7 +331,7 @@ public class SettingsDialog extends javax.swing.JDialog {
                             .addComponent(ipInterfaceRadioButton)
                             .addComponent(tpuartRadioButton)
                             .addGroup(knxPanelLayout.createSequentialGroup()
-                                .addComponent(jLabel4)
+                                .addComponent(individualAddressLabel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(individualAddressTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE)))
@@ -367,10 +353,10 @@ public class SettingsDialog extends javax.swing.JDialog {
                 .addComponent(tpuartPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(23, 23, 23)
                 .addGroup(knxPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
+                    .addComponent(individualAddressLabel)
                     .addComponent(individualAddressTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(64, 64, 64)
-                .addComponent(jLabel5)
+                .addComponent(changesApplyOnRestartLabel)
                 .addContainerGap(132, Short.MAX_VALUE))
         );
 
@@ -483,27 +469,26 @@ public class SettingsDialog extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox askFolderCheckbox;
     private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JLabel changesApplyOnRestartLabel;
     private javax.swing.JPanel generalPanel;
+    private javax.swing.JLabel individualAddressLabel;
     private javax.swing.JTextField individualAddressTextField;
+    private javax.swing.JLabel ipAddressLabel;
     private javax.swing.JTextField ipInterfaceIpTextField;
     private javax.swing.JPanel ipInterfacePanel;
     private javax.swing.JRadioButton ipInterfaceRadioButton;
     private javax.swing.JTextField ipRouterMulticasttextField;
     private javax.swing.JPanel ipRouterPanel;
     private javax.swing.JRadioButton ipRouterRadioButton;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel knxPanel;
     private javax.swing.JCheckBox lastFolderCheckbox;
+    private javax.swing.JLabel multicastipLabel;
     private javax.swing.JButton saveButton;
     private javax.swing.JTabbedPane settingsTabbedPane;
     private javax.swing.JTextField tpuartDevicetextField;
     private javax.swing.JPanel tpuartPanel;
     private javax.swing.JRadioButton tpuartRadioButton;
+    private javax.swing.JLabel tpuartinterfaceLabel;
     // End of variables declaration//GEN-END:variables
 
     private void updateOpenCheckboxes() {

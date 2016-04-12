@@ -69,9 +69,9 @@ public class DeviceEditor extends javax.swing.JPanel {
         deviceEditorTabbedPane = new javax.swing.JTabbedPane();
         deviceTab = new javax.swing.JPanel();
         propertiesPanel = new javax.swing.JPanel();
-        jLabel6 = new javax.swing.JLabel();
+        descriptionLabel = new javax.swing.JLabel();
         userdescriptionTextField = new javax.swing.JTextField();
-        jLabel7 = new javax.swing.JLabel();
+        individualAddressLabel = new javax.swing.JLabel();
         individualAddressInputPanel = new de.konnekting.suite.uicomponents.IndividualAddressInputPanel();
         deviceInformationPanel = new de.konnekting.suite.DeviceInformationPanel();
         commObjectTab = new javax.swing.JPanel();
@@ -84,7 +84,7 @@ public class DeviceEditor extends javax.swing.JPanel {
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle"); // NOI18N
         propertiesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("DeviceEditor.propertiesPanel.border.title"))); // NOI18N
 
-        jLabel6.setText(bundle.getString("DeviceEditor.jLabel6.text")); // NOI18N
+        descriptionLabel.setText(bundle.getString("DeviceEditor.descriptionLabel.text")); // NOI18N
 
         userdescriptionTextField.setEnabled(false);
         userdescriptionTextField.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -98,7 +98,7 @@ public class DeviceEditor extends javax.swing.JPanel {
             }
         });
 
-        jLabel7.setText(bundle.getString("DeviceEditor.jLabel7.text")); // NOI18N
+        individualAddressLabel.setText(bundle.getString("DeviceEditor.individualAddressLabel.text")); // NOI18N
 
         javax.swing.GroupLayout propertiesPanelLayout = new javax.swing.GroupLayout(propertiesPanel);
         propertiesPanel.setLayout(propertiesPanelLayout);
@@ -107,8 +107,8 @@ public class DeviceEditor extends javax.swing.JPanel {
             .addGroup(propertiesPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(propertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel7)
-                    .addComponent(jLabel6))
+                    .addComponent(individualAddressLabel)
+                    .addComponent(descriptionLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(propertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(userdescriptionTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 521, Short.MAX_VALUE)
@@ -121,7 +121,7 @@ public class DeviceEditor extends javax.swing.JPanel {
             .addGroup(propertiesPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(propertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
+                    .addComponent(descriptionLabel)
                     .addComponent(userdescriptionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(propertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(propertiesPanelLayout.createSequentialGroup()
@@ -130,7 +130,7 @@ public class DeviceEditor extends javax.swing.JPanel {
                         .addContainerGap())
                     .addGroup(propertiesPanelLayout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel7)
+                        .addComponent(individualAddressLabel)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
@@ -196,12 +196,12 @@ public class DeviceEditor extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel commObjectTab;
     private de.konnekting.suite.CommObjectTable commObjectTable;
+    private javax.swing.JLabel descriptionLabel;
     private javax.swing.JTabbedPane deviceEditorTabbedPane;
     private de.konnekting.suite.DeviceInformationPanel deviceInformationPanel;
     private javax.swing.JPanel deviceTab;
     private de.konnekting.suite.uicomponents.IndividualAddressInputPanel individualAddressInputPanel;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel individualAddressLabel;
     private de.konnekting.suite.ParameterPanel parameterPanel;
     private javax.swing.JPanel parameterTab;
     private javax.swing.JPanel propertiesPanel;

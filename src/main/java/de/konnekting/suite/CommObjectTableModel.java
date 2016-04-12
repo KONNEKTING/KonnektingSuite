@@ -20,11 +20,10 @@ package de.konnekting.suite;
 
 import de.konnekting.deviceconfig.DeviceConfigContainer;
 import de.konnekting.deviceconfig.exception.InvalidAddressFormatException;
-import de.root1.rooteventbus.RootEventBus;
-import de.konnekting.suite.events.StickyDeviceSelected;
 import de.konnekting.xml.konnektingdevice.v0.CommObject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -35,6 +34,8 @@ public class CommObjectTableModel extends DefaultTableModel {
 
     private DeviceConfigContainer device;
     private final List<CommObject> commObjects = new ArrayList<>();
+    
+    private final ResourceBundle rb = java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle");
 
     public CommObjectTableModel() {
     }
@@ -74,17 +75,17 @@ public class CommObjectTableModel extends DefaultTableModel {
         // 5 GA
         switch (columnIndex) {
             case 0:
-                return "ID";
+                return rb.getString(getClass().getSimpleName()+".tableheader.id"); // ID
             case 1:
-                return "Name";
+                return rb.getString(getClass().getSimpleName()+".tableheader.name"); // Name
             case 2:
-                return "Funktion";
+                return rb.getString(getClass().getSimpleName()+".tableheader.function"); // Funktion
             case 3:
-                return "DPT";
+                return rb.getString(getClass().getSimpleName()+".tableheader.dpt"); // DPT
             case 4:
-                return "Beschreibung";
+                return rb.getString(getClass().getSimpleName()+".tableheader.description"); // Beschreibung
             case 5:
-                return "Gruppenadresse";
+                return rb.getString(getClass().getSimpleName()+".tableheader.groupaddress"); // Gruppenadresse
             default:
                 throw new IllegalArgumentException("Column " + columnIndex + " not known");
         }

@@ -426,7 +426,6 @@ public class Main extends javax.swing.JFrame {
         jToolBar.add(programmDataOnlyButton);
 
         programComObjOnlyButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/konnekting/suite/icons/ledyellow.png"))); // NOI18N
-        programComObjOnlyButton.setText(bundle.getString("Main.programComObjOnlyButton.text")); // NOI18N
         programComObjOnlyButton.setToolTipText(bundle.getString("Main.programComObjOnlyButton.toolTipText")); // NOI18N
         programComObjOnlyButton.setFocusable(false);
         programComObjOnlyButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -439,7 +438,6 @@ public class Main extends javax.swing.JFrame {
         jToolBar.add(programComObjOnlyButton);
 
         programParamOnlyButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/konnekting/suite/icons/ledgreen.png"))); // NOI18N
-        programParamOnlyButton.setText(bundle.getString("Main.programParamOnlyButton.text")); // NOI18N
         programParamOnlyButton.setToolTipText(bundle.getString("Main.programParamOnlyButton.toolTipText")); // NOI18N
         programParamOnlyButton.setFocusable(false);
         programParamOnlyButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -453,7 +451,6 @@ public class Main extends javax.swing.JFrame {
         jToolBar.add(jSeparator3);
 
         groupmonitorButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/konnekting/suite/icons/display.png"))); // NOI18N
-        groupmonitorButton.setText(bundle.getString("Main.groupmonitorButton.text")); // NOI18N
         groupmonitorButton.setToolTipText(bundle.getString("Main.groupmonitorButton.toolTipText")); // NOI18N
         groupmonitorButton.setFocusable(false);
         groupmonitorButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -466,7 +463,6 @@ public class Main extends javax.swing.JFrame {
         jToolBar.add(groupmonitorButton);
 
         settingsButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/konnekting/suite/icons/kcontrol.png"))); // NOI18N
-        settingsButton.setText(bundle.getString("Main.settingsButton.text")); // NOI18N
         settingsButton.setToolTipText(bundle.getString("Main.settingsButton.toolTipText")); // NOI18N
         settingsButton.setFocusable(false);
         settingsButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -481,7 +477,6 @@ public class Main extends javax.swing.JFrame {
         jToolBar.add(filler1);
 
         aboutButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/konnekting/suite/icons/help.png"))); // NOI18N
-        aboutButton.setText(bundle.getString("Main.aboutButton.text")); // NOI18N
         aboutButton.setToolTipText(bundle.getString("Main.aboutButton.toolTipText")); // NOI18N
         aboutButton.setFocusable(false);
         aboutButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -494,7 +489,6 @@ public class Main extends javax.swing.JFrame {
         jToolBar.add(aboutButton);
 
         exitButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/konnekting/suite/icons/exit.png"))); // NOI18N
-        exitButton.setText(bundle.getString("Main.exitButton.text")); // NOI18N
         exitButton.setToolTipText(bundle.getString("Main.exitButton.toolTipText")); // NOI18N
         exitButton.setFocusable(false);
         exitButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -544,7 +538,7 @@ public class Main extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(statusPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 725, Short.MAX_VALUE)
+            .addComponent(statusPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(bottomSplitPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(

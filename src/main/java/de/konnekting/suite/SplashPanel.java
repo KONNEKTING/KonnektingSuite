@@ -24,7 +24,7 @@ public class SplashPanel extends javax.swing.JFrame {
     }
     
     public void setProgress(int progress) {
-        jProgressBar1.setValue(progress);
+        progressBar.setValue(progress);
         if (progress==100) {
             setVisible(false);
             dispose();
@@ -32,7 +32,7 @@ public class SplashPanel extends javax.swing.JFrame {
     }
     
     public void setVersionText(String text) {
-        jLabel1.setText(text);
+        statusLabel.setText(text);
     }
 
     /**
@@ -44,38 +44,37 @@ public class SplashPanel extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-        jProgressBar1 = new javax.swing.JProgressBar();
-        jLabel2 = new javax.swing.JLabel();
+        statusLabel = new javax.swing.JLabel();
+        progressBar = new javax.swing.JProgressBar();
+        iconLabel = new javax.swing.JLabel();
 
         setUndecorated(true);
         getContentPane().setLayout(null);
 
-        jLabel1.setFont(new java.awt.Font("Monospaced", 0, 9)); // NOI18N
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        statusLabel.setFont(new java.awt.Font("Monospaced", 0, 9)); // NOI18N
+        statusLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle"); // NOI18N
-        jLabel1.setText(bundle.getString("SplashPanel.jLabel1.text")); // NOI18N
-        jLabel1.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
-        jLabel1.setMaximumSize(new java.awt.Dimension(30, 19));
-        jLabel1.setMinimumSize(new java.awt.Dimension(30, 19));
-        jLabel1.setPreferredSize(new java.awt.Dimension(30, 19));
-        jLabel1.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
-        getContentPane().add(jLabel1);
-        jLabel1.setBounds(10, 270, 380, 20);
-        getContentPane().add(jProgressBar1);
-        jProgressBar1.setBounds(10, 250, 380, 20);
+        statusLabel.setText(bundle.getString("SplashPanel.statusLabel.text")); // NOI18N
+        statusLabel.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        statusLabel.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        statusLabel.setMaximumSize(new java.awt.Dimension(30, 19));
+        statusLabel.setMinimumSize(new java.awt.Dimension(30, 19));
+        statusLabel.setPreferredSize(new java.awt.Dimension(30, 19));
+        statusLabel.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
+        getContentPane().add(statusLabel);
+        statusLabel.setBounds(10, 270, 380, 20);
+        getContentPane().add(progressBar);
+        progressBar.setBounds(10, 250, 380, 20);
 
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/splash/splash.png"))); // NOI18N
-        jLabel2.setText(bundle.getString("SplashPanel.jLabel2.text")); // NOI18N
-        getContentPane().add(jLabel2);
-        jLabel2.setBounds(0, 0, 400, 300);
+        iconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/splash/splash.png"))); // NOI18N
+        getContentPane().add(iconLabel);
+        iconLabel.setBounds(0, 0, 400, 300);
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JProgressBar jProgressBar1;
+    private javax.swing.JLabel iconLabel;
+    private javax.swing.JProgressBar progressBar;
+    private javax.swing.JLabel statusLabel;
     // End of variables declaration//GEN-END:variables
 }

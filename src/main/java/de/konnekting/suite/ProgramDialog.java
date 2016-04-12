@@ -62,7 +62,7 @@ public class ProgramDialog extends javax.swing.JDialog {
         progressBar = new javax.swing.JProgressBar();
         statusMessageLabel = new javax.swing.JLabel();
         cancelButton = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
+        deviceGettingProgrammedLabel = new javax.swing.JLabel();
         deviceNameLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -77,7 +77,7 @@ public class ProgramDialog extends javax.swing.JDialog {
             }
         });
 
-        jLabel2.setText(bundle.getString("ProgramDialog.jLabel2.text")); // NOI18N
+        deviceGettingProgrammedLabel.setText(bundle.getString("ProgramDialog.deviceGettingProgrammedLabel.text")); // NOI18N
 
         deviceNameLabel.setText(bundle.getString("ProgramDialog.deviceNameLabel.text")); // NOI18N
 
@@ -92,7 +92,7 @@ public class ProgramDialog extends javax.swing.JDialog {
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel2)
+                                .addComponent(deviceGettingProgrammedLabel)
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addComponent(deviceNameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
@@ -105,7 +105,7 @@ public class ProgramDialog extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel2)
+                .addComponent(deviceGettingProgrammedLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(deviceNameLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -189,8 +189,8 @@ public class ProgramDialog extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
+    private javax.swing.JLabel deviceGettingProgrammedLabel;
     private javax.swing.JLabel deviceNameLabel;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JProgressBar progressBar;
     private javax.swing.JLabel statusMessageLabel;
     // End of variables declaration//GEN-END:variables
