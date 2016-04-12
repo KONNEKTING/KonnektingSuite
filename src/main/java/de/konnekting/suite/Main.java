@@ -109,17 +109,18 @@ public class Main extends javax.swing.JFrame {
 //        JulFormatter.set();
     }
     private final static Logger log = LoggerFactory.getLogger(Main.class);
+    private final java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle"); // NOI18N
 
     private File projectFolder;
     private final RootEventBus eventbus = RootEventBus.getDefault();
-    private static Properties properties = new Properties();
+    private static final Properties PROPERTIES = new Properties();
     static Properties applicationProperties = new Properties();
     static File propertiesFile = new File(new File(System.getProperty("user.home")), "KonnektingSuite.properties");
     private Knx knx;
     private final GroupMonitorFrame monitor;
 
     public static Properties getProperties() {
-        return properties;
+        return PROPERTIES;
     }
 
     /**
@@ -146,7 +147,7 @@ public class Main extends javax.swing.JFrame {
         String versionMsg = "KONNEKTING Suite - Version " + applicationProperties.getProperty("application.version", "n/a") + " Build " + applicationProperties.getProperty("application.build", "n/a") + (debug ? " DEBUG MODE!" : "");
         log.info(versionMsg);
         RootEventBus.getDefault().post(new EventConsoleMessage(versionMsg));
-        RootEventBus.getDefault().post(new EventConsoleMessage("Running on " + System.getProperty("os.name")));
+        RootEventBus.getDefault().post(new EventConsoleMessage(bundle.getString("MainWindow.ConsoleMsg.operatingSystem")+ ": "+ System.getProperty("os.name")));
 
         removeDeviceButton.setEnabled(false);
         programmAllButton.setEnabled(false);
@@ -156,11 +157,11 @@ public class Main extends javax.swing.JFrame {
         addDeviceButton.setEnabled(false);
         eventbus.register(this);
 
-        String access = properties.getProperty(SettingsDialog.PROP_ACCESS, SettingsDialog.ACCESS_ROUTING);
-        String routingMulticast = properties.getProperty(SettingsDialog.PROP_ROUTING_MULTICASTIP, "224.0.23.12");
-        String tunnelingIp = properties.getProperty(SettingsDialog.PROP_TUNNELING_IP, "192.168.0.100");
-        String tpuartDevice = properties.getProperty(SettingsDialog.PROP_TPUART_DEVICE, "COM3");
-        String individualAddress = properties.getProperty(SettingsDialog.PROP_INDIVIDUALADDRESS, "1.0.254");
+        String access = PROPERTIES.getProperty(SettingsDialog.PROP_ACCESS, SettingsDialog.ACCESS_ROUTING);
+        String routingMulticast = PROPERTIES.getProperty(SettingsDialog.PROP_ROUTING_MULTICASTIP, "224.0.23.12");
+        String tunnelingIp = PROPERTIES.getProperty(SettingsDialog.PROP_TUNNELING_IP, "192.168.0.100");
+        String tpuartDevice = PROPERTIES.getProperty(SettingsDialog.PROP_TPUART_DEVICE, "COM3");
+        String individualAddress = PROPERTIES.getProperty(SettingsDialog.PROP_INDIVIDUALADDRESS, "1.0.254");
 
         try {
             switch (access.toUpperCase()) {
@@ -168,17 +169,17 @@ public class Main extends javax.swing.JFrame {
                     knx = new Knx(individualAddress);
                     knx.setLoopbackMode(true);
                     log.info("Starting in ROUTING mode");
-                    RootEventBus.getDefault().post(new EventConsoleMessage("KNX Verbindung: IP-Router"));
+                    RootEventBus.getDefault().post(new EventConsoleMessage(bundle.getString("MainWindow.ConsoleMsg.KnxConnection")+": IP-Router"));
                     break;
                 case SettingsDialog.ACCESS_TUNNELING:
                     knx = new Knx(InetAddress.getByName(tunnelingIp));
                     log.info("Starting in TUNNELING mode");
-                    RootEventBus.getDefault().post(new EventConsoleMessage("KNX Verbindung: IP-Interface"));
+                    RootEventBus.getDefault().post(new EventConsoleMessage(bundle.getString("MainWindow.ConsoleMsg.KnxConnection")+": IP-Interface"));
                     break;
                 case SettingsDialog.ACCESS_TPUART:
                     knx = new Knx(Knx.SerialType.TPUART, tpuartDevice);
                     log.info("Starting in TPUART mode");
-                    RootEventBus.getDefault().post(new EventConsoleMessage("KNX Verbindung: TPUART"));
+                    RootEventBus.getDefault().post(new EventConsoleMessage(bundle.getString("MainWindow.ConsoleMsg.KnxConnection")+": TPUART"));
                     break;
                 default:
                     log.info("Error. Unknown ACCESS TYPE: " + access);
@@ -216,27 +217,27 @@ public class Main extends javax.swing.JFrame {
         }
 
         Dimension size = new Dimension();
-        size.width = Integer.parseInt(properties.getProperty("windowwidth", "1024"));
-        size.height = Integer.parseInt(properties.getProperty("windowheight", "768"));
+        size.width = Integer.parseInt(PROPERTIES.getProperty("windowwidth", "1024"));
+        size.height = Integer.parseInt(PROPERTIES.getProperty("windowheight", "768"));
         super.setSize(size);
         Point location = new Point();
-        location.x = Integer.parseInt(properties.getProperty("windowx", "" + Integer.MIN_VALUE));
-        location.y = Integer.parseInt(properties.getProperty("windowy", "" + Integer.MIN_VALUE));
+        location.x = Integer.parseInt(PROPERTIES.getProperty("windowx", "" + Integer.MIN_VALUE));
+        location.y = Integer.parseInt(PROPERTIES.getProperty("windowy", "" + Integer.MIN_VALUE));
         if (location.x == Integer.MIN_VALUE && location.y == Integer.MIN_VALUE) {
             super.setLocationRelativeTo(null);
         } else {
             super.setLocation(location);
         }
-        topSplitPane.setDividerLocation(Integer.parseInt(properties.getProperty("topsplitpanedividerlocation", "180")));
-        bottomSplitPane.setDividerLocation(Integer.parseInt(properties.getProperty("bottomsplitpanedividerlocation", "300")));
+        topSplitPane.setDividerLocation(Integer.parseInt(PROPERTIES.getProperty("topsplitpanedividerlocation", "180")));
+        bottomSplitPane.setDividerLocation(Integer.parseInt(PROPERTIES.getProperty("bottomsplitpanedividerlocation", "300")));
 
         monitor = new GroupMonitorFrame(this);
         if (knx != null) {
             monitor.setKnx(knx);
         }
 
-        boolean lastFolder = Boolean.parseBoolean(properties.getProperty(SettingsDialog.PROP_STARTUP_LASTFOLDER, "false"));
-        boolean askFolder = Boolean.parseBoolean(properties.getProperty(SettingsDialog.PROP_STARTUP_ASKFOLDER, "true"));
+        boolean lastFolder = Boolean.parseBoolean(PROPERTIES.getProperty(SettingsDialog.PROP_STARTUP_LASTFOLDER, "false"));
+        boolean askFolder = Boolean.parseBoolean(PROPERTIES.getProperty(SettingsDialog.PROP_STARTUP_ASKFOLDER, "true"));
 
         if (askFolder) {
             SwingUtilities.invokeLater(new Runnable() {
@@ -247,7 +248,7 @@ public class Main extends javax.swing.JFrame {
             });
 
         } else if (lastFolder) {
-            projectFolder = new File(properties.getProperty("projectfolder", System.getProperty("user.home")));
+            projectFolder = new File(PROPERTIES.getProperty("projectfolder", System.getProperty("user.home")));
             eventbus.post(new EventProjectOpened(projectFolder));
         }
 
@@ -269,7 +270,7 @@ public class Main extends javax.swing.JFrame {
     private void saveSettings() {
         try {
             log.info("Saving settings");
-            properties.store(new FileWriter(propertiesFile), "This is KONNEKTING Suite configuration file");
+            PROPERTIES.store(new FileWriter(propertiesFile), "This is KONNEKTING Suite configuration file");
         } catch (IOException ex) {
             RootEventBus.getDefault().post(new EventConsoleMessage("Fehler beim Schreiben der Einstellungen.", ex));
         }
@@ -280,7 +281,7 @@ public class Main extends javax.swing.JFrame {
     }
 
     public void onEvent(EventProjectOpened evt) {
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle"); // NOI18N
+        
         setTitle(bundle.getString("MainWindow.Title") + " - " + evt.getProjectFolder().getAbsolutePath());
         addDeviceButton.setEnabled(true);
     }
@@ -558,34 +559,34 @@ public class Main extends javax.swing.JFrame {
     private void topDividerChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_topDividerChange
         if (evt.getPropertyName().equals(JSplitPane.DIVIDER_LOCATION_PROPERTY)) {
             int newValue = (int) evt.getNewValue();
-            properties.put("topsplitpanedividerlocation", Integer.toString(newValue));
+            PROPERTIES.put("topsplitpanedividerlocation", Integer.toString(newValue));
         }
     }//GEN-LAST:event_topDividerChange
 
     private void bottomDividerChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_bottomDividerChange
         if (evt.getPropertyName().equals(JSplitPane.DIVIDER_LOCATION_PROPERTY)) {
             int newValue = (int) evt.getNewValue();
-            properties.put("bottomsplitpanedividerlocation", Integer.toString(newValue));
+            PROPERTIES.put("bottomsplitpanedividerlocation", Integer.toString(newValue));
         }
     }//GEN-LAST:event_bottomDividerChange
 
     private void windowResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_windowResized
         Dimension size = getSize();
-        properties.put("windowwidth", Integer.toString(size.width));
-        properties.put("windowheight", Integer.toString(size.height));
+        PROPERTIES.put("windowwidth", Integer.toString(size.width));
+        PROPERTIES.put("windowheight", Integer.toString(size.height));
     }//GEN-LAST:event_windowResized
 
     private void windowMoved(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_windowMoved
         Point location = getLocation();
-        properties.put("windowx", Integer.toString(location.x));
-        properties.put("windowy", Integer.toString(location.y));
+        PROPERTIES.put("windowx", Integer.toString(location.x));
+        PROPERTIES.put("windowy", Integer.toString(location.y));
     }//GEN-LAST:event_windowMoved
 
     private void openProjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openProjectButtonActionPerformed
         JFileChooser jfc;
 
-        if (properties.get("projectfolder") != null) {
-            jfc = new JFileChooser(properties.getProperty("projectfolder"));
+        if (PROPERTIES.get("projectfolder") != null) {
+            jfc = new JFileChooser(PROPERTIES.getProperty("projectfolder"));
         } else {
             jfc = new JFileChooser();
         }
@@ -596,7 +597,7 @@ public class Main extends javax.swing.JFrame {
         if (returnVal != JFileChooser.ABORT && jfc.getSelectedFile() != null) {
 
             projectFolder = jfc.getSelectedFile();
-            properties.put("projectfolder", projectFolder.getAbsolutePath());
+            PROPERTIES.put("projectfolder", projectFolder.getAbsolutePath());
             eventbus.post(new EventProjectOpened(projectFolder));
         }
     }//GEN-LAST:event_openProjectButtonActionPerformed
@@ -614,8 +615,8 @@ public class Main extends javax.swing.JFrame {
     private void addDeviceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addDeviceButtonActionPerformed
         JFileChooser jfc;
 
-        if (properties.get("projectfolder") != null) {
-            jfc = new JFileChooser(properties.getProperty("projectfolder"));
+        if (PROPERTIES.get("projectfolder") != null) {
+            jfc = new JFileChooser(PROPERTIES.getProperty("projectfolder"));
         } else {
             jfc = new JFileChooser();
         }
@@ -727,7 +728,7 @@ public class Main extends javax.swing.JFrame {
 
                 }
                 try {
-                    properties.load(new FileReader(propertiesFile));
+                    PROPERTIES.load(new FileReader(propertiesFile));
                 } catch (FileNotFoundException ex) {
                     log.info("Properties file not found. Skip to defaults.");
                 } catch (IOException ex) {
