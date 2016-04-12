@@ -91,7 +91,8 @@ public class ParameterListItem extends javax.swing.JPanel {
 
         setLayout(new java.awt.GridBagLayout());
 
-        descriptionLabel.setText("jLabel1");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle"); // NOI18N
+        descriptionLabel.setText(bundle.getString("ParameterListItem.descriptionLabel.text")); // NOI18N
         descriptionLabel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         descriptionLabel.setMaximumSize(new java.awt.Dimension(1000, 50));
         descriptionLabel.setMinimumSize(new java.awt.Dimension(200, 27));

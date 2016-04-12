@@ -88,14 +88,15 @@ public class SaveDeviceAsDialog extends javax.swing.JDialog {
         addDeviceButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
         newDeviceNamePanel = new javax.swing.JPanel();
-        jLabel6 = new javax.swing.JLabel();
+        descriptionLabel = new javax.swing.JLabel();
         deviceDescriptionTextField = new javax.swing.JTextField();
-        jLabel7 = new javax.swing.JLabel();
+        noteLabel = new javax.swing.JLabel();
         deviceInformationPanel = new de.konnekting.suite.DeviceInformationPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        addDeviceButton.setText("Gerät anlegen");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle"); // NOI18N
+        addDeviceButton.setText(bundle.getString("SaveDeviceAsDialog.addDeviceButton.text")); // NOI18N
         addDeviceButton.setMinimumSize(new java.awt.Dimension(500, 370));
         addDeviceButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -103,37 +104,37 @@ public class SaveDeviceAsDialog extends javax.swing.JDialog {
             }
         });
 
-        cancelButton.setText("Abbrechen");
+        cancelButton.setText(bundle.getString("SaveDeviceAsDialog.cancelButton.text")); // NOI18N
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
             }
         });
 
-        newDeviceNamePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Neues Gerät"));
+        newDeviceNamePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("SaveDeviceAsDialog.newDeviceNamePanel.border.title"))); // NOI18N
 
-        jLabel6.setText("Beschreibung");
+        descriptionLabel.setText(bundle.getString("SaveDeviceAsDialog.descriptionLabel.text")); // NOI18N
 
-        jLabel7.setText("<html><b>Hinweis:</b> Die angegebene Beschreibung wird dazu genutzt einen initiellen, eindeutigen Dateinamen im Projektverzeichnis zu generieren. Wird die Beschreibung im späteren Verlauf geändert, wird die Datei nicht automatisch umbenannt.</html>");
+        noteLabel.setText(bundle.getString("SaveDeviceAsDialog.noteLabel.text")); // NOI18N
 
         javax.swing.GroupLayout newDeviceNamePanelLayout = new javax.swing.GroupLayout(newDeviceNamePanel);
         newDeviceNamePanel.setLayout(newDeviceNamePanelLayout);
         newDeviceNamePanelLayout.setHorizontalGroup(
             newDeviceNamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(newDeviceNamePanelLayout.createSequentialGroup()
-                .addComponent(jLabel6)
+                .addComponent(descriptionLabel)
                 .addGap(10, 10, 10)
                 .addComponent(deviceDescriptionTextField))
-            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+            .addComponent(noteLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
         newDeviceNamePanelLayout.setVerticalGroup(
             newDeviceNamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(newDeviceNamePanelLayout.createSequentialGroup()
                 .addGroup(newDeviceNamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
+                    .addComponent(descriptionLabel)
                     .addComponent(deviceDescriptionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(noteLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 35, Short.MAX_VALUE))
         );
 
@@ -196,10 +197,10 @@ public class SaveDeviceAsDialog extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addDeviceButton;
     private javax.swing.JButton cancelButton;
+    private javax.swing.JLabel descriptionLabel;
     private javax.swing.JTextField deviceDescriptionTextField;
     private de.konnekting.suite.DeviceInformationPanel deviceInformationPanel;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel newDeviceNamePanel;
+    private javax.swing.JLabel noteLabel;
     // End of variables declaration//GEN-END:variables
 }

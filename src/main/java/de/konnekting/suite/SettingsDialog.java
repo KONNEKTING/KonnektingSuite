@@ -146,16 +146,17 @@ public class SettingsDialog extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         settingsTabbedPane.setTabPlacement(javax.swing.JTabbedPane.LEFT);
-        settingsTabbedPane.setToolTipText("");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle"); // NOI18N
+        settingsTabbedPane.setToolTipText(bundle.getString("SettingsDialog.settingsTabbedPane.toolTipText")); // NOI18N
 
-        lastFolderCheckbox.setText("Letzten Projektordner automatisch öffnen?");
+        lastFolderCheckbox.setText(bundle.getString("SettingsDialog.lastFolderCheckbox.text")); // NOI18N
         lastFolderCheckbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 lastFolderCheckboxActionPerformed(evt);
             }
         });
 
-        askFolderCheckbox.setText("Beim Start nach Projektordner fragen?");
+        askFolderCheckbox.setText(bundle.getString("SettingsDialog.askFolderCheckbox.text")); // NOI18N
         askFolderCheckbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 askFolderCheckboxActionPerformed(evt);
@@ -183,14 +184,14 @@ public class SettingsDialog extends javax.swing.JDialog {
                 .addContainerGap(426, Short.MAX_VALUE))
         );
 
-        settingsTabbedPane.addTab("Allgemein", generalPanel);
+        settingsTabbedPane.addTab(bundle.getString("SettingsDialog.generalPanel.TabConstraints.tabTitle"), generalPanel); // NOI18N
 
         ipRouterPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jLabel1.setText("Multicast IP");
+        jLabel1.setText(bundle.getString("SettingsDialog.jLabel1.text")); // NOI18N
 
         ipRouterMulticasttextField.setEditable(false);
-        ipRouterMulticasttextField.setText("224.0.23.12");
+        ipRouterMulticasttextField.setText(bundle.getString("SettingsDialog.ipRouterMulticasttextField.text")); // NOI18N
         ipRouterMulticasttextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ipRouterMulticasttextFieldActionPerformed(evt);
@@ -220,7 +221,7 @@ public class SettingsDialog extends javax.swing.JDialog {
 
         buttonGroup1.add(ipRouterRadioButton);
         ipRouterRadioButton.setSelected(true);
-        ipRouterRadioButton.setText("IP Router");
+        ipRouterRadioButton.setText(bundle.getString("SettingsDialog.ipRouterRadioButton.text")); // NOI18N
         ipRouterRadioButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ipRouterRadioButtonActionPerformed(evt);
@@ -228,7 +229,7 @@ public class SettingsDialog extends javax.swing.JDialog {
         });
 
         buttonGroup1.add(ipInterfaceRadioButton);
-        ipInterfaceRadioButton.setText("IP Interface");
+        ipInterfaceRadioButton.setText(bundle.getString("SettingsDialog.ipInterfaceRadioButton.text")); // NOI18N
         ipInterfaceRadioButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ipInterfaceRadioButtonActionPerformed(evt);
@@ -237,9 +238,9 @@ public class SettingsDialog extends javax.swing.JDialog {
 
         ipInterfacePanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jLabel3.setText("IP-Addresse");
+        jLabel3.setText(bundle.getString("SettingsDialog.jLabel3.text")); // NOI18N
 
-        ipInterfaceIpTextField.setText("192.168.0.100");
+        ipInterfaceIpTextField.setText(bundle.getString("SettingsDialog.ipInterfaceIpTextField.text")); // NOI18N
         ipInterfaceIpTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ipInterfaceIpTextFieldActionPerformed(evt);
@@ -268,7 +269,7 @@ public class SettingsDialog extends javax.swing.JDialog {
         );
 
         buttonGroup1.add(tpuartRadioButton);
-        tpuartRadioButton.setText("TPUART via RS232");
+        tpuartRadioButton.setText(bundle.getString("SettingsDialog.tpuartRadioButton.text")); // NOI18N
         tpuartRadioButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tpuartRadioButtonActionPerformed(evt);
@@ -277,9 +278,9 @@ public class SettingsDialog extends javax.swing.JDialog {
 
         tpuartPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jLabel2.setText("Schnittstelle");
+        jLabel2.setText(bundle.getString("SettingsDialog.jLabel2.text")); // NOI18N
 
-        tpuartDevicetextField.setText("COM3");
+        tpuartDevicetextField.setText(bundle.getString("SettingsDialog.tpuartDevicetextField.text")); // NOI18N
         tpuartDevicetextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tpuartDevicetextFieldActionPerformed(evt);
@@ -312,9 +313,9 @@ public class SettingsDialog extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jLabel4.setText("Physikalische Adresse KNX");
+        jLabel4.setText(bundle.getString("SettingsDialog.jLabel4.text")); // NOI18N
 
-        individualAddressTextField.setText("1.0.255");
+        individualAddressTextField.setText(bundle.getString("SettingsDialog.individualAddressTextField.text")); // NOI18N
         individualAddressTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 individualAddressTextFieldActionPerformed(evt);
@@ -322,7 +323,7 @@ public class SettingsDialog extends javax.swing.JDialog {
         });
 
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel5.setText("!!!ÄNDERUNGEN WERDEN ERST MIT EINEM NEUSTART DER SUITE WIRKSAM!!!");
+        jLabel5.setText(bundle.getString("SettingsDialog.jLabel5.text")); // NOI18N
 
         javax.swing.GroupLayout knxPanelLayout = new javax.swing.GroupLayout(knxPanel);
         knxPanel.setLayout(knxPanelLayout);
@@ -373,9 +374,9 @@ public class SettingsDialog extends javax.swing.JDialog {
                 .addContainerGap(132, Short.MAX_VALUE))
         );
 
-        settingsTabbedPane.addTab("KNX", knxPanel);
+        settingsTabbedPane.addTab(bundle.getString("SettingsDialog.knxPanel.TabConstraints.tabTitle"), knxPanel); // NOI18N
 
-        saveButton.setText("Übernehmen");
+        saveButton.setText(bundle.getString("SettingsDialog.saveButton.text")); // NOI18N
         saveButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 saveButtonActionPerformed(evt);

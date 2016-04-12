@@ -96,7 +96,8 @@ public class ParameterPanel extends javax.swing.JPanel {
         setLayout(new java.awt.GridBagLayout());
 
         deviceDescriptionLabel.setBackground(new java.awt.Color(255, 255, 204));
-        deviceDescriptionLabel.setText("Gerät: 1.1.30  PM Technik");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle"); // NOI18N
+        deviceDescriptionLabel.setText(bundle.getString("ParameterPanel.deviceDescriptionLabel.text")); // NOI18N
         deviceDescriptionLabel.setAlignmentY(0.0F);
         deviceDescriptionLabel.setMaximumSize(new java.awt.Dimension(2000, 15));
         deviceDescriptionLabel.setMinimumSize(new java.awt.Dimension(230, 15));

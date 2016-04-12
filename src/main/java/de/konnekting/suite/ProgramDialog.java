@@ -67,18 +67,19 @@ public class ProgramDialog extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        statusMessageLabel.setText("StatusText");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle"); // NOI18N
+        statusMessageLabel.setText(bundle.getString("ProgramDialog.statusMessageLabel.text")); // NOI18N
 
-        cancelButton.setText("Abbrechen");
+        cancelButton.setText(bundle.getString("ProgramDialog.cancelButton.text")); // NOI18N
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
             }
         });
 
-        jLabel2.setText("Gerät wird programmiert:");
+        jLabel2.setText(bundle.getString("ProgramDialog.jLabel2.text")); // NOI18N
 
-        deviceNameLabel.setText("Gerät");
+        deviceNameLabel.setText(bundle.getString("ProgramDialog.deviceNameLabel.text")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

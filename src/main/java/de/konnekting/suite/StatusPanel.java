@@ -61,7 +61,8 @@ public class StatusPanel extends javax.swing.JPanel {
         lastStatusMsgLabel = new javax.swing.JLabel();
         jSeparator2 = new javax.swing.JSeparator();
 
-        lastStatusMsgLabel.setText("Status");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle"); // NOI18N
+        lastStatusMsgLabel.setText(bundle.getString("StatusPanel.lastStatusMsgLabel.text")); // NOI18N
 
         jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
 

@@ -53,7 +53,8 @@ public class SplashPanel extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Monospaced", 0, 9)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel1.setText("Loading...");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle"); // NOI18N
+        jLabel1.setText(bundle.getString("SplashPanel.jLabel1.text")); // NOI18N
         jLabel1.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
         jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
         jLabel1.setMaximumSize(new java.awt.Dimension(30, 19));
@@ -66,7 +67,7 @@ public class SplashPanel extends javax.swing.JFrame {
         jProgressBar1.setBounds(10, 250, 380, 20);
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/splash/splash.png"))); // NOI18N
-        jLabel2.setText("jLabel2");
+        jLabel2.setText(bundle.getString("SplashPanel.jLabel2.text")); // NOI18N
         getContentPane().add(jLabel2);
         jLabel2.setBounds(0, 0, 400, 300);
     }// </editor-fold>//GEN-END:initComponents

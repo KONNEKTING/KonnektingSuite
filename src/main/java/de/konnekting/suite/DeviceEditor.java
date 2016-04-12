@@ -81,9 +81,10 @@ public class DeviceEditor extends javax.swing.JPanel {
 
         deviceTab.setMinimumSize(new java.awt.Dimension(400, 300));
 
-        propertiesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Eigenschaften"));
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle"); // NOI18N
+        propertiesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("DeviceEditor.propertiesPanel.border.title"))); // NOI18N
 
-        jLabel6.setText("Beschreibung");
+        jLabel6.setText(bundle.getString("DeviceEditor.jLabel6.text")); // NOI18N
 
         userdescriptionTextField.setEnabled(false);
         userdescriptionTextField.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -97,7 +98,7 @@ public class DeviceEditor extends javax.swing.JPanel {
             }
         });
 
-        jLabel7.setText("Physikalische Adresse");
+        jLabel7.setText(bundle.getString("DeviceEditor.jLabel7.text")); // NOI18N
 
         javax.swing.GroupLayout propertiesPanelLayout = new javax.swing.GroupLayout(propertiesPanel);
         propertiesPanel.setLayout(propertiesPanelLayout);
@@ -149,7 +150,7 @@ public class DeviceEditor extends javax.swing.JPanel {
                 .addGap(0, 81, Short.MAX_VALUE))
         );
 
-        deviceEditorTabbedPane.addTab("Gerät", deviceTab);
+        deviceEditorTabbedPane.addTab(bundle.getString("DeviceEditor.deviceTab.TabConstraints.tabTitle"), deviceTab); // NOI18N
 
         commObjectTab.setMinimumSize(new java.awt.Dimension(400, 300));
         java.awt.GridBagLayout commObjectTabLayout = new java.awt.GridBagLayout();
@@ -160,13 +161,13 @@ public class DeviceEditor extends javax.swing.JPanel {
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         commObjectTab.add(commObjectTable, gridBagConstraints);
 
-        deviceEditorTabbedPane.addTab("Kommunikationsobjekte", commObjectTab);
+        deviceEditorTabbedPane.addTab(bundle.getString("DeviceEditor.commObjectTab.TabConstraints.tabTitle"), commObjectTab); // NOI18N
 
         parameterTab.setMinimumSize(new java.awt.Dimension(400, 300));
         parameterTab.setLayout(new java.awt.BorderLayout());
         parameterTab.add(parameterPanel, java.awt.BorderLayout.CENTER);
 
-        deviceEditorTabbedPane.addTab("Parameter", parameterTab);
+        deviceEditorTabbedPane.addTab(bundle.getString("DeviceEditor.parameterTab.TabConstraints.tabTitle"), parameterTab); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);

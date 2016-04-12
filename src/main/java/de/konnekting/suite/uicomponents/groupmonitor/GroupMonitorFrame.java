@@ -149,7 +149,8 @@ public class GroupMonitorFrame extends javax.swing.JFrame {
         telegramCount = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Gruppenmonitor");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/uicomponents/groupmonitor/Bundle"); // NOI18N
+        setTitle(bundle.getString("GroupMonitorFrame.title")); // NOI18N
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
                 formComponentResized(evt);
@@ -165,7 +166,7 @@ public class GroupMonitorFrame extends javax.swing.JFrame {
         jToolBar1.setRollover(true);
 
         buttonGroup1.add(startButton);
-        startButton.setText("Start");
+        startButton.setText(bundle.getString("GroupMonitorFrame.startButton.text")); // NOI18N
         startButton.setFocusable(false);
         startButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         startButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -178,13 +179,13 @@ public class GroupMonitorFrame extends javax.swing.JFrame {
 
         buttonGroup1.add(stopButton);
         stopButton.setSelected(true);
-        stopButton.setText("Stop");
+        stopButton.setText(bundle.getString("GroupMonitorFrame.stopButton.text")); // NOI18N
         stopButton.setFocusable(false);
         stopButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         stopButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToolBar1.add(stopButton);
 
-        clearButton.setText("Löschen");
+        clearButton.setText(bundle.getString("GroupMonitorFrame.clearButton.text")); // NOI18N
         clearButton.setFocusable(false);
         clearButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         clearButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -197,7 +198,7 @@ public class GroupMonitorFrame extends javax.swing.JFrame {
         jToolBar1.add(jSeparator1);
 
         autoscrollButton.setSelected(true);
-        autoscrollButton.setText("Automatisch scrollen");
+        autoscrollButton.setText(bundle.getString("GroupMonitorFrame.autoscrollButton.text")); // NOI18N
         autoscrollButton.setFocusable(false);
         autoscrollButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         autoscrollButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -209,7 +210,7 @@ public class GroupMonitorFrame extends javax.swing.JFrame {
         jToolBar1.add(autoscrollButton);
         jToolBar1.add(jSeparator2);
 
-        telegramCount.setText("Telegramme:");
+        telegramCount.setText(bundle.getString("GroupMonitorFrame.telegramCount.text")); // NOI18N
         jToolBar1.add(telegramCount);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
