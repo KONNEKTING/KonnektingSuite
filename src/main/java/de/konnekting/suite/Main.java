@@ -47,6 +47,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
@@ -697,6 +698,16 @@ public class Main extends javax.swing.JFrame {
      */
     public static void main(String args[]) {
 
+        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+            @Override
+            public void uncaughtException(Thread t, Throwable e) {
+                log.error("Uncaught exception occured in thread ["+t.getName()+"]", e);
+                RootEventBus.getDefault().post(new EventConsoleMessage("Uncaught exception occured in thread ["+t.getName()+"]", e));
+            }
+        });
+        
+        
+        log.info("Locale: {}",Locale.getDefault());
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 log.info("LaF Name: '" + info.getName() + "'");

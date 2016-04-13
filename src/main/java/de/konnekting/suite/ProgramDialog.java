@@ -17,6 +17,8 @@ import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFrame;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -24,6 +26,8 @@ import javax.swing.JFrame;
  */
 public class ProgramDialog extends javax.swing.JDialog {
     
+    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle"); // NOI18N
     private final List<DeviceConfigContainer> deviceList = new ArrayList<>();
     private Program p;
     private boolean doIndividualAddress;
@@ -62,14 +66,14 @@ public class ProgramDialog extends javax.swing.JDialog {
         progressBar = new javax.swing.JProgressBar();
         statusMessageLabel = new javax.swing.JLabel();
         cancelButton = new javax.swing.JButton();
-        deviceGettingProgrammedLabel = new javax.swing.JLabel();
+        programmingLabel = new javax.swing.JLabel();
         deviceNameLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle"); // NOI18N
-        statusMessageLabel.setText(bundle.getString("ProgramDialog.statusMessageLabel.text")); // NOI18N
+        statusMessageLabel.setText("..."); // NOI18N
 
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle"); // NOI18N
         cancelButton.setText(bundle.getString("ProgramDialog.cancelButton.text")); // NOI18N
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -77,9 +81,9 @@ public class ProgramDialog extends javax.swing.JDialog {
             }
         });
 
-        deviceGettingProgrammedLabel.setText(bundle.getString("ProgramDialog.deviceGettingProgrammedLabel.text")); // NOI18N
+        programmingLabel.setText(bundle.getString("ProgramDialog.programmingLabel.text")); // NOI18N
 
-        deviceNameLabel.setText(bundle.getString("ProgramDialog.deviceNameLabel.text")); // NOI18N
+        deviceNameLabel.setText("..."); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -92,7 +96,7 @@ public class ProgramDialog extends javax.swing.JDialog {
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(deviceGettingProgrammedLabel)
+                                .addComponent(programmingLabel)
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addComponent(deviceNameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
@@ -105,7 +109,7 @@ public class ProgramDialog extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(deviceGettingProgrammedLabel)
+                .addComponent(programmingLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(deviceNameLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -120,9 +124,24 @@ public class ProgramDialog extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private String getLangString(String key, Object... values) {
+        String completeKey = getClass().getSimpleName()+"."+key;
+        try {
+            String s = bundle.getString(completeKey);
+            return String.format(s, values);
+        } catch (Exception ex) {
+            log.error("Problem reading/using key '"+completeKey+"'", ex);
+            return "<"+completeKey+">";
+        }
+    }
+    
+    private String getLangString(String key) {
+        return bundle.getString(getClass().getSimpleName()+"."+key);
+    }
+    
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         p.abort();
-        RootEventBus.getDefault().post(new EventConsoleMessage("[Programmieren] " + "Abbruch angefordert."));
+        RootEventBus.getDefault().post(new EventConsoleMessage(getLangString("ConsoleMsg.prefix")+" " + getLangString("ConsoleMsg.cancelRequested")));
         cancelButton.setText(cancelButton.getText() + "...");
         cancelButton.setEnabled(false);
     }//GEN-LAST:event_cancelButtonActionPerformed
@@ -149,17 +168,17 @@ public class ProgramDialog extends javax.swing.JDialog {
                 @Override
                 public void onStatusMessage(String statusMsg) {
                     statusMessageLabel.setText(statusMsg);
-                    RootEventBus.getDefault().post(new EventConsoleMessage("[Programmieren] " + statusMsg));
+                    RootEventBus.getDefault().post(new EventConsoleMessage(getLangString("ConsoleMsg.prefix")+" " + statusMsg));
                 }
                 
                 @Override
                 public void onProgressUpdate(int currentStep, int steps) {
                     progressBar.setMaximum(steps);
                     progressBar.setValue(currentStep);
-                    RootEventBus.getDefault().post(new EventConsoleMessage("[Programmieren] Fortschritt: " + currentStep + "/" + steps));
+                    RootEventBus.getDefault().post(new EventConsoleMessage(getLangString("ConsoleMsg.prefix")+" "+getLangString("ConsoleMsg.progress")+" " + currentStep + "/" + steps));
                 }
             };
-            new BackgroundTask("Programmieren") {
+            new BackgroundTask(getLangString("ConsoleMsg.prefix")) {
                 @Override
                 public void run() {
                     long start = System.currentTimeMillis();
@@ -167,17 +186,17 @@ public class ProgramDialog extends javax.swing.JDialog {
                         p.addProgressListener(ppl);
                         
                         String name = deviceList.get(0).getIndividualAddress() + " " + deviceList.get(0).getDescription();
-                        RootEventBus.getDefault().post(new EventConsoleMessage("[Programmieren] Programmiere: " + name));
+                        RootEventBus.getDefault().post(new EventConsoleMessage(getLangString("ConsoleMsg.prefix")+" " + name));
                         deviceNameLabel.setText(name);
                         start = System.currentTimeMillis();
                         p.program(deviceList.get(0), doIndividualAddress, doComObjects, doParams);
                     } catch (ProgramException ex) {
-                        RootEventBus.getDefault().post(new EventConsoleMessage("Fehler beim Programmieren.", ex));
+                        RootEventBus.getDefault().post(new EventConsoleMessage(getLangString("ConsoleMsg.prefix")+" "+getLangString("ConsoleMsg.errorOccured"), ex));
                     } finally {
                         long stop = System.currentTimeMillis();
                         p.removeProgressListener(ppl);
                         dispose();
-                        RootEventBus.getDefault().post(new EventConsoleMessage("[Programmieren] Fertig! Dauer: " + (stop - start) + "ms"));
+                        RootEventBus.getDefault().post(new EventConsoleMessage(getLangString("ConsoleMsg.prefix")+" "+getLangString("ConsoleMsg.doneResult", (stop - start)))); // "Fertig! Dauer: " + (stop - start) + "ms")
                     }
                 }
             };
@@ -189,8 +208,8 @@ public class ProgramDialog extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
-    private javax.swing.JLabel deviceGettingProgrammedLabel;
     private javax.swing.JLabel deviceNameLabel;
+    private javax.swing.JLabel programmingLabel;
     private javax.swing.JProgressBar progressBar;
     private javax.swing.JLabel statusMessageLabel;
     // End of variables declaration//GEN-END:variables
