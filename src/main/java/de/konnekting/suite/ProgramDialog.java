@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 public class ProgramDialog extends javax.swing.JDialog {
     
     private final Logger log = LoggerFactory.getLogger(getClass());
-    private final java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle"); // NOI18N
+    private final java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/i18n/language"); // NOI18N
     private final List<DeviceConfigContainer> deviceList = new ArrayList<>();
     private Program p;
     private boolean doIndividualAddress;
@@ -73,7 +73,7 @@ public class ProgramDialog extends javax.swing.JDialog {
 
         statusMessageLabel.setText("..."); // NOI18N
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle"); // NOI18N
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/i18n/language"); // NOI18N
         cancelButton.setText(bundle.getString("ProgramDialog.cancelButton.text")); // NOI18N
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

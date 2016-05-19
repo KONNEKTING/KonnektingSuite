@@ -46,8 +46,10 @@ import java.io.OutputStreamWriter;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
@@ -102,7 +104,7 @@ public class Main extends javax.swing.JFrame {
 //        JulFormatter.set();
     }
     private final static Logger log = LoggerFactory.getLogger(Main.class);
-    private final java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle"); // NOI18N
+    private final java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/i18n/language"); // NOI18N
 
     private File projectFolder;
     private final RootEventBus eventbus = RootEventBus.getDefault();
@@ -156,23 +158,25 @@ public class Main extends javax.swing.JFrame {
         String tpuartDevice = PROPERTIES.getProperty(SettingsDialog.PROP_TPUART_DEVICE, "COM3");
         String individualAddress = PROPERTIES.getProperty(SettingsDialog.PROP_INDIVIDUALADDRESS, "1.0.254");
 
+        
+        
         try {
             switch (access.toUpperCase()) {
                 case SettingsDialog.ACCESS_ROUTING:
+                    log.info("Starting in ROUTING mode: {}@{}",individualAddress, routingMulticast);
+                    RootEventBus.getDefault().post(new EventConsoleMessage(bundle.getString("MainWindow.ConsoleMsg.knxConnection")+"IP-Router: "+individualAddress+"@"+routingMulticast));
                     knx = new Knx(individualAddress);
                     knx.setLoopbackMode(true);
-                    log.info("Starting in ROUTING mode");
-                    RootEventBus.getDefault().post(new EventConsoleMessage(bundle.getString("MainWindow.ConsoleMsg.knxConnection")+"IP-Router"));
                     break;
                 case SettingsDialog.ACCESS_TUNNELING:
+                    log.info("Starting in TUNNELING mode: {}@{}",individualAddress, tunnelingIp);
+                    RootEventBus.getDefault().post(new EventConsoleMessage(bundle.getString("MainWindow.ConsoleMsg.knxConnection")+"IP-Interface: "+individualAddress+"@"+tunnelingIp));
                     knx = new Knx(InetAddress.getByName(tunnelingIp));
-                    log.info("Starting in TUNNELING mode");
-                    RootEventBus.getDefault().post(new EventConsoleMessage(bundle.getString("MainWindow.ConsoleMsg.knxConnection")+"IP-Interface"));
                     break;
                 case SettingsDialog.ACCESS_TPUART:
+                    log.info("Starting in TPUART mode: {}@{}",individualAddress,tpuartDevice);
+                    RootEventBus.getDefault().post(new EventConsoleMessage(bundle.getString("MainWindow.ConsoleMsg.knxConnection")+"TPUART: "+individualAddress+"@"+tpuartDevice));
                     knx = new Knx(Knx.SerialType.TPUART, tpuartDevice);
-                    log.info("Starting in TPUART mode");
-                    RootEventBus.getDefault().post(new EventConsoleMessage(bundle.getString("MainWindow.ConsoleMsg.knxConnection")+"TPUART"));
                     break;
                 default:
                     log.info("Error. Unknown ACCESS TYPE: " + access);
@@ -343,7 +347,7 @@ public class Main extends javax.swing.JFrame {
         consolePanel = new de.konnekting.suite.ConsolePanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle"); // NOI18N
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/i18n/language"); // NOI18N
         setTitle(bundle.getString("MainWindow.Title")); // NOI18N
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
@@ -732,6 +736,13 @@ public class Main extends javax.swing.JFrame {
                 }
                 try {
                     PROPERTIES.load(new FileReader(propertiesFile));
+                    
+                    Iterator<Map.Entry<Object, Object>> iter = PROPERTIES.entrySet().iterator();
+                    while (iter.hasNext()) {
+                        Map.Entry<Object, Object> entry = iter.next();
+                        log.info("Property: {}={}", entry.getKey(), entry.getValue());
+                    }
+                    
                 } catch (FileNotFoundException ex) {
                     log.info("Properties file not found. Skip to defaults.");
                 } catch (IOException ex) {

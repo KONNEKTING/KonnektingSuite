@@ -35,7 +35,7 @@ public class CommObjectTableModel extends DefaultTableModel {
     private DeviceConfigContainer device;
     private final List<CommObject> commObjects = new ArrayList<>();
     
-    private final ResourceBundle rb = java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle");
+    private final ResourceBundle rb = java.util.ResourceBundle.getBundle("de/konnekting/suite/i18n/language");
 
     public CommObjectTableModel() {
     }

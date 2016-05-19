@@ -49,7 +49,7 @@ public class AboutDialog extends javax.swing.JDialog {
 
         versionLabel.setFont(new java.awt.Font("Monospaced", 0, 9)); // NOI18N
         versionLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle"); // NOI18N
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/i18n/language"); // NOI18N
         versionLabel.setText(bundle.getString("AboutDialog.versionLabel.text")); // NOI18N
         getContentPane().add(versionLabel);
         versionLabel.setBounds(10, 280, 380, 12);

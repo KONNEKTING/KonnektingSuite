@@ -81,7 +81,7 @@ public class DeviceInformationPanel extends javax.swing.JPanel {
         manufacturernameTextField = new javax.swing.JTextField();
         devicenameTextField = new javax.swing.JTextField();
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle"); // NOI18N
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/i18n/language"); // NOI18N
         deviceInfoPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("DeviceInformationPanel.deviceInfoPanel.border.title"))); // NOI18N
 
         manufacturerIdLabel.setText(bundle.getString("DeviceInformationPanel.manufacturerIdLabel.text")); // NOI18N

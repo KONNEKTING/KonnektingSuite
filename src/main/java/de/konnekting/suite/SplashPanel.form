@@ -31,7 +31,7 @@
         </Property>
         <Property name="horizontalAlignment" type="int" value="2"/>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="de/konnekting/suite/Bundle.properties" key="SplashPanel.statusLabel.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+          <ResourceString bundle="de/konnekting/suite/i18n/language.properties" key="SplashPanel.statusLabel.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
         </Property>
         <Property name="verticalAlignment" type="int" value="3"/>
         <Property name="horizontalTextPosition" type="int" value="2"/>

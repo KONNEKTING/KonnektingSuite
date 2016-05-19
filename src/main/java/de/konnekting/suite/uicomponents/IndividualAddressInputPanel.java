@@ -107,7 +107,7 @@ public class IndividualAddressInputPanel extends javax.swing.JPanel implements C
 
         jLabel2.setText("."); // NOI18N
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle"); // NOI18N
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/i18n/language"); // NOI18N
         parkButton.setText(bundle.getString("IndividualAddressInputPanel.parkButton.text")); // NOI18N
         parkButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

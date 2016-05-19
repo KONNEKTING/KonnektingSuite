@@ -49,13 +49,13 @@ public class ParameterPanel extends javax.swing.JPanel {
         device = ev.getDeviceConfig();
 
         if (device==null) {
-            deviceDescriptionLabel.setText(java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle").getString("ParameterPanel.deviceDescriptionLabel.text"));  
+            deviceDescriptionLabel.setText(java.util.ResourceBundle.getBundle("de/konnekting/suite/i18n/language").getString("ParameterPanel.deviceDescriptionLabel.text"));  
             groupList.setListData(new String[]{});
             return;
         } 
         parameterList.setDevice(device);
         
-        deviceDescriptionLabel.setText(java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle").getString("ParameterPanel.deviceDescriptionLabel.text")+device.getIndividualAddress() +" "+ device.getDescription());
+        deviceDescriptionLabel.setText(java.util.ResourceBundle.getBundle("de/konnekting/suite/i18n/language").getString("ParameterPanel.deviceDescriptionLabel.text")+device.getIndividualAddress() +" "+ device.getDescription());
 
         List<ParameterGroup> groups = device.getParameterGroups();
 
@@ -96,7 +96,7 @@ public class ParameterPanel extends javax.swing.JPanel {
         setLayout(new java.awt.GridBagLayout());
 
         deviceDescriptionLabel.setBackground(new java.awt.Color(255, 255, 204));
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle"); // NOI18N
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/i18n/language"); // NOI18N
         deviceDescriptionLabel.setText(bundle.getString("ParameterPanel.deviceDescriptionLabel.text")); // NOI18N
         deviceDescriptionLabel.setAlignmentY(0.0F);
         deviceDescriptionLabel.setMaximumSize(new java.awt.Dimension(2000, 15));

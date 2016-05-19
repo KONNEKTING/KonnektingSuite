@@ -29,7 +29,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class GroupMonitorTableModel extends DefaultTableModel {
 
-    private final ResourceBundle rb = java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle");
+    private final ResourceBundle rb = java.util.ResourceBundle.getBundle("de/konnekting/suite/i18n/language");
     private final List<GroupAddressEventContainer> events = new ArrayList<>();
 
     public void addEvent(GroupAddressEventContainer event) {

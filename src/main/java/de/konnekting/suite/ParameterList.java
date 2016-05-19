@@ -49,7 +49,7 @@ public class ParameterList extends javax.swing.JPanel {
 
             removeAll();
             initComponents();
-            numberOfParamsLabel.setText(java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle").getString("ParameterList.numberOfParamsLabel.text") + list.size());
+            numberOfParamsLabel.setText(java.util.ResourceBundle.getBundle("de/konnekting/suite/i18n/language").getString("ParameterList.numberOfParamsLabel.text") + list.size());
             
             GridBagConstraints gridBagConstraints;
 
@@ -95,7 +95,7 @@ public class ParameterList extends javax.swing.JPanel {
 
         setLayout(new java.awt.GridBagLayout());
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle"); // NOI18N
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/i18n/language"); // NOI18N
         numberOfParamsLabel.setText(bundle.getString("ParameterList.numberOfParamsLabel.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -115,6 +115,6 @@ public class ParameterList extends javax.swing.JPanel {
         this.device = device;
         removeAll();
         initComponents();
-        numberOfParamsLabel.setText(java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle").getString("ParameterList.numberOfParamsLabel.text"));
+        numberOfParamsLabel.setText(java.util.ResourceBundle.getBundle("de/konnekting/suite/i18n/language").getString("ParameterList.numberOfParamsLabel.text"));
     }
 }

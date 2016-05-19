@@ -94,7 +94,7 @@ public class SaveDeviceAsDialog extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle"); // NOI18N
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/i18n/language"); // NOI18N
         addDeviceButton.setText(bundle.getString("SaveDeviceAsDialog.addDeviceButton.text")); // NOI18N
         addDeviceButton.setMinimumSize(new java.awt.Dimension(500, 370));
         addDeviceButton.addActionListener(new java.awt.event.ActionListener() {

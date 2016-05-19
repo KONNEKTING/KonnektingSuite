@@ -81,7 +81,7 @@ public class DeviceEditor extends javax.swing.JPanel {
 
         deviceTab.setMinimumSize(new java.awt.Dimension(400, 300));
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle"); // NOI18N
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/i18n/language"); // NOI18N
         propertiesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("DeviceEditor.propertiesPanel.border.title"))); // NOI18N
 
         descriptionLabel.setText(bundle.getString("DeviceEditor.descriptionLabel.text")); // NOI18N

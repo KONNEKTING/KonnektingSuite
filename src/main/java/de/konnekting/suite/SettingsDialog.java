@@ -132,7 +132,7 @@ public class SettingsDialog extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         settingsTabbedPane.setTabPlacement(javax.swing.JTabbedPane.LEFT);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle"); // NOI18N
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/i18n/language"); // NOI18N
         settingsTabbedPane.setToolTipText(bundle.getString("SettingsDialog.settingsTabbedPane.toolTipText")); // NOI18N
 
         lastFolderCheckbox.setText(bundle.getString("SettingsDialog.lastFolderCheckbox.text")); // NOI18N

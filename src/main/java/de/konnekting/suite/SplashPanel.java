@@ -53,7 +53,7 @@ public class SplashPanel extends javax.swing.JFrame {
 
         statusLabel.setFont(new java.awt.Font("Monospaced", 0, 9)); // NOI18N
         statusLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle"); // NOI18N
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/i18n/language"); // NOI18N
         statusLabel.setText(bundle.getString("SplashPanel.statusLabel.text")); // NOI18N
         statusLabel.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
         statusLabel.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
