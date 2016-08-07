@@ -66,7 +66,7 @@
         <Container class="javax.swing.JPanel" name="generalPanel">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="Allgemein">
+              <JTabbedPaneConstraints tabName="Common">
                 <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                   <ResourceString bundle="de/konnekting/suite/i18n/language.properties" key="SettingsDialog.generalPanel.TabConstraints.tabTitle" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                 </Property>
@@ -83,7 +83,7 @@
                           <Component id="lastFolderCheckbox" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="askFolderCheckbox" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="277" max="32767" attributes="0"/>
+                      <EmptySpace pref="466" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -139,18 +139,9 @@
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="changesApplyOnRestartLabel" pref="560" max="32767" attributes="0"/>
-                          <Group type="102" attributes="0">
-                              <EmptySpace min="22" pref="22" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="ipRouterPanel" max="32767" attributes="0"/>
-                                  <Component id="ipInterfacePanel" max="32767" attributes="0"/>
-                                  <Component id="tpuartPanel" max="32767" attributes="0"/>
-                              </Group>
-                          </Group>
+                          <Component id="changesApplyOnRestartLabel" pref="723" max="32767" attributes="0"/>
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="ipRouterRadioButton" min="-2" max="-2" attributes="0"/>
                                   <Component id="ipInterfaceRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="tpuartRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Group type="102" alignment="0" attributes="0">
@@ -158,8 +149,19 @@
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="individualAddressTextField" min="-2" pref="100" max="-2" attributes="0"/>
                                   </Group>
+                                  <Component id="offlineRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="ipRouterRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <EmptySpace min="22" pref="22" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="ipInterfacePanel" max="32767" attributes="0"/>
+                                  <Component id="tpuartPanel" max="32767" attributes="0"/>
+                                  <Component id="ipRouterPanel" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="offlinePanel" max="32767" attributes="0"/>
+                              </Group>
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -169,6 +171,11 @@
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="offlineRadioButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="offlinePanel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="ipRouterRadioButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="ipRouterPanel" min="-2" max="-2" attributes="0"/>
@@ -180,19 +187,58 @@
                       <Component id="tpuartRadioButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="tpuartPanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="57" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="individualAddressLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="individualAddressTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="64" max="-2" attributes="0"/>
                       <Component id="changesApplyOnRestartLabel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="132" max="32767" attributes="0"/>
+                      <EmptySpace pref="31" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
+            <Container class="javax.swing.JPanel" name="offlinePanel">
+              <Properties>
+                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                  <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
+                    <EtchetBorder/>
+                  </Border>
+                </Property>
+              </Properties>
+
+              <Layout>
+                <DimensionLayout dim="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="tpuartinterfaceLabel1" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+                <DimensionLayout dim="1">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="tpuartinterfaceLabel1" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+              </Layout>
+              <SubComponents>
+                <Component class="javax.swing.JLabel" name="tpuartinterfaceLabel1">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="de/konnekting/suite/Bundle.properties" key="SettingsDialog.tpuartinterfaceLabel1.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                    </Property>
+                  </Properties>
+                </Component>
+              </SubComponents>
+            </Container>
             <Container class="javax.swing.JPanel" name="ipRouterPanel">
               <Properties>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
@@ -210,6 +256,12 @@
                           <Component id="multicastipLabel" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="ipRouterMulticasttextField" min="-2" pref="158" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="multicastNetworkOn" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="multicastNetworkCombobox" min="-2" pref="201" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="ipRoutingAutodetectButton" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
@@ -221,6 +273,9 @@
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="multicastipLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="ipRouterMulticasttextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="multicastNetworkCombobox" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="multicastNetworkOn" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="ipRoutingAutodetectButton" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="32767" attributes="0"/>
                       </Group>
@@ -237,11 +292,39 @@
                 </Component>
                 <Component class="javax.swing.JTextField" name="ipRouterMulticasttextField">
                   <Properties>
-                    <Property name="editable" type="boolean" value="false"/>
                     <Property name="text" type="java.lang.String" value="224.0.23.12" noResource="true"/>
                   </Properties>
+                </Component>
+                <Component class="javax.swing.JComboBox" name="multicastNetworkCombobox">
+                  <Properties>
+                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                      <StringArray count="4">
+                        <StringItem index="0" value="Item 1"/>
+                        <StringItem index="1" value="Item 2"/>
+                        <StringItem index="2" value="Item 3"/>
+                        <StringItem index="3" value="Item 4"/>
+                      </StringArray>
+                    </Property>
+                  </Properties>
                   <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ipRouterMulticasttextFieldActionPerformed"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="multicastNetworkComboboxActionPerformed"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JLabel" name="multicastNetworkOn">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="de/konnekting/suite/i18n/language.properties" key="SettingsDialog.multicastNetworkOn.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                    </Property>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JButton" name="ipRoutingAutodetectButton">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="de/konnekting/suite/i18n/language.properties" key="SettingsDialog.multicastNetworkDetectButton.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                    </Property>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ipRoutingAutodetectButtonActionPerformed"/>
                   </Events>
                 </Component>
               </SubComponents>
@@ -251,7 +334,6 @@
                 <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
                   <ComponentRef name="buttonGroup1"/>
                 </Property>
-                <Property name="selected" type="boolean" value="true"/>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                   <ResourceString bundle="de/konnekting/suite/i18n/language.properties" key="SettingsDialog.ipRouterRadioButton.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                 </Property>
@@ -319,9 +401,6 @@
                   <Properties>
                     <Property name="text" type="java.lang.String" value="192.168.0.100" noResource="true"/>
                   </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ipInterfaceIpTextFieldActionPerformed"/>
-                  </Events>
                 </Component>
               </SubComponents>
             </Container>
@@ -384,10 +463,6 @@
                   <Properties>
                     <Property name="text" type="java.lang.String" value="COM3" noResource="true"/>
                   </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tpuartDevicetextFieldActionPerformed"/>
-                    <EventHandler event="propertyChange" listener="java.beans.PropertyChangeListener" parameters="java.beans.PropertyChangeEvent" handler="tpuartDevicetextFieldPropertyChange"/>
-                  </Events>
                 </Component>
               </SubComponents>
             </Container>
@@ -402,9 +477,6 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="1.0.255" noResource="true"/>
               </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="individualAddressTextFieldActionPerformed"/>
-              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="changesApplyOnRestartLabel">
               <Properties>
@@ -413,6 +485,20 @@
                   <ResourceString bundle="de/konnekting/suite/i18n/language.properties" key="SettingsDialog.changesApplyOnRestartLabel.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                 </Property>
               </Properties>
+            </Component>
+            <Component class="javax.swing.JRadioButton" name="offlineRadioButton">
+              <Properties>
+                <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+                  <ComponentRef name="buttonGroup1"/>
+                </Property>
+                <Property name="selected" type="boolean" value="true"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="de/konnekting/suite/Bundle.properties" key="SettingsDialog.offlineRadioButton.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="offlineRadioButtonActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

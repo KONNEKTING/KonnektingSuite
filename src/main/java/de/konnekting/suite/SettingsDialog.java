@@ -21,8 +21,21 @@ package de.konnekting.suite;
 import de.konnekting.suite.events.EventSaveSettings;
 import de.konnekting.suite.utils.Utils;
 import de.root1.rooteventbus.RootEventBus;
+import de.root1.slicknx.AutoDiscoverProgressListener;
+import de.root1.slicknx.Knx;
+import de.root1.slicknx.KnxException;
 import java.awt.Component;
+import java.awt.Frame;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComponent;
 
 /**
@@ -33,6 +46,7 @@ public class SettingsDialog extends javax.swing.JDialog {
 
     private final Properties p = Main.getProperties();
     
+    public static final String ACCESS_OFF = "OFF";
     public static final String ACCESS_ROUTING = "ROUTING";
     public static final String ACCESS_TUNNELING = "TUNNELING";
     public static final String ACCESS_TPUART = "TPUART";
@@ -42,12 +56,16 @@ public class SettingsDialog extends javax.swing.JDialog {
     
     public static final String PROP_ACCESS = "knx.access";
     public static final String PROP_ROUTING_MULTICASTIP = "knx.routing.multicast";
+    public static final String PROP_ROUTING_MULTICASTNETWORKINTERFACE = "knx.routing.networkinterface";
     public static final String PROP_TUNNELING_IP = "knx.tunneling.ip";
     public static final String PROP_TPUART_DEVICE = "knx.tpuart.device";
     public static final String PROP_INDIVIDUALADDRESS = "knx.individualaddress";
+    
+    private final List<NetworkInterfaceItem> networkInterfaces = new ArrayList<>();
 
     /**
      * Creates new form SettingsDialog
+     * @param parent
      */
     public SettingsDialog(java.awt.Frame parent) {
         super(parent, true);
@@ -56,7 +74,7 @@ public class SettingsDialog extends javax.swing.JDialog {
         boolean lastFolder = Boolean.parseBoolean(p.getProperty(PROP_STARTUP_LASTFOLDER, "false"));
         boolean askFolder = Boolean.parseBoolean(p.getProperty(PROP_STARTUP_ASKFOLDER, "true"));
         
-        String access = p.getProperty(PROP_ACCESS, ACCESS_ROUTING);
+        String access = p.getProperty(PROP_ACCESS, ACCESS_OFF);
         String routingMulticast = p.getProperty(PROP_ROUTING_MULTICASTIP, "224.0.23.12");
         String tunnelingIp = p.getProperty(PROP_TUNNELING_IP, "192.168.0.100");
         String tpuartDevice = p.getProperty(PROP_TPUART_DEVICE, "COM3");
@@ -64,6 +82,9 @@ public class SettingsDialog extends javax.swing.JDialog {
         
         
         switch(access.toUpperCase()) {
+            case ACCESS_OFF:
+                offlineRadioButton.setSelected(true);
+                break;
             case ACCESS_ROUTING:
                 ipRouterRadioButton.setSelected(true);
                 break;
@@ -87,6 +108,30 @@ public class SettingsDialog extends javax.swing.JDialog {
         
         askFolderCheckbox.setSelected(askFolder);
         lastFolderCheckbox.setSelected(lastFolder);
+        
+        try {
+            Enumeration<NetworkInterface> networkInterfaces1 = NetworkInterface.getNetworkInterfaces();
+            
+            while (networkInterfaces1.hasMoreElements()){
+                networkInterfaces.add(new NetworkInterfaceItem(networkInterfaces1.nextElement()));
+            }
+            
+            
+        } catch (SocketException ex) {
+        }
+        
+        
+        multicastNetworkCombobox.setModel(new DefaultComboBoxModel(networkInterfaces.toArray()));
+        
+        // make default selection, based in properties
+        String niName = Main.getProperties().getProperty(PROP_ROUTING_MULTICASTNETWORKINTERFACE,"nodefaultvalueavailable");
+        for(int i = 0; i<networkInterfaces.size();i++) {
+            NetworkInterfaceItem nii = (NetworkInterfaceItem) multicastNetworkCombobox.getModel().getElementAt(i);
+            if (nii.getNetworkInterface().getName().equals(niName)) {
+                multicastNetworkCombobox.setSelectedIndex(i);
+                break;
+            }
+        }
         
         if (Utils.isLinux()) {
             tpuartRadioButton.setEnabled(false);
@@ -112,9 +157,14 @@ public class SettingsDialog extends javax.swing.JDialog {
         lastFolderCheckbox = new javax.swing.JCheckBox();
         askFolderCheckbox = new javax.swing.JCheckBox();
         knxPanel = new javax.swing.JPanel();
+        offlinePanel = new javax.swing.JPanel();
+        tpuartinterfaceLabel1 = new javax.swing.JLabel();
         ipRouterPanel = new javax.swing.JPanel();
         multicastipLabel = new javax.swing.JLabel();
         ipRouterMulticasttextField = new javax.swing.JTextField();
+        multicastNetworkCombobox = new javax.swing.JComboBox();
+        multicastNetworkOn = new javax.swing.JLabel();
+        ipRoutingAutodetectButton = new javax.swing.JButton();
         ipRouterRadioButton = new javax.swing.JRadioButton();
         ipInterfaceRadioButton = new javax.swing.JRadioButton();
         ipInterfacePanel = new javax.swing.JPanel();
@@ -127,6 +177,7 @@ public class SettingsDialog extends javax.swing.JDialog {
         individualAddressLabel = new javax.swing.JLabel();
         individualAddressTextField = new javax.swing.JTextField();
         changesApplyOnRestartLabel = new javax.swing.JLabel();
+        offlineRadioButton = new javax.swing.JRadioButton();
         saveButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -158,7 +209,7 @@ public class SettingsDialog extends javax.swing.JDialog {
                 .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lastFolderCheckbox)
                     .addComponent(askFolderCheckbox))
-                .addContainerGap(277, Short.MAX_VALUE))
+                .addContainerGap(466, Short.MAX_VALUE))
         );
         generalPanelLayout.setVerticalGroup(
             generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -172,15 +223,47 @@ public class SettingsDialog extends javax.swing.JDialog {
 
         settingsTabbedPane.addTab(bundle.getString("SettingsDialog.generalPanel.TabConstraints.tabTitle"), generalPanel); // NOI18N
 
+        offlinePanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        java.util.ResourceBundle bundle1 = java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle"); // NOI18N
+        tpuartinterfaceLabel1.setText(bundle1.getString("SettingsDialog.tpuartinterfaceLabel1.text")); // NOI18N
+
+        javax.swing.GroupLayout offlinePanelLayout = new javax.swing.GroupLayout(offlinePanel);
+        offlinePanel.setLayout(offlinePanelLayout);
+        offlinePanelLayout.setHorizontalGroup(
+            offlinePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(offlinePanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(tpuartinterfaceLabel1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        offlinePanelLayout.setVerticalGroup(
+            offlinePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(offlinePanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(tpuartinterfaceLabel1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         ipRouterPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         multicastipLabel.setText(bundle.getString("SettingsDialog.multicastipLabel.text")); // NOI18N
 
-        ipRouterMulticasttextField.setEditable(false);
         ipRouterMulticasttextField.setText("224.0.23.12"); // NOI18N
-        ipRouterMulticasttextField.addActionListener(new java.awt.event.ActionListener() {
+
+        multicastNetworkCombobox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        multicastNetworkCombobox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ipRouterMulticasttextFieldActionPerformed(evt);
+                multicastNetworkComboboxActionPerformed(evt);
+            }
+        });
+
+        multicastNetworkOn.setText(bundle.getString("SettingsDialog.multicastNetworkOn.text")); // NOI18N
+
+        ipRoutingAutodetectButton.setText(bundle.getString("SettingsDialog.multicastNetworkDetectButton.text")); // NOI18N
+        ipRoutingAutodetectButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ipRoutingAutodetectButtonActionPerformed(evt);
             }
         });
 
@@ -193,6 +276,12 @@ public class SettingsDialog extends javax.swing.JDialog {
                 .addComponent(multicastipLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ipRouterMulticasttextField, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(multicastNetworkOn)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(multicastNetworkCombobox, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ipRoutingAutodetectButton)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         ipRouterPanelLayout.setVerticalGroup(
@@ -201,12 +290,14 @@ public class SettingsDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(ipRouterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(multicastipLabel)
-                    .addComponent(ipRouterMulticasttextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(ipRouterMulticasttextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(multicastNetworkCombobox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(multicastNetworkOn)
+                    .addComponent(ipRoutingAutodetectButton))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         buttonGroup1.add(ipRouterRadioButton);
-        ipRouterRadioButton.setSelected(true);
         ipRouterRadioButton.setText(bundle.getString("SettingsDialog.ipRouterRadioButton.text")); // NOI18N
         ipRouterRadioButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -227,11 +318,6 @@ public class SettingsDialog extends javax.swing.JDialog {
         ipAddressLabel.setText(bundle.getString("SettingsDialog.ipAddressLabel.text")); // NOI18N
 
         ipInterfaceIpTextField.setText("192.168.0.100"); // NOI18N
-        ipInterfaceIpTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ipInterfaceIpTextFieldActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout ipInterfacePanelLayout = new javax.swing.GroupLayout(ipInterfacePanel);
         ipInterfacePanel.setLayout(ipInterfacePanelLayout);
@@ -267,16 +353,6 @@ public class SettingsDialog extends javax.swing.JDialog {
         tpuartinterfaceLabel.setText(bundle.getString("SettingsDialog.tpuartinterfaceLabel.text")); // NOI18N
 
         tpuartDevicetextField.setText("COM3"); // NOI18N
-        tpuartDevicetextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tpuartDevicetextFieldActionPerformed(evt);
-            }
-        });
-        tpuartDevicetextField.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                tpuartDevicetextFieldPropertyChange(evt);
-            }
-        });
 
         javax.swing.GroupLayout tpuartPanelLayout = new javax.swing.GroupLayout(tpuartPanel);
         tpuartPanel.setLayout(tpuartPanelLayout);
@@ -302,14 +378,18 @@ public class SettingsDialog extends javax.swing.JDialog {
         individualAddressLabel.setText(bundle.getString("SettingsDialog.individualAddressLabel.text")); // NOI18N
 
         individualAddressTextField.setText("1.0.255"); // NOI18N
-        individualAddressTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                individualAddressTextFieldActionPerformed(evt);
-            }
-        });
 
         changesApplyOnRestartLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         changesApplyOnRestartLabel.setText(bundle.getString("SettingsDialog.changesApplyOnRestartLabel.text")); // NOI18N
+
+        buttonGroup1.add(offlineRadioButton);
+        offlineRadioButton.setSelected(true);
+        offlineRadioButton.setText(bundle1.getString("SettingsDialog.offlineRadioButton.text")); // NOI18N
+        offlineRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                offlineRadioButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout knxPanelLayout = new javax.swing.GroupLayout(knxPanel);
         knxPanel.setLayout(knxPanelLayout);
@@ -318,28 +398,35 @@ public class SettingsDialog extends javax.swing.JDialog {
             .addGroup(knxPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(knxPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(changesApplyOnRestartLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 560, Short.MAX_VALUE)
-                    .addGroup(knxPanelLayout.createSequentialGroup()
-                        .addGap(22, 22, 22)
-                        .addGroup(knxPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(ipRouterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(ipInterfacePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(tpuartPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(changesApplyOnRestartLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 723, Short.MAX_VALUE)
                     .addGroup(knxPanelLayout.createSequentialGroup()
                         .addGroup(knxPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(ipRouterRadioButton)
                             .addComponent(ipInterfaceRadioButton)
                             .addComponent(tpuartRadioButton)
                             .addGroup(knxPanelLayout.createSequentialGroup()
                                 .addComponent(individualAddressLabel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(individualAddressTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                                .addComponent(individualAddressTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(offlineRadioButton)
+                            .addComponent(ipRouterRadioButton))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(knxPanelLayout.createSequentialGroup()
+                        .addGap(22, 22, 22)
+                        .addGroup(knxPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(ipInterfacePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(tpuartPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(ipRouterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(offlinePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         knxPanelLayout.setVerticalGroup(
             knxPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(knxPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(offlineRadioButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(offlinePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ipRouterRadioButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ipRouterPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -351,13 +438,13 @@ public class SettingsDialog extends javax.swing.JDialog {
                 .addComponent(tpuartRadioButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tpuartPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(23, 23, 23)
+                .addGap(57, 57, 57)
                 .addGroup(knxPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(individualAddressLabel)
                     .addComponent(individualAddressTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(64, 64, 64)
                 .addComponent(changesApplyOnRestartLabel)
-                .addContainerGap(132, Short.MAX_VALUE))
+                .addContainerGap(31, Short.MAX_VALUE))
         );
 
         settingsTabbedPane.addTab(bundle.getString("SettingsDialog.knxPanel.TabConstraints.tabTitle"), knxPanel); // NOI18N
@@ -414,16 +501,6 @@ public class SettingsDialog extends javax.swing.JDialog {
         p.setProperty(PROP_ACCESS, ACCESS_TPUART);
     }//GEN-LAST:event_tpuartRadioButtonActionPerformed
 
-    private void tpuartDevicetextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tpuartDevicetextFieldActionPerformed
-        
-    }//GEN-LAST:event_tpuartDevicetextFieldActionPerformed
-
-    private void ipInterfaceIpTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ipInterfaceIpTextFieldActionPerformed
-    }//GEN-LAST:event_ipInterfaceIpTextFieldActionPerformed
-
-    private void individualAddressTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_individualAddressTextFieldActionPerformed
-    }//GEN-LAST:event_individualAddressTextFieldActionPerformed
-
     private void ipInterfaceRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ipInterfaceRadioButtonActionPerformed
         setEnableAll(ipRouterPanel, false);
         setEnableAll(ipInterfacePanel, true);
@@ -438,14 +515,12 @@ public class SettingsDialog extends javax.swing.JDialog {
         p.setProperty(PROP_ACCESS, ACCESS_ROUTING);
     }//GEN-LAST:event_ipRouterRadioButtonActionPerformed
 
-    private void ipRouterMulticasttextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ipRouterMulticasttextFieldActionPerformed
-    }//GEN-LAST:event_ipRouterMulticasttextFieldActionPerformed
-
-    private void tpuartDevicetextFieldPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_tpuartDevicetextFieldPropertyChange
-    }//GEN-LAST:event_tpuartDevicetextFieldPropertyChange
-
     private void doSave() {
         p.setProperty(PROP_ROUTING_MULTICASTIP, ipRouterMulticasttextField.getText());
+        
+        NetworkInterfaceItem nii = (NetworkInterfaceItem) multicastNetworkCombobox.getSelectedItem();
+        
+        p.setProperty(PROP_ROUTING_MULTICASTNETWORKINTERFACE, nii.getNetworkInterface().getName());
         p.setProperty(PROP_TPUART_DEVICE, tpuartDevicetextField.getText());
         p.setProperty(PROP_TUNNELING_IP, ipInterfaceIpTextField.getText());
         p.setProperty(PROP_INDIVIDUALADDRESS, individualAddressTextField.getText());
@@ -465,6 +540,30 @@ public class SettingsDialog extends javax.swing.JDialog {
         updateOpenCheckboxes();
     }//GEN-LAST:event_askFolderCheckboxActionPerformed
 
+    private void offlineRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_offlineRadioButtonActionPerformed
+        setEnableAll(ipRouterPanel, false);
+        setEnableAll(ipInterfacePanel, false);
+        setEnableAll(tpuartPanel, false);
+        p.setProperty(PROP_ACCESS, ACCESS_OFF);
+    }//GEN-LAST:event_offlineRadioButtonActionPerformed
+
+    private void multicastNetworkComboboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_multicastNetworkComboboxActionPerformed
+        
+    }//GEN-LAST:event_multicastNetworkComboboxActionPerformed
+
+    private void ipRoutingAutodetectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ipRoutingAutodetectButtonActionPerformed
+        KnxAutoDiscoverProgress kadp = new KnxAutoDiscoverProgress((Frame)getParent(), true);
+        
+        // start progress
+        kadp.setVisible(true);
+        
+        NetworkInterface ni = kadp.getNetworkInterface();
+        if (ni!=null) {
+            multicastNetworkCombobox.setSelectedItem(new NetworkInterfaceItem(ni));
+            ipRouterMulticasttextField.setText(kadp.getMulticast());
+        }
+    }//GEN-LAST:event_ipRoutingAutodetectButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox askFolderCheckbox;
@@ -480,15 +579,21 @@ public class SettingsDialog extends javax.swing.JDialog {
     private javax.swing.JTextField ipRouterMulticasttextField;
     private javax.swing.JPanel ipRouterPanel;
     private javax.swing.JRadioButton ipRouterRadioButton;
+    private javax.swing.JButton ipRoutingAutodetectButton;
     private javax.swing.JPanel knxPanel;
     private javax.swing.JCheckBox lastFolderCheckbox;
+    private javax.swing.JComboBox multicastNetworkCombobox;
+    private javax.swing.JLabel multicastNetworkOn;
     private javax.swing.JLabel multicastipLabel;
+    private javax.swing.JPanel offlinePanel;
+    private javax.swing.JRadioButton offlineRadioButton;
     private javax.swing.JButton saveButton;
     private javax.swing.JTabbedPane settingsTabbedPane;
     private javax.swing.JTextField tpuartDevicetextField;
     private javax.swing.JPanel tpuartPanel;
     private javax.swing.JRadioButton tpuartRadioButton;
     private javax.swing.JLabel tpuartinterfaceLabel;
+    private javax.swing.JLabel tpuartinterfaceLabel1;
     // End of variables declaration//GEN-END:variables
 
     private void updateOpenCheckboxes() {

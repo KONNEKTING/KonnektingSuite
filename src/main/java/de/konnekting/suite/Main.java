@@ -43,7 +43,10 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.net.Inet4Address;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -63,6 +66,7 @@ import javax.xml.bind.JAXBException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
+import tuwien.auto.calimero.exception.KNXIllegalArgumentException;
 
 /**
  *
@@ -72,14 +76,17 @@ public class Main extends javax.swing.JFrame {
 
     static {
         String level = System.getProperty("debuglevel", "info");
+        
+        File logFolder = new File(System.getProperty("logfolder", "."));
 
         System.out.println("ENABLING LOGGING with level: " + level);
+        System.out.println("Using log folder: " + logFolder.getAbsolutePath());
 
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             OutputStreamWriter osw = new OutputStreamWriter(baos);
             osw.write("handlers= java.util.logging.FileHandler, java.util.logging.ConsoleHandler" + "\n");
-            osw.write("java.util.logging.FileHandler.pattern = KonnektingSuite.log" + "\n");
+            osw.write("java.util.logging.FileHandler.pattern = "+logFolder.getAbsolutePath()+"/KonnektingSuite.log" + "\n");
             osw.write("java.util.logging.FileHandler.limit = 10000000" + "\n");
             osw.write("java.util.logging.FileHandler.count = 10" + "\n");
             osw.write("java.util.logging.FileHandler.formatter = de.root1.logging.JulFormatter" + "\n");
@@ -142,7 +149,7 @@ public class Main extends javax.swing.JFrame {
         String versionMsg = "KONNEKTING Suite - Version " + applicationProperties.getProperty("application.version", "n/a") + " Build " + applicationProperties.getProperty("application.build", "n/a") + (debug ? " DEBUG MODE!" : "");
         log.info(versionMsg);
         RootEventBus.getDefault().post(new EventConsoleMessage(versionMsg));
-        RootEventBus.getDefault().post(new EventConsoleMessage(bundle.getString("MainWindow.ConsoleMsg.operatingSystem")+ ": "+ System.getProperty("os.name")));
+        RootEventBus.getDefault().post(new EventConsoleMessage(bundle.getString("MainWindow.ConsoleMsg.operatingSystem") + ": " + System.getProperty("os.name")));
 
         removeDeviceButton.setEnabled(false);
         programmAllButton.setEnabled(false);
@@ -152,63 +159,73 @@ public class Main extends javax.swing.JFrame {
         addDeviceButton.setEnabled(false);
         eventbus.register(this);
 
+
         String access = PROPERTIES.getProperty(SettingsDialog.PROP_ACCESS, SettingsDialog.ACCESS_ROUTING);
         String routingMulticast = PROPERTIES.getProperty(SettingsDialog.PROP_ROUTING_MULTICASTIP, "224.0.23.12");
         String tunnelingIp = PROPERTIES.getProperty(SettingsDialog.PROP_TUNNELING_IP, "192.168.0.100");
         String tpuartDevice = PROPERTIES.getProperty(SettingsDialog.PROP_TPUART_DEVICE, "COM3");
         String individualAddress = PROPERTIES.getProperty(SettingsDialog.PROP_INDIVIDUALADDRESS, "1.0.254");
 
-        
-        
         try {
+            
+            String defaultNi = NetworkInterface.getNetworkInterfaces().nextElement().getName();
+            String routingNetworkinterface = PROPERTIES.getProperty(SettingsDialog.PROP_ROUTING_MULTICASTNETWORKINTERFACE, defaultNi);
+            
             switch (access.toUpperCase()) {
                 case SettingsDialog.ACCESS_ROUTING:
-                    log.info("Starting in ROUTING mode: {}@{}",individualAddress, routingMulticast);
-                    RootEventBus.getDefault().post(new EventConsoleMessage(bundle.getString("MainWindow.ConsoleMsg.knxConnection")+"IP-Router: "+individualAddress+"@"+routingMulticast));
-                    knx = new Knx(individualAddress);
+                    log.info("Starting in ROUTING mode: {}@{} on {}", individualAddress, routingMulticast, routingNetworkinterface);
+                    RootEventBus.getDefault().post(new EventConsoleMessage(bundle.getString("MainWindow.ConsoleMsg.knxConnection") + "IP-Router: " + individualAddress + "@" + routingMulticast+"/"+routingNetworkinterface));
+                    knx = new Knx(de.konnekting.suite.utils.Utils.getNetworkinterfaceByName(routingNetworkinterface), InetAddress.getByName(routingMulticast));
                     knx.setLoopbackMode(true);
                     break;
                 case SettingsDialog.ACCESS_TUNNELING:
-                    log.info("Starting in TUNNELING mode: {}@{}",individualAddress, tunnelingIp);
-                    RootEventBus.getDefault().post(new EventConsoleMessage(bundle.getString("MainWindow.ConsoleMsg.knxConnection")+"IP-Interface: "+individualAddress+"@"+tunnelingIp));
+                    log.info("Starting in TUNNELING mode: {}@{}", individualAddress, tunnelingIp);
+                    RootEventBus.getDefault().post(new EventConsoleMessage(bundle.getString("MainWindow.ConsoleMsg.knxConnection") + "IP-Interface: " + individualAddress + "@" + tunnelingIp));
                     knx = new Knx(InetAddress.getByName(tunnelingIp));
                     break;
                 case SettingsDialog.ACCESS_TPUART:
-                    log.info("Starting in TPUART mode: {}@{}",individualAddress,tpuartDevice);
-                    RootEventBus.getDefault().post(new EventConsoleMessage(bundle.getString("MainWindow.ConsoleMsg.knxConnection")+"TPUART: "+individualAddress+"@"+tpuartDevice));
+                    log.info("Starting in TPUART mode: {}@{}", individualAddress, tpuartDevice);
+                    RootEventBus.getDefault().post(new EventConsoleMessage(bundle.getString("MainWindow.ConsoleMsg.knxConnection") + "TPUART: " + individualAddress + "@" + tpuartDevice));
                     knx = new Knx(Knx.SerialType.TPUART, tpuartDevice);
+                    break;
+                case SettingsDialog.ACCESS_OFF:
+                    log.info("Starting in offline mode");
+                    RootEventBus.getDefault().post(new EventConsoleMessage(bundle.getString("MainWindow.ConsoleMsg.knxConnection") + "OFFLINE"));    
+                    knx=null;
                     break;
                 default:
                     log.info("Error. Unknown ACCESS TYPE: " + access);
                     System.exit(1);
             }
 
-            knx.addGroupAddressListener("*", new GroupAddressListener() {
-                @Override
-                public void readRequest(GroupAddressEvent event) {
-                    process();
-                }
+            if (knx != null) {
+                knx.addGroupAddressListener("*", new GroupAddressListener() {
+                    @Override
+                    public void readRequest(GroupAddressEvent event) {
+                        process();
+                    }
 
-                @Override
-                public void readResponse(GroupAddressEvent event) {
-                    process();
-                }
+                    @Override
+                    public void readResponse(GroupAddressEvent event) {
+                        process();
+                    }
 
-                @Override
-                public void write(GroupAddressEvent event) {
-                    process();
-                }
+                    @Override
+                    public void write(GroupAddressEvent event) {
+                        process();
+                    }
 
-                public void process() {
-                    RootEventBus.getDefault().post(new EventConsoleMessage(bundle.getString("MainWindow.ConsoleMsg.detectedTelegram")));
-                    knx.removeGroupAddressListener("*", this);
-                }
-            });
+                    public void process() {
+                        RootEventBus.getDefault().post(new EventConsoleMessage(bundle.getString("MainWindow.ConsoleMsg.detectedTelegram")));
+                        knx.removeGroupAddressListener("*", this);
+                    }
+                });
+            }
 
         } catch (KnxException ex) {
             RootEventBus.getDefault().post(new EventConsoleMessage("Fehler beim Öffnen der KNX Verbindung: " + access, ex));
             log.error("Error creating knx access.", ex);
-        } catch (UnknownHostException ex) {
+        } catch (KNXIllegalArgumentException | UnknownHostException | SocketException ex) {
             RootEventBus.getDefault().post(new EventConsoleMessage("Fehler beim Öffnen der KNX Verbindung.", ex));
             log.error("Error creating knx access.", ex);
         }
@@ -278,7 +295,7 @@ public class Main extends javax.swing.JFrame {
     }
 
     public void onEvent(EventProjectOpened evt) {
-        
+
         setTitle(bundle.getString("MainWindow.Title") + " - " + evt.getProjectFolder().getAbsolutePath());
         addDeviceButton.setEnabled(true);
     }
@@ -705,13 +722,12 @@ public class Main extends javax.swing.JFrame {
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
             @Override
             public void uncaughtException(Thread t, Throwable e) {
-                log.error("Uncaught exception occured in thread ["+t.getName()+"]", e);
-                RootEventBus.getDefault().post(new EventConsoleMessage("Uncaught exception occured in thread ["+t.getName()+"]", e));
+                log.error("Uncaught exception occured in thread [" + t.getName() + "]", e);
+                RootEventBus.getDefault().post(new EventConsoleMessage("Uncaught exception occured in thread [" + t.getName() + "]", e));
             }
         });
-        
-        
-        log.info("Locale: {}",Locale.getDefault());
+
+        log.info("Locale: {}", Locale.getDefault());
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 log.info("LaF Name: '" + info.getName() + "'");
@@ -725,7 +741,7 @@ public class Main extends javax.swing.JFrame {
         }
 
         final SplashPanel splashPanel = new SplashPanel();
-        
+
         Thread t = new Thread("Load properties") {
             @Override
             public void run() {
@@ -736,13 +752,13 @@ public class Main extends javax.swing.JFrame {
                 }
                 try {
                     PROPERTIES.load(new FileReader(propertiesFile));
-                    
+
                     Iterator<Map.Entry<Object, Object>> iter = PROPERTIES.entrySet().iterator();
                     while (iter.hasNext()) {
                         Map.Entry<Object, Object> entry = iter.next();
                         log.info("Property: {}={}", entry.getKey(), entry.getValue());
                     }
-                    
+
                 } catch (FileNotFoundException ex) {
                     log.info("Properties file not found. Skip to defaults.");
                 } catch (IOException ex) {

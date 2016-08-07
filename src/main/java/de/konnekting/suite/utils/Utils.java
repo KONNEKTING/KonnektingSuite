@@ -19,6 +19,11 @@
 package de.konnekting.suite.utils;
 
 import java.awt.Color;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Enumeration;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -49,11 +54,11 @@ public class Utils {
     }
 
     public static String getLine(String addr) {
-        return addr.substring(nthIndexOf(addr, ".".charAt(0), 1)+1, nthIndexOf(addr, ".".charAt(0), 2));
+        return addr.substring(nthIndexOf(addr, ".".charAt(0), 1) + 1, nthIndexOf(addr, ".".charAt(0), 2));
     }
 
     public static String getMember(String addr) {
-        return addr.substring(nthIndexOf(addr, ".".charAt(0), 2)+1);
+        return addr.substring(nthIndexOf(addr, ".".charAt(0), 2) + 1);
     }
 
     public static int nthIndexOf(String text, char needle, int n) {
@@ -67,9 +72,20 @@ public class Utils {
         }
         return -1;
     }
-    
+
     public static boolean isLinux() {
         return System.getProperty("os.name").toUpperCase().contains("LINUX");
     }
-    
+
+    public static NetworkInterface getNetworkinterfaceByName(String name) throws SocketException {
+        Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
+        while (networkInterfaces.hasMoreElements()) {
+            NetworkInterface ni = networkInterfaces.nextElement();
+            if (ni.getName().equals(name)) {
+                return ni;
+            }
+        }
+        throw new SocketException("Interface with name '" + name + "' not found.");
+    }
+
 }
