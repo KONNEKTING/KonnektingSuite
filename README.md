@@ -18,10 +18,10 @@ The first time you program a device, the device needs an individual address. Oth
 
 So, staring with your first programming of a device, follow this steps:
 
-# Configure a individual address for the device in the suite (Tab 'Device')
-# Give the required communication objects group addresses (Tab 'Communication Objects')
-# Check and set parameters of the device (Tab 'Parameters')
-# Press the PROG BUTTON on the device. The PROG LED on the device must turn ON.
+1. Configure a individual address for the device in the suite (Tab 'Device')
+2. Give the required communication objects group addresses (Tab 'Communication Objects')
+3. Check and set parameters of the device (Tab 'Parameters')
+4. Press the PROG BUTTON on the device. The PROG LED on the device must turn ON.
 # Press the "read button" in the suite
 
 That's all. The Suite will search for the device and programm it.
