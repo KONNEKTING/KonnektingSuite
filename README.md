@@ -22,7 +22,7 @@ So, starting with your first programming of a device, follow this steps:
 2. Give the required communication objects group addresses (Tab 'Communication Objects')
 3. Check and set parameters of the device (Tab 'Parameters')
 4. Press the PROG BUTTON on the device. The PROG LED on the device must turn ON.
-# Press the "read button" in the suite
+5. Press the "read button" in the suite
 
 That's all. The Suite will search for the device and programm it.
 On further changes, you can use the other buttons to update the device programming. Unless you change the individual address, you don't habe to press the PROG BUTTON on your device. The Suite is able to directly address the device.
