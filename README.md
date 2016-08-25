@@ -5,7 +5,7 @@ Graphical desktop application to program a KONNEKTING Device
 
 ## How to program a device
 
-With the "Suite" you can program an individual address (aka. physical address/PA) as well as group-addresses (GA) and device parameters (means: device settings). It's currently not possible to program the "firmware or sketch" of an arduino to a device. 
+With the "Suite" you can program an individual address (aka. physical address/PA) as well as group-addresses (GA) and device parameters (means: device settings). It's currently *not* possible to program the "firmware or sketch" of an arduino to a device. 
 
 There are currently 4 programming modes in the suite available:
 
@@ -16,7 +16,7 @@ There are currently 4 programming modes in the suite available:
 
 The first time you program a device, the device needs an individual address. Otherwise you cannot do anything with it, as it is not "adressable". And as it is not adressable if it's not programmed at all, you need to press the "prog button" on the device, so that the suite is able to find it on the bus.
 
-So, staring with your first programming of a device, follow this steps:
+So, starting with your first programming of a device, follow this steps:
 
 1. Configure a individual address for the device in the suite (Tab 'Device')
 2. Give the required communication objects group addresses (Tab 'Communication Objects')
