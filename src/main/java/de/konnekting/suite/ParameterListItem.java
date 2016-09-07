@@ -23,6 +23,7 @@ import de.konnekting.deviceconfig.utils.Helper;
 //import de.konnekting.suite.uicomponents.FloatParameterTextField;
 import de.konnekting.suite.uicomponents.NumberParameterTextField;
 import de.konnekting.suite.uicomponents.RawParameterTextField;
+import de.konnekting.suite.uicomponents.StringParameterTextField;
 import de.konnekting.xml.konnektingdevice.v0.Parameter;
 import de.konnekting.xml.konnektingdevice.v0.Parameter.Value;
 import de.konnekting.xml.konnektingdevice.v0.ParameterConfiguration;
@@ -112,13 +113,6 @@ public class ParameterListItem extends javax.swing.JPanel {
     private javax.swing.JLabel descriptionLabel;
     // End of variables declaration//GEN-END:variables
 
-//    private void save(JTextField field) {
-//    private void save(ValueTextField field) {
-//        String rawbyteText = field.getText();
-//        device.setParameterValue(id, Helper.hexToBytes(rawbyteText));
-//        log.ifo("Changing text param #"+id+" to '"+rawbyteText+"'");
-//    }
-//    
     private void save(JComboBox<ComboboxItem> combobox) {
         int selectedIndex = combobox.getSelectedIndex();
         ComboboxItem cbi = combobox.getItemAt(selectedIndex);
@@ -155,6 +149,9 @@ public class ParameterListItem extends javax.swing.JPanel {
             String type = param.getValue().getType().toUpperCase();
             ParameterType paramType = ParameterType.valueOf(type);
             switch (paramType) {
+                case STRING11:
+                    comp = new StringParameterTextField(device, param, conf);
+                    break;
                 case RAW1:
                 case RAW2:
                 case RAW3:
