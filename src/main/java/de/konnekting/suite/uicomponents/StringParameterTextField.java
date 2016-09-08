@@ -24,7 +24,7 @@ import de.konnekting.deviceconfig.DeviceConfigContainer;
 import de.konnekting.deviceconfig.utils.Helper;
 import de.konnekting.xml.konnektingdevice.v0.Parameter;
 import de.konnekting.xml.konnektingdevice.v0.ParameterConfiguration;
-import de.konnekting.xml.konnektingdevice.v0.ParameterType;
+import de.konnekting.xml.konnektingdevice.v0.ParamType;
 import java.awt.HeadlessException;
 import java.io.UnsupportedEncodingException;
 import javax.swing.JOptionPane;
@@ -40,7 +40,7 @@ public class StringParameterTextField extends ValidateableTextField {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     private final Parameter param;
-    private final ParameterType paramType;
+    private final ParamType paramType;
     private final DeviceConfigContainer device;
 
     private String validationError = "";
@@ -50,8 +50,7 @@ public class StringParameterTextField extends ValidateableTextField {
         this.device = device;
         this.param = param;
 
-        String type = param.getValue().getType().toUpperCase();
-        paramType = ParameterType.valueOf(type);
+        paramType = param.getValue().getType();
 
         byte[] value = conf.getValue();
         if (value == null) {
@@ -102,7 +101,7 @@ public class StringParameterTextField extends ValidateableTextField {
             (int) 0x00, (int) 0x00, (int) 0x00, 
             (int) 0x00, (int) 0x00};
         switch (paramType) {
-            case STRING11: {
+            case STRING_11: {
                 try {
                     value = r2b.convertString11(text);
                 } catch (UnsupportedEncodingException ex) {
@@ -127,7 +126,7 @@ public class StringParameterTextField extends ValidateableTextField {
         String readableValue = "";
 
         switch (paramType) {
-            case STRING11:
+            case STRING_11:
                 if (!checkParamSize(value, param, 11)) {
                     break;
                 }

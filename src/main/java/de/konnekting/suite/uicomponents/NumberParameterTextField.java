@@ -22,9 +22,9 @@ import de.konnekting.deviceconfig.utils.ReadableValue2Bytes;
 import de.konnekting.deviceconfig.utils.Bytes2ReadableValue;
 import de.konnekting.deviceconfig.DeviceConfigContainer;
 import de.konnekting.deviceconfig.utils.Helper;
+import de.konnekting.xml.konnektingdevice.v0.ParamType;
 import de.konnekting.xml.konnektingdevice.v0.Parameter;
 import de.konnekting.xml.konnektingdevice.v0.ParameterConfiguration;
-import de.konnekting.xml.konnektingdevice.v0.ParameterType;
 import java.awt.HeadlessException;
 import javax.swing.JOptionPane;
 import org.slf4j.Logger;
@@ -42,7 +42,7 @@ public class NumberParameterTextField extends ValidateableTextField {
     private long max = 0;
     private final boolean minMaxSet;
     private final Parameter param;
-    private final ParameterType paramType;
+    private final ParamType paramType;
     private final DeviceConfigContainer device;
     
     private String validationError = "";
@@ -52,8 +52,7 @@ public class NumberParameterTextField extends ValidateableTextField {
         this.device = device;
         this.param = param;
 
-        String type = param.getValue().getType().toUpperCase();
-        paramType = ParameterType.valueOf(type);
+        paramType = param.getValue().getType();
 
         // if min is set, max must also be set --> ensure and catch exception?!
         byte[] minRaw = param.getValue().getMin();
@@ -70,7 +69,7 @@ public class NumberParameterTextField extends ValidateableTextField {
         // parse/read MIN/MAX values
         Bytes2ReadableValue b2r = new Bytes2ReadableValue();
         switch (paramType) {
-            case INT8:
+            case INT_8:
                 if (!checkParamSize(value, param, 1)) {
                     break;
                 }
@@ -83,7 +82,7 @@ public class NumberParameterTextField extends ValidateableTextField {
                     max = Byte.MAX_VALUE;
                 }
                 break;
-            case UINT8:
+            case UINT_8:
                 if (!checkParamSize(value, param, 1)) {
                     break;
                 }
@@ -96,7 +95,7 @@ public class NumberParameterTextField extends ValidateableTextField {
                     max = 255;
                 }
                 break;
-            case INT16:
+            case INT_16:
                 if (!checkParamSize(value, param, 2)) {
                     break;
                 }
@@ -108,7 +107,7 @@ public class NumberParameterTextField extends ValidateableTextField {
                     max = Short.MAX_VALUE;
                 }
                 break;
-            case UINT16:
+            case UINT_16:
                 if (!checkParamSize(value, param, 2)) {
                     break;
                 }
@@ -120,7 +119,7 @@ public class NumberParameterTextField extends ValidateableTextField {
                     max = 65535;
                 }
                 break;
-            case INT32:
+            case INT_32:
                 if (!checkParamSize(value, param, 4)) {
                     break;
                 }
@@ -132,7 +131,7 @@ public class NumberParameterTextField extends ValidateableTextField {
                     max = Integer.MAX_VALUE;
                 }
                 break;
-            case UINT32:
+            case UINT_32:
                 if (!checkParamSize(value, param, 4)) {
                     break;
                 }
@@ -194,22 +193,22 @@ public class NumberParameterTextField extends ValidateableTextField {
         ReadableValue2Bytes r2b = new ReadableValue2Bytes();
         byte[] value;
         switch (paramType) {
-            case INT8:
+            case INT_8:
                 value = r2b.convertINT8(Byte.parseByte(text));
                 break;
-            case UINT8:
+            case UINT_8:
                 value = r2b.convertUINT8(Short.parseShort(text));
                 break;
-            case INT16:
+            case INT_16:
                 value = r2b.convertINT16(Short.parseShort(text));
                 break;
-            case UINT16:
+            case UINT_16:
                 value = r2b.convertUINT16(Integer.parseInt(text));
                 break;
-            case INT32:
+            case INT_32:
                 value = r2b.convertINT32(Integer.parseInt(text));
                 break;
-            case UINT32:
+            case UINT_32:
                 value = r2b.convertUINT32(Long.parseLong(text));
                 break;
             default:
@@ -229,39 +228,39 @@ public class NumberParameterTextField extends ValidateableTextField {
         String readableValue = "";
 
         switch (paramType) {
-            case INT8:
+            case INT_8:
                 if (!checkParamSize(value, param, 1)) {
                     break;
                 }
 
                 readableValue = String.valueOf(b2r.convertINT8(value));
                 break;
-            case UINT8:
+            case UINT_8:
                 if (!checkParamSize(value, param, 1)) {
                     break;
                 }
 
                 readableValue = String.valueOf(b2r.convertUINT8(value));
                 break;
-            case INT16:
+            case INT_16:
                 if (!checkParamSize(value, param, 2)) {
                     break;
                 }
                 readableValue = String.valueOf(b2r.convertINT16(value));
                 break;
-            case UINT16:
+            case UINT_16:
                 if (!checkParamSize(value, param, 2)) {
                     break;
                 }
                 readableValue = String.valueOf(b2r.convertUINT16(value));
                 break;
-            case INT32:
+            case INT_32:
                 if (!checkParamSize(value, param, 4)) {
                     break;
                 }
                 readableValue = String.valueOf(b2r.convertINT32(value));
                 break;
-            case UINT32:
+            case UINT_32:
                 if (!checkParamSize(value, param, 4)) {
                     break;
                 }

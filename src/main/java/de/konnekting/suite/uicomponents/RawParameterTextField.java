@@ -24,7 +24,7 @@ import de.konnekting.deviceconfig.DeviceConfigContainer;
 import de.konnekting.deviceconfig.utils.Helper;
 import de.konnekting.xml.konnektingdevice.v0.Parameter;
 import de.konnekting.xml.konnektingdevice.v0.ParameterConfiguration;
-import de.konnekting.xml.konnektingdevice.v0.ParameterType;
+import de.konnekting.xml.konnektingdevice.v0.ParamType;
 import java.awt.HeadlessException;
 import javax.swing.JOptionPane;
 import org.slf4j.Logger;
@@ -39,7 +39,7 @@ public class RawParameterTextField extends ValidateableTextField {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     private final Parameter param;
-    private final ParameterType paramType;
+    private final ParamType paramType;
     private final DeviceConfigContainer device;
 
     private String validationError = "";
@@ -50,41 +50,40 @@ public class RawParameterTextField extends ValidateableTextField {
         this.device = device;
         this.param = param;
 
-        String type = param.getValue().getType().toUpperCase();
-        paramType = ParameterType.valueOf(type);
+        paramType = param.getValue().getType();
 
         switch (paramType) {
-            case RAW1:
+            case RAW_1:
                 length = 1;
                 break;
-            case RAW2:
+            case RAW_2:
                 length = 2;
                 break;
-            case RAW3:
+            case RAW_3:
                 length = 3;
                 break;
-            case RAW4:
+            case RAW_4:
                 length = 4;
                 break;
-            case RAW5:
+            case RAW_5:
                 length = 5;
                 break;
-            case RAW6:
+            case RAW_6:
                 length = 6;
                 break;
-            case RAW7:
+            case RAW_7:
                 length = 7;
                 break;
-            case RAW8:
+            case RAW_8:
                 length = 8;
                 break;
-            case RAW9:
+            case RAW_9:
                 length = 9;
                 break;
-            case RAW10:
+            case RAW_10:
                 length = 10;
                 break;
-            case RAW11:
+            case RAW_11:
             default:
                 length = 11;
                 break;
