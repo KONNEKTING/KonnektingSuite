@@ -95,26 +95,25 @@ public class StringParameterTextField extends ValidateableTextField {
     public byte[] getValue() {
         String text = getText();
         
-        // concat whitespace until string has reached 11 bytes
-        while (text.length()<11) {
-            text+=" ";
-        }
         ReadableValue2Bytes r2b = new ReadableValue2Bytes();
-        byte[] value;
+        byte[] value = new byte[]{
+            (int) 0x00, (int) 0x00, (int) 0x00, 
+            (int) 0x00, (int) 0x00, (int) 0x00, 
+            (int) 0x00, (int) 0x00, (int) 0x00, 
+            (int) 0x00, (int) 0x00};
         switch (paramType) {
             case STRING11: {
                 try {
                     value = r2b.convertString11(text);
                 } catch (UnsupportedEncodingException ex) {
                     log.error("Error converting String to bytes", ex);
-                    value = null;
                 }
             }
             break;
             default:
-                value = null;
-
+                log.error("Param with id {} is no string11 type", param.getId());
         }
+        
         return value;
     }
 
