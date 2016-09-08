@@ -77,16 +77,16 @@ public class Main extends javax.swing.JFrame {
     static {
         String level = System.getProperty("debuglevel", "info");
         
-        File logFolder = new File(System.getProperty("logfolder", "."));
+        String logFolder = new File(System.getProperty("logfolder", ".")).getAbsolutePath().replace("\\", "/");
 
         System.out.println("ENABLING LOGGING with level: " + level);
-        System.out.println("Using log folder: " + logFolder.getAbsolutePath());
+        System.out.println("Using log folder: " + logFolder);
 
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             OutputStreamWriter osw = new OutputStreamWriter(baos);
             osw.write("handlers= java.util.logging.FileHandler, java.util.logging.ConsoleHandler" + "\n");
-            osw.write("java.util.logging.FileHandler.pattern = "+logFolder.getAbsolutePath()+"/KonnektingSuite.log" + "\n");
+            osw.write("java.util.logging.FileHandler.pattern = "+logFolder+"/KonnektingSuite.log" + "\n");
             osw.write("java.util.logging.FileHandler.limit = 10000000" + "\n");
             osw.write("java.util.logging.FileHandler.count = 10" + "\n");
             osw.write("java.util.logging.FileHandler.formatter = de.root1.logging.JulFormatter" + "\n");
