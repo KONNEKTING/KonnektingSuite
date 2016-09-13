@@ -103,6 +103,7 @@ public class ParameterPanel extends javax.swing.JPanel {
         
         // start with first group
         if (selectedElement==null) {
+            log.info("Selecting first index");
             groupList.setSelectedIndex(0);
         } else {
             // select last selected element
@@ -111,6 +112,7 @@ public class ParameterPanel extends javax.swing.JPanel {
                 Object elementAt = groupList.getModel().getElementAt(i);
                 if (elementAt.equals(selectedElement)) {
                     groupList.setSelectedIndex(i);
+                    log.info("Selecting last index {}->{}", i, selectedElement);
                     break;
                 }
             }
