@@ -34,24 +34,20 @@ import org.slf4j.LoggerFactory;
  *
  * @author achristian
  */
-public class NumberParameterTextField extends ValidateableTextField {
+public class NumberParameterTextField extends ParameterTextField {
     
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     private long min = 0;
     private long max = 0;
     private final boolean minMaxSet;
-    private final Parameter param;
     private final ParamType paramType;
-    private final DeviceConfigContainer device;
     
     private String validationError = "";
     private String lastText;
     
-        public NumberParameterTextField(DeviceConfigContainer device, Parameter param, ParameterConfiguration conf) {
-        this.device = device;
-        this.param = param;
-
+    public NumberParameterTextField(DeviceConfigContainer device, Parameter param, ParameterConfiguration conf) {
+        super(device, param, conf);
         paramType = param.getValue().getType();
 
         // if min is set, max must also be set --> ensure and catch exception?!

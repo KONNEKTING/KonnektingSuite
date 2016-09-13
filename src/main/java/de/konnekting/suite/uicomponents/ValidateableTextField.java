@@ -121,5 +121,5 @@ public abstract class ValidateableTextField extends JTextField implements Valida
     public void removeChangeListener(ChangeListener listener) {
         this.listeners.remove(listener);
     }
-
+    
 }

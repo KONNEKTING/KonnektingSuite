@@ -21,7 +21,6 @@ package de.konnekting.suite.uicomponents;
 import de.konnekting.deviceconfig.utils.ReadableValue2Bytes;
 import de.konnekting.deviceconfig.utils.Bytes2ReadableValue;
 import de.konnekting.deviceconfig.DeviceConfigContainer;
-import de.konnekting.deviceconfig.utils.Helper;
 import de.konnekting.xml.konnektingdevice.v0.Parameter;
 import de.konnekting.xml.konnektingdevice.v0.ParameterConfiguration;
 import de.konnekting.xml.konnektingdevice.v0.ParamType;
@@ -35,20 +34,17 @@ import org.slf4j.LoggerFactory;
  *
  * @author achristian
  */
-public class StringParameterTextField extends ValidateableTextField {
+public class StringParameterTextField extends ParameterTextField {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    private final Parameter param;
     private final ParamType paramType;
-    private final DeviceConfigContainer device;
 
     private String validationError = "";
     private String lastText;
 
     public StringParameterTextField(DeviceConfigContainer device, Parameter param, ParameterConfiguration conf) {
-        this.device = device;
-        this.param = param;
+        super(device, param, conf);
 
         paramType = param.getValue().getType();
 
