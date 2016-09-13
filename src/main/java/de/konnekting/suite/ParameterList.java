@@ -24,9 +24,11 @@ import de.root1.rooteventbus.RootEventBus;
 import de.konnekting.suite.events.StickyParamGroupSelected;
 import de.konnekting.suite.utils.Utils;
 import de.konnekting.xml.konnektingdevice.v0.Parameter;
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,10 +37,13 @@ import org.slf4j.LoggerFactory;
  * @author achristian
  */
 public class ParameterList extends javax.swing.JPanel {
+
     private final Logger log = LoggerFactory.getLogger(getClass());
     private List<Parameter> list;
     private final List<ParameterListItem> parameterListItems = new ArrayList<>();
     private DeviceConfigContainer device;
+    private final Color colorNormal = new JPanel().getBackground();
+    private final Color colorBrighter = Utils.brighter(colorNormal);
 
     /**
      * Creates new form ParameterList
@@ -47,48 +52,48 @@ public class ParameterList extends javax.swing.JPanel {
         RootEventBus.getDefault().registerSticky(this);
         initComponents();
     }
-    
+
     public void onEvent(EventParameterChanged event) {
         refreshParameterVisibility();
     }
 
     public void onEvent(StickyParamGroupSelected event) {
 
-            list = event.getList();
+        list = event.getList();
 
-            removeAll();
-            parameterListItems.clear();
-            initComponents();
-            numberOfParamsLabel.setText(java.util.ResourceBundle.getBundle("de/konnekting/suite/i18n/language").getString("ParameterList.numberOfParamsLabel.text") + list.size());
-            
-            GridBagConstraints gridBagConstraints;
+        removeAll();
+        parameterListItems.clear();
+        initComponents();
+        numberOfParamsLabel.setText(java.util.ResourceBundle.getBundle("de/konnekting/suite/i18n/language").getString("ParameterList.numberOfParamsLabel.text") + list.size());
 
-            int i = 0;
+        GridBagConstraints gridBagConstraints;
 
-            for (Parameter param : list) {
-                ParameterListItem item = new ParameterListItem();
-                parameterListItems.add(item);
-                item.setParam(param.getId(), device);
-                if (i % 2 == 1) {
-                    item.setBackground(Utils.brighter(item.getBackground()));
-                }
-                i++;
+        int i = 0;
 
-                gridBagConstraints = new java.awt.GridBagConstraints();
-                gridBagConstraints.gridx = 0;
-                gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-                gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-                gridBagConstraints.weightx = 0.1;
-
-                add(item, gridBagConstraints);
-            }
+        for (Parameter param : list) {
+            ParameterListItem item = new ParameterListItem();
+            parameterListItems.add(item);
+            item.setParam(param.getId(), device);
+            if (i % 2 == 1) {
+                item.setBackground(colorBrighter);
+            } 
+            i++;
 
             gridBagConstraints = new java.awt.GridBagConstraints();
             gridBagConstraints.gridx = 0;
-            gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+            gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+            gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
             gridBagConstraints.weightx = 0.1;
-            gridBagConstraints.weighty = 0.1;
-            add(new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 32767)), gridBagConstraints);
+
+            add(item, gridBagConstraints);
+        }
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.1;
+        gridBagConstraints.weighty = 0.1;
+        add(new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 32767)), gridBagConstraints);
 
     }
 
@@ -131,8 +136,19 @@ public class ParameterList extends javax.swing.JPanel {
 
     private void refreshParameterVisibility() {
         log.info("refresing visibility");
-        for (ParameterListItem parameterListItem : parameterListItems) {
-            parameterListItem.updateParameterVisibility();
+
+        int i = 0;
+        for (ParameterListItem item : parameterListItems) {
+            boolean visible = item.updateParameterVisibility();
+            if (visible) {
+                if (i % 2 == 1) {
+                    item.setBackground(colorBrighter);
+                } else {
+                    item.setBackground(colorNormal);
+                }
+                i++;
+            }
+
         }
         validate();
     }

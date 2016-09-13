@@ -193,13 +193,15 @@ public class ParameterListItem extends javax.swing.JPanel {
 
     }
 
-    void updateParameterVisibility() {
+    boolean updateParameterVisibility() {
         if (comp instanceof ParameterDependency) {
             ParameterDependency pd = (ParameterDependency) comp;
             boolean parameterVisible = pd.isParameterVisible();
             
             log.info("Setting param #{} to visible={}", id, parameterVisible);
             setVisible(parameterVisible);
+            return parameterVisible;
         }
+        return true;
     }
 }
