@@ -19,6 +19,7 @@
 package de.konnekting.suite;
 
 import de.konnekting.deviceconfig.utils.Helper;
+import de.konnekting.suite.events.EventParameterChanged;
 import de.konnekting.suite.events.StickyDeviceSelected;
 import de.konnekting.suite.uicomponents.GroupAddressTextField;
 import de.root1.rooteventbus.RootEventBus;
@@ -71,6 +72,11 @@ public class CommObjectTable extends javax.swing.JPanel {
         
         // set new device data
         dataModel.setDeviceData(ev.getDeviceConfig());
+    }
+    
+    // Update comobj table when parameter has changed (check dependencies...)
+    public void onEvent(EventParameterChanged ev) {
+        dataModel.refreshCommObjVisibility();
     }
 
     private InputVerifier getGaInputVerifier() {

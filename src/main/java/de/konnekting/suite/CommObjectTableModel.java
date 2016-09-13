@@ -18,13 +18,20 @@
  */
 package de.konnekting.suite;
 
+import de.konnekting.deviceconfig.utils.ReflectionIdComparator;
 import de.konnekting.deviceconfig.DeviceConfigContainer;
 import de.konnekting.deviceconfig.exception.InvalidAddressFormatException;
 import de.konnekting.xml.konnektingdevice.v0.CommObject;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
 import javax.swing.table.DefaultTableModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -32,24 +39,19 @@ import javax.swing.table.DefaultTableModel;
  */
 public class CommObjectTableModel extends DefaultTableModel {
 
+    private final Logger log = LoggerFactory.getLogger(getClass());
     private DeviceConfigContainer device;
     private final List<CommObject> commObjects = new ArrayList<>();
-    
+
     private final ResourceBundle rb = java.util.ResourceBundle.getBundle("de/konnekting/suite/i18n/language");
+    private int rows = 0;
 
     public CommObjectTableModel() {
     }
 
     public void setDeviceData(DeviceConfigContainer device) {
         this.device = device;
-        commObjects.clear();
-        if (device == null) {
-            commObjects.clear();
-        } else {
-            commObjects.addAll(device.getCommObjects());
-            commObjects.sort(new ReflectionIdComparator());
-        }
-        fireTableDataChanged();
+        reloadDeviceData();
     }
 
     @Override
@@ -57,7 +59,8 @@ public class CommObjectTableModel extends DefaultTableModel {
         if (commObjects == null) {
             return 0;
         }
-        return commObjects.size();
+
+        return rows;
     }
 
     @Override
@@ -75,17 +78,17 @@ public class CommObjectTableModel extends DefaultTableModel {
         // 5 GA
         switch (columnIndex) {
             case 0:
-                return rb.getString(getClass().getSimpleName()+".tableheader.id"); // ID
+                return rb.getString(getClass().getSimpleName() + ".tableheader.id"); // ID
             case 1:
-                return rb.getString(getClass().getSimpleName()+".tableheader.name"); // Name
+                return rb.getString(getClass().getSimpleName() + ".tableheader.name"); // Name
             case 2:
-                return rb.getString(getClass().getSimpleName()+".tableheader.function"); // Funktion
+                return rb.getString(getClass().getSimpleName() + ".tableheader.function"); // Funktion
             case 3:
-                return rb.getString(getClass().getSimpleName()+".tableheader.dpt"); // DPT
+                return rb.getString(getClass().getSimpleName() + ".tableheader.dpt"); // DPT
             case 4:
-                return rb.getString(getClass().getSimpleName()+".tableheader.description"); // Beschreibung
+                return rb.getString(getClass().getSimpleName() + ".tableheader.description"); // Beschreibung
             case 5:
-                return rb.getString(getClass().getSimpleName()+".tableheader.groupaddress"); // Gruppenadresse
+                return rb.getString(getClass().getSimpleName() + ".tableheader.groupaddress"); // Gruppenadresse
             default:
                 throw new IllegalArgumentException("Column " + columnIndex + " not known");
         }
@@ -196,6 +199,61 @@ public class CommObjectTableModel extends DefaultTableModel {
         }
     }
 
-    
+    void reloadDeviceData() {
+        commObjects.clear();
+        if (device == null) {
+            commObjects.clear();
+            rows = 0;
+        } else {
+            commObjects.addAll(device.getAllCommObjects());
+
+        }
+
+        refreshCommObjVisibility();
+
+    }
+
+    public void refreshCommObjVisibility() {
+
+        // sort by id
+        commObjects.sort(new ReflectionIdComparator());
+        log.info("Sort by ID");
+
+        final Set<CommObject> enabled = new HashSet<>();
+        final Set<CommObject> disabled = new HashSet<>();
+
+        // sort by visibility
+        commObjects.sort(new Comparator<CommObject>() {
+
+            @Override
+            public int compare(CommObject o1, CommObject o2) {
+                boolean o1Enabled = device.isCommObjectEnabled(o1);
+                boolean o2Enabled = device.isCommObjectEnabled(o2);
+                if (o1Enabled && !o2Enabled) {
+                    enabled.add(o1);
+                    disabled.add(o2);
+                    return -1;
+                } else if (o2Enabled && !o1Enabled) {
+                    disabled.add(o1);
+                    enabled.add(o2);
+                    return 1;
+                } else if (o1Enabled && o2Enabled) {
+                    enabled.add(o1);
+                    enabled.add(o2);
+                    return 0;
+                } else if (!o1Enabled && !o2Enabled) {
+                    disabled.add(o1);
+                    disabled.add(o2);
+                    return 0;
+                } else {
+                    return 0;
+                }
+            }
+
+        });
+        log.info("Sort by enabled/disabled: {} vs. {}", enabled.size(), disabled.size());
+        rows = enabled.size();
+        fireTableDataChanged();
+    }
 
 }

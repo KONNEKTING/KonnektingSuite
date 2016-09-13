@@ -18,6 +18,7 @@
  */
 package de.konnekting.suite;
 
+import de.konnekting.deviceconfig.utils.ReflectionIdComparator;
 import de.konnekting.deviceconfig.DeviceConfigContainer;
 import de.root1.rooteventbus.RootEventBus;
 import de.konnekting.suite.events.StickyDeviceSelected;

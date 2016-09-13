@@ -20,7 +20,7 @@ package de.konnekting.suite;
 
 import de.konnekting.deviceconfig.DeviceConfigContainer;
 import de.konnekting.deviceconfig.utils.Helper;
-//import de.konnekting.suite.uicomponents.FloatParameterTextField;
+import de.konnekting.suite.events.EventParameterChanged;
 import de.konnekting.suite.uicomponents.NumberParameterTextField;
 import de.konnekting.suite.uicomponents.RawParameterTextField;
 import de.konnekting.suite.uicomponents.StringParameterTextField;
@@ -28,14 +28,18 @@ import de.konnekting.xml.konnektingdevice.v0.Parameter;
 import de.konnekting.xml.konnektingdevice.v0.Parameter.Value;
 import de.konnekting.xml.konnektingdevice.v0.ParameterConfiguration;
 import de.konnekting.xml.konnektingdevice.v0.ParamType;
+import de.root1.rooteventbus.RootEventBus;
 import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JTextField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -146,10 +150,12 @@ public class ParameterListItem extends javax.swing.JPanel {
         GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
         if (options == null || options.isEmpty()) {
 
+            JTextField tfield = null;
+            
             ParamType paramType = param.getValue().getType();
             switch (paramType) {
                 case STRING_11:
-                    comp = new StringParameterTextField(device, param, conf);
+                    tfield = new StringParameterTextField(device, param, conf);
                     break;
                 case RAW_1:
                 case RAW_2:
@@ -162,7 +168,7 @@ public class ParameterListItem extends javax.swing.JPanel {
                 case RAW_9:
                 case RAW_10:
                 case RAW_11:
-                    comp = new RawParameterTextField(device, param, conf);
+                    tfield = new RawParameterTextField(device, param, conf);
                     break;
                 case INT_8:
                 case UINT_8:
@@ -171,8 +177,20 @@ public class ParameterListItem extends javax.swing.JPanel {
                 case INT_32:
                 case UINT_32:
                 default:
-                    comp = new NumberParameterTextField(device, param, conf);
+                    tfield = new NumberParameterTextField(device, param, conf);
             }
+            
+            tfield.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    RootEventBus.getDefault().post(new EventParameterChanged());
+                }
+            });
+            
+            
+            comp = tfield;
+            
         } else {
             List<ComboboxItem> cbitems = new ArrayList<>();
 
@@ -197,6 +215,7 @@ public class ParameterListItem extends javax.swing.JPanel {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     save(combobox);
+                    RootEventBus.getDefault().post(new EventParameterChanged());
                 }
             });
             save(combobox); // ensure that default value is stored
