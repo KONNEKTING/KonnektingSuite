@@ -22,6 +22,8 @@ import de.konnekting.deviceconfig.DeviceConfigContainer;
 import de.konnekting.deviceconfig.utils.Helper;
 import de.konnekting.suite.events.EventParameterChanged;
 import de.konnekting.suite.uicomponents.NumberParameterTextField;
+import de.konnekting.suite.uicomponents.ParameterCombobox;
+import de.konnekting.suite.uicomponents.ParameterDependency;
 import de.konnekting.suite.uicomponents.RawParameterTextField;
 import de.konnekting.suite.uicomponents.StringParameterTextField;
 import de.konnekting.xml.konnektingdevice.v0.Parameter;
@@ -32,8 +34,6 @@ import de.root1.rooteventbus.RootEventBus;
 import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -51,29 +51,10 @@ public class ParameterListItem extends javax.swing.JPanel {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
+    private JComponent comp;
     private short id;
     private DeviceConfigContainer device;
 
-    class ComboboxItem {
-
-        private final String representation;
-        private final String value;
-
-        private ComboboxItem(String value, String representation) {
-            this.value = value;
-            this.representation = representation;
-        }
-
-        @Override
-        public String toString() {
-            return representation;
-        }
-
-        public String getValue() {
-            return value;
-        }
-
-    }
 
     /**
      * Creates new form ParameterListItem
@@ -117,12 +98,7 @@ public class ParameterListItem extends javax.swing.JPanel {
     private javax.swing.JLabel descriptionLabel;
     // End of variables declaration//GEN-END:variables
 
-    private void save(JComboBox<ComboboxItem> combobox) {
-        int selectedIndex = combobox.getSelectedIndex();
-        ComboboxItem cbi = combobox.getItemAt(selectedIndex);
-        log.info("Changing combo param #" + id + " to '" + cbi.getValue() + "'");
-        device.setParameterValue(id, Helper.hexToBytes(cbi.getValue()));
-    }
+    
 
     void setParam(short id, DeviceConfigContainer device) {
         this.id = id;
@@ -146,7 +122,7 @@ public class ParameterListItem extends javax.swing.JPanel {
 
         log.info("Setting param #" + id + " to '" + Helper.bytesToHex(currentValRaw) + "'");
 
-        JComponent comp;
+        
         GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
         if (options == null || options.isEmpty()) {
 
@@ -192,34 +168,15 @@ public class ParameterListItem extends javax.swing.JPanel {
             comp = tfield;
             
         } else {
-            List<ComboboxItem> cbitems = new ArrayList<>();
-
-            StringTokenizer st = new StringTokenizer(options, "=|");
-            int i = -1;
-            int selectedIndex = -1;
-            while (st.hasMoreTokens()) {
-                i++;
-                String val = st.nextToken();
-                String representation = st.nextToken();
-                ComboboxItem cbi = new ComboboxItem(val, representation);
-                cbitems.add(cbi);
-                if (val.equals(Helper.bytesToHex(currentValRaw))) {
-                    selectedIndex = i;
-                }
-            }
-
-            JComboBox<ComboboxItem> combobox = new JComboBox(cbitems.toArray());
-            combobox.setSelectedIndex(selectedIndex);
-
+            
+            ParameterCombobox combobox = new ParameterCombobox(device, param, conf);
             combobox.addActionListener(new ActionListener() {
+
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    save(combobox);
                     RootEventBus.getDefault().post(new EventParameterChanged());
                 }
             });
-            save(combobox); // ensure that default value is stored
-
             comp = combobox;
         }
 
@@ -234,5 +191,15 @@ public class ParameterListItem extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(2, 0, 1, 3);
         add(comp, gridBagConstraints);
 
+    }
+
+    void updateParameterVisibility() {
+        if (comp instanceof ParameterDependency) {
+            ParameterDependency pd = (ParameterDependency) comp;
+            boolean parameterVisible = pd.isParameterVisible();
+            
+            log.info("Setting param #{} to visible={}", id, parameterVisible);
+            setVisible(parameterVisible);
+        }
     }
 }

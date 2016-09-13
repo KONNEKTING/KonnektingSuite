@@ -19,20 +19,25 @@
 package de.konnekting.suite;
 
 import de.konnekting.deviceconfig.DeviceConfigContainer;
+import de.konnekting.suite.events.EventParameterChanged;
 import de.root1.rooteventbus.RootEventBus;
 import de.konnekting.suite.events.StickyParamGroupSelected;
 import de.konnekting.suite.utils.Utils;
 import de.konnekting.xml.konnektingdevice.v0.Parameter;
 import java.awt.GridBagConstraints;
+import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author achristian
  */
 public class ParameterList extends javax.swing.JPanel {
-
+    private final Logger log = LoggerFactory.getLogger(getClass());
     private List<Parameter> list;
+    private final List<ParameterListItem> parameterListItems = new ArrayList<>();
     private DeviceConfigContainer device;
 
     /**
@@ -42,12 +47,17 @@ public class ParameterList extends javax.swing.JPanel {
         RootEventBus.getDefault().registerSticky(this);
         initComponents();
     }
+    
+    public void onEvent(EventParameterChanged event) {
+        refreshParameterVisibility();
+    }
 
     public void onEvent(StickyParamGroupSelected event) {
 
             list = event.getList();
 
             removeAll();
+            parameterListItems.clear();
             initComponents();
             numberOfParamsLabel.setText(java.util.ResourceBundle.getBundle("de/konnekting/suite/i18n/language").getString("ParameterList.numberOfParamsLabel.text") + list.size());
             
@@ -57,6 +67,7 @@ public class ParameterList extends javax.swing.JPanel {
 
             for (Parameter param : list) {
                 ParameterListItem item = new ParameterListItem();
+                parameterListItems.add(item);
                 item.setParam(param.getId(), device);
                 if (i % 2 == 1) {
                     item.setBackground(Utils.brighter(item.getBackground()));
@@ -116,5 +127,13 @@ public class ParameterList extends javax.swing.JPanel {
         removeAll();
         initComponents();
         numberOfParamsLabel.setText(java.util.ResourceBundle.getBundle("de/konnekting/suite/i18n/language").getString("ParameterList.numberOfParamsLabel.text"));
+    }
+
+    private void refreshParameterVisibility() {
+        log.info("refresing visibility");
+        for (ParameterListItem parameterListItem : parameterListItems) {
+            parameterListItem.updateParameterVisibility();
+        }
+        validate();
     }
 }
