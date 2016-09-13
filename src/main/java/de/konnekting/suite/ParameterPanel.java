@@ -20,6 +20,7 @@ package de.konnekting.suite;
 
 import de.konnekting.deviceconfig.utils.ReflectionIdComparator;
 import de.konnekting.deviceconfig.DeviceConfigContainer;
+import de.konnekting.suite.events.EventParameterChanged;
 import de.root1.rooteventbus.RootEventBus;
 import de.konnekting.suite.events.StickyDeviceSelected;
 import de.konnekting.suite.events.StickyParamGroupSelected;
@@ -28,14 +29,19 @@ import de.konnekting.xml.konnektingdevice.v0.ParameterGroup;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author achristian
  */
 public class ParameterPanel extends javax.swing.JPanel {
-
+    
+    private final Logger log = LoggerFactory.getLogger(getClass());
     private DeviceConfigContainer device;
+    private List<ParameterGroup> paramGroups = new ArrayList<>();
+    private boolean alreadyUpdating = true;
 
     /**
      * Creates new form ParameterPanel
@@ -58,11 +64,35 @@ public class ParameterPanel extends javax.swing.JPanel {
         
         deviceDescriptionLabel.setText(java.util.ResourceBundle.getBundle("de/konnekting/suite/i18n/language").getString("ParameterPanel.deviceDescriptionLabel.text")+device.getIndividualAddress() +" "+ device.getDescription());
 
+        updateGroupsInList();
+    }
+    
+    public void onEvent(EventParameterChanged event) {
+        if (!alreadyUpdating) {
+            updateGroupsInList();
+        }
+    }
+    
+    private void updateGroupsInList() {
+        alreadyUpdating=true;
+        log.info("refresing groups in list");
+        
+        int selectedIndex = groupList.getSelectedIndex();
+        
+        Object selectedElement = null;
+        
+        if (selectedIndex!=-1) {
+            selectedElement = groupList.getModel().getElementAt(selectedIndex);
+        }
+        
         List<ParameterGroup> groups = device.getParameterGroups();
 
         List<String> groupnames = new ArrayList<>();
+        paramGroups.clear();
         for (ParameterGroup group : groups) {
-            groupnames.add(group.getName());
+            if (device.isParameterGroupEnabled(group)) {
+                groupnames.add(group.getName());
+            }
         };
 
         String[] groupNamesArray = groupnames.toArray(new String[0]);
@@ -70,9 +100,24 @@ public class ParameterPanel extends javax.swing.JPanel {
         
         groupList.setListData(groupNamesArray);
         
+        
         // start with first group
-        groupList.setSelectedIndex(0);
-
+        if (selectedElement==null) {
+            groupList.setSelectedIndex(0);
+        } else {
+            // select last selected element
+            int elements = groupList.getModel().getSize();
+            for(int i=0;i<elements;i++){
+                Object elementAt = groupList.getModel().getElementAt(i);
+                if (elementAt.equals(selectedElement)) {
+                    groupList.setSelectedIndex(i);
+                    break;
+                }
+            }
+        }
+        
+        validate();
+        alreadyUpdating=false;
     }
 
     /**
