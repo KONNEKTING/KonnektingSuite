@@ -158,7 +158,7 @@ public class SettingsDialog extends javax.swing.JDialog {
         askFolderCheckbox = new javax.swing.JCheckBox();
         knxPanel = new javax.swing.JPanel();
         offlinePanel = new javax.swing.JPanel();
-        tpuartinterfaceLabel1 = new javax.swing.JLabel();
+        noconnectionLabel = new javax.swing.JLabel();
         ipRouterPanel = new javax.swing.JPanel();
         multicastipLabel = new javax.swing.JLabel();
         ipRouterMulticasttextField = new javax.swing.JTextField();
@@ -225,8 +225,7 @@ public class SettingsDialog extends javax.swing.JDialog {
 
         offlinePanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        java.util.ResourceBundle bundle1 = java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle"); // NOI18N
-        tpuartinterfaceLabel1.setText(bundle1.getString("SettingsDialog.tpuartinterfaceLabel1.text")); // NOI18N
+        noconnectionLabel.setText(bundle.getString("SettingsDialog.noconnectionLabel.text")); // NOI18N
 
         javax.swing.GroupLayout offlinePanelLayout = new javax.swing.GroupLayout(offlinePanel);
         offlinePanel.setLayout(offlinePanelLayout);
@@ -234,14 +233,14 @@ public class SettingsDialog extends javax.swing.JDialog {
             offlinePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(offlinePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tpuartinterfaceLabel1)
+                .addComponent(noconnectionLabel)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         offlinePanelLayout.setVerticalGroup(
             offlinePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(offlinePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tpuartinterfaceLabel1)
+                .addComponent(noconnectionLabel)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -384,6 +383,7 @@ public class SettingsDialog extends javax.swing.JDialog {
 
         buttonGroup1.add(offlineRadioButton);
         offlineRadioButton.setSelected(true);
+        java.util.ResourceBundle bundle1 = java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle"); // NOI18N
         offlineRadioButton.setText(bundle1.getString("SettingsDialog.offlineRadioButton.text")); // NOI18N
         offlineRadioButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -585,6 +585,7 @@ public class SettingsDialog extends javax.swing.JDialog {
     private javax.swing.JComboBox multicastNetworkCombobox;
     private javax.swing.JLabel multicastNetworkOn;
     private javax.swing.JLabel multicastipLabel;
+    private javax.swing.JLabel noconnectionLabel;
     private javax.swing.JPanel offlinePanel;
     private javax.swing.JRadioButton offlineRadioButton;
     private javax.swing.JButton saveButton;
@@ -593,7 +594,6 @@ public class SettingsDialog extends javax.swing.JDialog {
     private javax.swing.JPanel tpuartPanel;
     private javax.swing.JRadioButton tpuartRadioButton;
     private javax.swing.JLabel tpuartinterfaceLabel;
-    private javax.swing.JLabel tpuartinterfaceLabel1;
     // End of variables declaration//GEN-END:variables
 
     private void updateOpenCheckboxes() {
