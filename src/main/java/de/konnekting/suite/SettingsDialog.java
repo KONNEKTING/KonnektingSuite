@@ -383,8 +383,7 @@ public class SettingsDialog extends javax.swing.JDialog {
 
         buttonGroup1.add(offlineRadioButton);
         offlineRadioButton.setSelected(true);
-        java.util.ResourceBundle bundle1 = java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle"); // NOI18N
-        offlineRadioButton.setText(bundle1.getString("SettingsDialog.offlineRadioButton.text")); // NOI18N
+        offlineRadioButton.setText(bundle.getString("SettingsDialog.offlineRadioButton.text")); // NOI18N
         offlineRadioButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 offlineRadioButtonActionPerformed(evt);
