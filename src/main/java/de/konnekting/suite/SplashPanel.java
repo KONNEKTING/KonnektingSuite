@@ -18,8 +18,8 @@ public class SplashPanel extends javax.swing.JFrame {
      */
     public SplashPanel() {
         initComponents();
-        setLocationRelativeTo(null);
         setSize(400, 300);
+        setLocationRelativeTo(null);
         setVisible(true);
     }
     

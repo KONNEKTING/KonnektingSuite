@@ -7,7 +7,6 @@ package de.konnekting.suite.uicomponents;
 
 import de.konnekting.deviceconfig.DeviceConfigContainer;
 import de.konnekting.deviceconfig.utils.Helper;
-import de.konnekting.suite.ParameterListItem;
 import de.konnekting.suite.events.EventParameterChanged;
 import de.konnekting.xml.konnektingdevice.v0.Parameter;
 import de.konnekting.xml.konnektingdevice.v0.ParameterConfiguration;

@@ -84,6 +84,7 @@ public class ParameterPanel extends javax.swing.JPanel {
         if (selectedIndex!=-1) {
             selectedElement = groupList.getModel().getElementAt(selectedIndex);
         }
+        log.info("Selected element is: {} - {}", selectedIndex, selectedElement);
         
         List<ParameterGroup> groups = device.getParameterGroups();
 
@@ -195,8 +196,8 @@ public class ParameterPanel extends javax.swing.JPanel {
         if (groupList.getSelectedIndex() != -1) {
             String selectedGroup = (String) groupList.getModel().getElementAt(groupList.getSelectedIndex());
 
-            List<Parameter> params = device.getParameterGroup(selectedGroup);
-            RootEventBus.getDefault().postSticky(new StickyParamGroupSelected(params));
+            ParameterGroup group = device.getParameterGroup(selectedGroup);
+            RootEventBus.getDefault().postSticky(new StickyParamGroupSelected(group));
         }
     }//GEN-LAST:event_groupListValueChanged
 

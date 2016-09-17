@@ -19,6 +19,7 @@
 package de.konnekting.suite.events;
 
 import de.konnekting.xml.konnektingdevice.v0.Parameter;
+import de.konnekting.xml.konnektingdevice.v0.ParameterGroup;
 import java.util.List;
 
 /**
@@ -26,18 +27,18 @@ import java.util.List;
  * @author achristian
  */
 public class StickyParamGroupSelected {
-    private final List<Parameter> list;
+    private final ParameterGroup group;
 
-    public StickyParamGroupSelected(List<Parameter> list) {
-        this.list = list;
+    public StickyParamGroupSelected(ParameterGroup group) {
+        this.group = group;
     }
 
     public StickyParamGroupSelected() {
-        list=null;
+        group=null;
     }
 
-    public List<Parameter> getList() {
-        return list;
+    public ParameterGroup getGroup() {
+        return group;
     }
 
 }

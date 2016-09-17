@@ -35,6 +35,8 @@ import de.root1.slicknx.KnxException;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -76,7 +78,7 @@ public class Main extends javax.swing.JFrame {
 
     static {
         String level = System.getProperty("debuglevel", "info");
-        
+
         String logFolder = new File(System.getProperty("logfolder", ".")).getAbsolutePath().replace("\\", "/");
 
         System.out.println("ENABLING LOGGING with level: " + level);
@@ -86,7 +88,7 @@ public class Main extends javax.swing.JFrame {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             OutputStreamWriter osw = new OutputStreamWriter(baos);
             osw.write("handlers= java.util.logging.FileHandler, java.util.logging.ConsoleHandler" + "\n");
-            osw.write("java.util.logging.FileHandler.pattern = "+logFolder+"/KonnektingSuite.log" + "\n");
+            osw.write("java.util.logging.FileHandler.pattern = " + logFolder + "/KonnektingSuite.log" + "\n");
             osw.write("java.util.logging.FileHandler.limit = 10000000" + "\n");
             osw.write("java.util.logging.FileHandler.count = 10" + "\n");
             osw.write("java.util.logging.FileHandler.formatter = de.root1.logging.JulFormatter" + "\n");
@@ -120,6 +122,7 @@ public class Main extends javax.swing.JFrame {
     static File propertiesFile = new File(new File(System.getProperty("user.home")), "KonnektingSuite.properties");
     private Knx knx;
     private final GroupMonitorFrame monitor;
+    private final ProjectSaver projectSaver;
 
     public static Properties getProperties() {
         return PROPERTIES;
@@ -129,7 +132,7 @@ public class Main extends javax.swing.JFrame {
      * Creates new form Main
      */
     public Main() {
-
+        projectSaver = new ProjectSaver(this);
         Runtime.getRuntime().addShutdownHook(new Thread() {
 
             @Override
@@ -142,7 +145,13 @@ public class Main extends javax.swing.JFrame {
 
         });
 
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                exitButton.doClick();
+            }
+        });
         initComponents();
 
         boolean debug = Boolean.getBoolean("de.root1.slicknx.konnekting.debug");
@@ -159,7 +168,6 @@ public class Main extends javax.swing.JFrame {
         addDeviceButton.setEnabled(false);
         eventbus.register(this);
 
-
         String access = PROPERTIES.getProperty(SettingsDialog.PROP_ACCESS, SettingsDialog.ACCESS_ROUTING);
         String routingMulticast = PROPERTIES.getProperty(SettingsDialog.PROP_ROUTING_MULTICASTIP, "224.0.23.12");
         String tunnelingIp = PROPERTIES.getProperty(SettingsDialog.PROP_TUNNELING_IP, "192.168.0.100");
@@ -167,14 +175,14 @@ public class Main extends javax.swing.JFrame {
         String individualAddress = PROPERTIES.getProperty(SettingsDialog.PROP_INDIVIDUALADDRESS, "1.0.254");
 
         try {
-            
+
             String defaultNi = NetworkInterface.getNetworkInterfaces().nextElement().getName();
             String routingNetworkinterface = PROPERTIES.getProperty(SettingsDialog.PROP_ROUTING_MULTICASTNETWORKINTERFACE, defaultNi);
-            
+
             switch (access.toUpperCase()) {
                 case SettingsDialog.ACCESS_ROUTING:
                     log.info("Starting in ROUTING mode: {}@{} on {}", individualAddress, routingMulticast, routingNetworkinterface);
-                    RootEventBus.getDefault().post(new EventConsoleMessage(bundle.getString("MainWindow.ConsoleMsg.knxConnection") + "IP-Router: " + individualAddress + "@" + routingMulticast+"/"+routingNetworkinterface));
+                    RootEventBus.getDefault().post(new EventConsoleMessage(bundle.getString("MainWindow.ConsoleMsg.knxConnection") + "IP-Router: " + individualAddress + "@" + routingMulticast + "/" + routingNetworkinterface));
                     knx = new Knx(de.konnekting.suite.utils.Utils.getNetworkinterfaceByName(routingNetworkinterface), InetAddress.getByName(routingMulticast));
                     knx.setLoopbackMode(true);
                     break;
@@ -190,8 +198,8 @@ public class Main extends javax.swing.JFrame {
                     break;
                 case SettingsDialog.ACCESS_OFF:
                     log.info("Starting in offline mode");
-                    RootEventBus.getDefault().post(new EventConsoleMessage(bundle.getString("MainWindow.ConsoleMsg.knxConnection") + "OFFLINE"));    
-                    knx=null;
+                    RootEventBus.getDefault().post(new EventConsoleMessage(bundle.getString("MainWindow.ConsoleMsg.knxConnection") + "OFFLINE"));
+                    knx = null;
                     break;
                 default:
                     log.info("Error. Unknown ACCESS TYPE: " + access);
@@ -307,6 +315,7 @@ public class Main extends javax.swing.JFrame {
         // only enable if there is a selection
         removeDeviceButton.setEnabled(deviceConfig != null);
         updateProgButtons();
+        projectSaver.add(evt.getDeviceConfig());
 
     }
 
@@ -328,6 +337,7 @@ public class Main extends javax.swing.JFrame {
     public void onEvent(EventDeviceChanged evt) {
         eventbus.post(new EventProjectSave());
         updateProgButtons();
+        projectSaver.add(evt.getDeviceConfig());
     }
 
     /**
@@ -691,7 +701,9 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_settingsButtonActionPerformed
 
     private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed
-        System.exit(0);
+        projectSaver.setVisible(true);
+        dispose();
+//        System.exit(0);
     }//GEN-LAST:event_exitButtonActionPerformed
 
     private void programComObjOnlyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_programComObjOnlyButtonActionPerformed
