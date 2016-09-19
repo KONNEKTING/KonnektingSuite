@@ -22,6 +22,8 @@ import de.konnekting.deviceconfig.DeviceConfigContainer;
 import de.konnekting.deviceconfig.EventDeviceChanged;
 import de.konnekting.deviceconfig.utils.Helper;
 import de.konnekting.suite.events.EventConsoleMessage;
+import de.konnekting.suite.events.EventDeviceAdded;
+import de.konnekting.suite.events.EventDeviceRemoved;
 import de.root1.rooteventbus.RootEventBus;
 import de.konnekting.suite.events.EventProjectOpened;
 import de.konnekting.suite.events.EventSaveSettings;
@@ -131,19 +133,12 @@ public class Main extends javax.swing.JFrame {
      */
     public Main() {
         projectSaver = new ProjectSaver(this);
-        Runtime.getRuntime().addShutdownHook(new Thread() {
 
-            @Override
-            public void run() {
-                if (knx != null) {
-                    knx.close();
-                }
-                saveSettings();
-            }
+//        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        });
-
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        // let the exit handle by WindowAdapter
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -299,6 +294,11 @@ public class Main extends javax.swing.JFrame {
     public void onEvent(EventSaveSettings evt) {
         saveSettings();
     }
+    
+    public void onEvent(EventDeviceAdded evt) {
+        log.info("Added device: {}", evt.getDeviceConfig());
+        projectSaver.add(evt.getDeviceConfig());
+    }
 
     public void onEvent(EventProjectOpened evt) {
 
@@ -313,8 +313,6 @@ public class Main extends javax.swing.JFrame {
         // only enable if there is a selection
         removeDeviceButton.setEnabled(deviceConfig != null);
         updateProgButtons();
-        projectSaver.add(evt.getDeviceConfig());
-
     }
 
     private void updateProgButtons() {
@@ -333,9 +331,15 @@ public class Main extends javax.swing.JFrame {
     }
 
     public void onEvent(EventDeviceChanged evt) {
-//        eventbus.post(new EventProjectSave());
         updateProgButtons();
-        projectSaver.add(evt.getDeviceConfig());
+        if (evt.getDeviceConfig()!=null) {
+            projectSaver.add(evt.getDeviceConfig());
+        }
+    }
+    
+    public void onEvent(EventDeviceRemoved evt) {
+        updateProgButtons();
+        projectSaver.remove(evt.getDevice());
     }
 
     /**
@@ -699,9 +703,14 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_settingsButtonActionPerformed
 
     private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed
+        if (knx != null) {
+            knx.close();
+        }
         projectSaver.setVisible(true);
+        saveSettings();
         dispose();
-//        System.exit(0);
+        log.info("SUITE EXITING");
+        System.exit(0);
     }//GEN-LAST:event_exitButtonActionPerformed
 
     private void programComObjOnlyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_programComObjOnlyButtonActionPerformed

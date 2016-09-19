@@ -18,6 +18,7 @@
  */
 package de.konnekting.suite;
 
+import de.konnekting.suite.events.EventDeviceRemoved;
 import de.konnekting.deviceconfig.DeviceConfigContainer;
 import de.konnekting.suite.events.EventAddDevice;
 import de.konnekting.suite.events.EventConsoleMessage;
@@ -25,7 +26,6 @@ import de.root1.rooteventbus.RootEventBus;
 import de.konnekting.suite.events.EventDeviceAdded;
 import de.konnekting.suite.events.EventDeviceListRefresh;
 import de.konnekting.suite.events.EventProjectOpened;
-import de.konnekting.suite.events.EventProjectSave;
 import de.konnekting.suite.events.StickyDeviceSelected;
 import java.io.File;
 import javax.swing.JOptionPane;
@@ -96,10 +96,6 @@ public class DeviceList extends javax.swing.JPanel {
 
             }
         };
-    }
-
-    public void onEvent(EventProjectSave event) {
-        deviceListModel.saveAllToDisk();
     }
 
     /**
@@ -182,6 +178,7 @@ public class DeviceList extends javax.swing.JPanel {
             case 1:
                 device.remove();
                 deviceListModel.remove(selectedIndex);
+                RootEventBus.getDefault().post(new EventDeviceRemoved(device));
                 break;
             case 0:
             case JOptionPane.CLOSED_OPTION:

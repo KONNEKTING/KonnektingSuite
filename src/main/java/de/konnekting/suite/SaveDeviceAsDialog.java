@@ -173,11 +173,6 @@ public class SaveDeviceAsDialog extends javax.swing.JDialog {
 
         try {
             device.setIndividualAddress("1.1.");
-            try {
-                device.writeConfig();
-            } catch (JAXBException | SAXException ex) {
-                log.error("Error writing file " + device.toString(), ex);
-            }
             RootEventBus.getDefault().post(new EventAddDevice(device));
         } catch (InvalidAddressFormatException ex) {
             log.error("Error setting individual address. format invalid.");

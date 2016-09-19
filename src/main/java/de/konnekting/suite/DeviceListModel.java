@@ -19,12 +19,7 @@
 package de.konnekting.suite;
 
 import de.konnekting.deviceconfig.DeviceConfigContainer;
-import de.konnekting.suite.events.EventConsoleMessage;
-import de.konnekting.suite.events.EventProjectSaved;
-import de.root1.rooteventbus.RootEventBus;
 import javax.swing.DefaultListModel;
-import javax.xml.bind.JAXBException;
-import org.xml.sax.SAXException;
 
 
 /**
@@ -33,20 +28,5 @@ import org.xml.sax.SAXException;
  */
 public class DeviceListModel extends DefaultListModel<DeviceConfigContainer>{
 
-    void saveAllToDisk() {
-        boolean allok = true;
-        for(int i=0;i<getSize();i++) {
-            DeviceConfigContainer device = getElementAt(i);
-            try {
-                device.writeConfig();
-            } catch (JAXBException | SAXException ex) {
-                RootEventBus.getDefault().post(new EventConsoleMessage("Fehler beim Speichern von "+device, ex));
-                allok=false;
-            }
-        }
-        if (allok) {
-            RootEventBus.getDefault().post(new EventProjectSaved());
-        }
-    }
     
 }

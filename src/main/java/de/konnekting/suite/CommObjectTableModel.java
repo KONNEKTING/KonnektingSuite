@@ -215,44 +215,46 @@ public class CommObjectTableModel extends DefaultTableModel {
 
     public void refreshCommObjVisibility() {
 
-        // sort by id
-        commObjects.sort(new ReflectionIdComparator());
-        log.info("Sort by ID");
+        if (commObjects.isEmpty()) {
+            // sort by id
+            commObjects.sort(new ReflectionIdComparator());
+            log.info("Sort by ID");
 
-        final Set<CommObject> enabled = new HashSet<>();
-        final Set<CommObject> disabled = new HashSet<>();
+            final Set<CommObject> enabled = new HashSet<>();
+            final Set<CommObject> disabled = new HashSet<>();
 
-        // sort by visibility
-        commObjects.sort(new Comparator<CommObject>() {
+            // sort by visibility
+            commObjects.sort(new Comparator<CommObject>() {
 
-            @Override
-            public int compare(CommObject o1, CommObject o2) {
-                boolean o1Enabled = device.isCommObjectEnabled(o1);
-                boolean o2Enabled = device.isCommObjectEnabled(o2);
-                if (o1Enabled && !o2Enabled) {
-                    enabled.add(o1);
-                    disabled.add(o2);
-                    return -1;
-                } else if (o2Enabled && !o1Enabled) {
-                    disabled.add(o1);
-                    enabled.add(o2);
-                    return 1;
-                } else if (o1Enabled && o2Enabled) {
-                    enabled.add(o1);
-                    enabled.add(o2);
-                    return 0;
-                } else if (!o1Enabled && !o2Enabled) {
-                    disabled.add(o1);
-                    disabled.add(o2);
-                    return 0;
-                } else {
-                    return 0;
+                @Override
+                public int compare(CommObject o1, CommObject o2) {
+                    boolean o1Enabled = device.isCommObjectEnabled(o1);
+                    boolean o2Enabled = device.isCommObjectEnabled(o2);
+                    if (o1Enabled && !o2Enabled) {
+                        enabled.add(o1);
+                        disabled.add(o2);
+                        return -1;
+                    } else if (o2Enabled && !o1Enabled) {
+                        disabled.add(o1);
+                        enabled.add(o2);
+                        return 1;
+                    } else if (o1Enabled && o2Enabled) {
+                        enabled.add(o1);
+                        enabled.add(o2);
+                        return 0;
+                    } else if (!o1Enabled && !o2Enabled) {
+                        disabled.add(o1);
+                        disabled.add(o2);
+                        return 0;
+                    } else {
+                        return 0;
+                    }
                 }
-            }
 
-        });
-        log.info("Sort by enabled/disabled: {} vs. {}", enabled.size(), disabled.size());
-        rows = enabled.size();
+            });
+            log.info("Sort by enabled/disabled: {} vs. {}", enabled.size(), disabled.size());
+            rows = enabled.size();
+        }
         fireTableDataChanged();
     }
 

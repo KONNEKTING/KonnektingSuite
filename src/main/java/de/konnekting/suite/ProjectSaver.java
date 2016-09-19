@@ -8,6 +8,7 @@ package de.konnekting.suite;
 import de.konnekting.deviceconfig.DeviceConfigContainer;
 import java.util.HashSet;
 import java.util.Set;
+import javax.swing.SwingUtilities;
 import javax.xml.bind.JAXBException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +48,7 @@ public class ProjectSaver extends javax.swing.JDialog {
 
     private void save() {
         if (devices.isEmpty()) {
+            done();
             return;
         }
         onProgress(0, devices.size(), "");
@@ -136,11 +138,22 @@ public class ProjectSaver extends javax.swing.JDialog {
 
     public void done() {
         setVisible(false);
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                dispose();
+            }
+        });
     }
 
     void add(DeviceConfigContainer deviceConfig) {
-        log.info("Added dirty: {}", deviceConfig);
+        log.info("Added dirty: {} -> {}", deviceConfig, deviceConfig.hashCode());
         devices.add(deviceConfig);
+    }
+
+    void remove(DeviceConfigContainer deviceConfig) {
+        log.info("Removed dirty: {} -> {}", deviceConfig, deviceConfig.hashCode());
+        devices.remove(deviceConfig);
     }
 
 }
