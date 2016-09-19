@@ -18,7 +18,6 @@
  */
 package de.konnekting.suite;
 
-import de.konnekting.suite.events.EventProjectSave;
 import de.konnekting.deviceconfig.DeviceConfigContainer;
 import de.konnekting.deviceconfig.EventDeviceChanged;
 import de.konnekting.deviceconfig.utils.Helper;
@@ -45,7 +44,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
@@ -335,7 +333,7 @@ public class Main extends javax.swing.JFrame {
     }
 
     public void onEvent(EventDeviceChanged evt) {
-        eventbus.post(new EventProjectSave());
+//        eventbus.post(new EventProjectSave());
         updateProgButtons();
         projectSaver.add(evt.getDeviceConfig());
     }

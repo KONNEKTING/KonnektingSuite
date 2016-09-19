@@ -6,15 +6,19 @@
 package de.konnekting.suite.uicomponents;
 
 import de.konnekting.deviceconfig.DeviceConfigContainer;
+import de.konnekting.suite.events.EventParameterChanged;
 import de.konnekting.xml.konnektingdevice.v0.Parameter;
 import de.konnekting.xml.konnektingdevice.v0.ParameterConfiguration;
+import de.root1.rooteventbus.RootEventBus;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  *
  * @author achristian
  */
 public abstract class ParameterTextField extends ValidateableTextField implements ParameterDependency {
-    
+
     protected DeviceConfigContainer device;
     protected Parameter param;
     protected ParameterConfiguration conf;
@@ -23,11 +27,19 @@ public abstract class ParameterTextField extends ValidateableTextField implement
         this.device = device;
         this.param = param;
         this.conf = conf;
+
+        addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                RootEventBus.getDefault().post(new EventParameterChanged());
+            }
+        });
+
     }
-    
+
     @Override
     public boolean isParameterVisible() {
         return device.isParameterEnabled(param);
     }
-    
+
 }

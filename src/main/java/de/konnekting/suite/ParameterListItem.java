@@ -20,7 +20,6 @@ package de.konnekting.suite;
 
 import de.konnekting.deviceconfig.DeviceConfigContainer;
 import de.konnekting.deviceconfig.utils.Helper;
-import de.konnekting.suite.events.EventParameterChanged;
 import de.konnekting.suite.uicomponents.NumberParameterTextField;
 import de.konnekting.suite.uicomponents.ParameterCombobox;
 import de.konnekting.suite.uicomponents.ParameterDependency;
@@ -30,14 +29,7 @@ import de.konnekting.xml.konnektingdevice.v0.Parameter;
 import de.konnekting.xml.konnektingdevice.v0.Parameter.Value;
 import de.konnekting.xml.konnektingdevice.v0.ParameterConfiguration;
 import de.konnekting.xml.konnektingdevice.v0.ParamType;
-import de.root1.rooteventbus.RootEventBus;
 import java.awt.GridBagConstraints;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
-import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JTextField;
 import org.slf4j.Logger;
@@ -53,7 +45,6 @@ public class ParameterListItem extends javax.swing.JPanel {
 
     private JComponent comp;
     private short id;
-    private DeviceConfigContainer device;
 
 
     /**
@@ -102,7 +93,6 @@ public class ParameterListItem extends javax.swing.JPanel {
 
     void setParam(short id, DeviceConfigContainer device) {
         this.id = id;
-        this.device = device;
 
         Parameter param = device.getParameter(id);
 
@@ -113,16 +103,7 @@ public class ParameterListItem extends javax.swing.JPanel {
         descriptionLabel.setText("<html>" + desc + "</html>");
 
         ParameterConfiguration conf = device.getParameterConfig(id);
-        byte[] currentValRaw = conf.getValue();
 
-        if (currentValRaw == null) {
-            // set to default
-            currentValRaw = valueObject.getDefault();
-        }
-
-        log.info("Setting param #" + id + " to '" + Helper.bytesToHex(currentValRaw) + "'");
-
-        
         GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
         if (options == null || options.isEmpty()) {
 
@@ -155,28 +136,9 @@ public class ParameterListItem extends javax.swing.JPanel {
                 default:
                     tfield = new NumberParameterTextField(device, param, conf);
             }
-            
-            tfield.addActionListener(new ActionListener() {
-
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    RootEventBus.getDefault().post(new EventParameterChanged());
-                }
-            });
-            
-            
             comp = tfield;
-            
         } else {
-            
             ParameterCombobox combobox = new ParameterCombobox(device, param, conf);
-            combobox.addActionListener(new ActionListener() {
-
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    RootEventBus.getDefault().post(new EventParameterChanged());
-                }
-            });
             comp = combobox;
         }
 

@@ -37,17 +37,17 @@ public class ParameterCombobox extends JComboBox<ParameterCombobox.ComboboxItem>
         this.device = device;
         this.param = param;
         this.conf = conf;
-        
+
         Parameter.Value valueObject = param.getValue();
         String options = valueObject.getOptions();
-        
+
         byte[] currentValRaw = conf.getValue();
-        
+
         if (currentValRaw == null) {
             // set to default
             currentValRaw = valueObject.getDefault();
+            log.info("Setting param #{} to default value '{}'", param.getId(), Helper.bytesToHex(currentValRaw));
         }
-        
 
         List<ComboboxItem> cbitems = new ArrayList<>();
 
@@ -65,18 +65,18 @@ public class ParameterCombobox extends JComboBox<ParameterCombobox.ComboboxItem>
             }
         }
 
+        setModel(new DefaultComboBoxModel<ComboboxItem>(cbitems.toArray(new ComboboxItem[]{})));
+        setSelectedIndex(selectedIndex);
+        save(); // ensure that default value is stored
 
         addActionListener(new ActionListener() {
+
             @Override
             public void actionPerformed(ActionEvent e) {
                 save();
                 RootEventBus.getDefault().post(new EventParameterChanged());
             }
         });
-
-        setModel(new DefaultComboBoxModel<ComboboxItem>(cbitems.toArray(new ComboboxItem[]{})));
-        setSelectedIndex(selectedIndex);
-        save(); // ensure that default value is stored
     }
 
     @Override

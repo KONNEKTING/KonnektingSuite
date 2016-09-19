@@ -23,7 +23,7 @@ public class ProjectSaver extends javax.swing.JDialog {
     private Set<DeviceConfigContainer> devices = new HashSet<>();
 
     /**
-     * Creates new form KnxAutoDiscoverProgress
+     * Creates new form ProjectSaver
      */
     public ProjectSaver(java.awt.Frame parent) {
         super(parent, true);
@@ -66,12 +66,9 @@ public class ProjectSaver extends javax.swing.JDialog {
                 
                 onProgress(i, devices.size(), description);
                 device.writeConfig();
-                Thread.sleep(1000);
             } catch (JAXBException ex) {
                 ex.printStackTrace();
             } catch (SAXException ex) {
-                ex.printStackTrace();
-            } catch (InterruptedException ex) {
                 ex.printStackTrace();
             } finally {
                 log.info("Saving: {} *done*", device);
@@ -142,6 +139,7 @@ public class ProjectSaver extends javax.swing.JDialog {
     }
 
     void add(DeviceConfigContainer deviceConfig) {
+        log.info("Added dirty: {}", deviceConfig);
         devices.add(deviceConfig);
     }
 

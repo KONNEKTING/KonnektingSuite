@@ -58,6 +58,7 @@ public class NumberParameterTextField extends ParameterTextField {
             value = param.getValue().getDefault();
             // enforce default value to be set/saved
             device.setParameterValue(param.getId(), value);
+            log.info("Setting param #{} to default value '{}'", param.getId(), Helper.bytesToHex(value));
         }
 
         minMaxSet = minRaw != null && maxRaw != null;
