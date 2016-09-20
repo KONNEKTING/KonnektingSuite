@@ -215,7 +215,7 @@ public class CommObjectTableModel extends DefaultTableModel {
 
     public void refreshCommObjVisibility() {
 
-        if (commObjects.isEmpty()) {
+        if (!commObjects.isEmpty()) {
             // sort by id
             commObjects.sort(new ReflectionIdComparator());
             log.info("Sort by ID");

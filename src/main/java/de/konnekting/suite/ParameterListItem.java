@@ -19,7 +19,6 @@
 package de.konnekting.suite;
 
 import de.konnekting.deviceconfig.DeviceConfigContainer;
-import de.konnekting.deviceconfig.utils.Helper;
 import de.konnekting.suite.uicomponents.NumberParameterTextField;
 import de.konnekting.suite.uicomponents.ParameterCombobox;
 import de.konnekting.suite.uicomponents.ParameterDependency;
