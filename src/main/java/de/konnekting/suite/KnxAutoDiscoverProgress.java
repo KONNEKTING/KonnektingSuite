@@ -49,7 +49,7 @@ public class KnxAutoDiscoverProgress extends javax.swing.JDialog implements Auto
                 @Override
                 public void run() {
                     try {
-                        Knx.discoverInterfaceDevices(10, tthis);
+                        Knx.discoverInterfaceDevices(15, tthis);
                     } catch (KnxException ex) {
                         ex.printStackTrace();
                     }
