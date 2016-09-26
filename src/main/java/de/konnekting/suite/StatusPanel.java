@@ -22,6 +22,11 @@ import de.root1.rooteventbus.RootEventBus;
 import de.konnekting.suite.events.EventBackgroundThread;
 import de.konnekting.suite.events.EventDeviceAdded;
 import de.konnekting.suite.events.StickyDeviceSelected;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicBoolean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -29,7 +34,23 @@ import de.konnekting.suite.events.StickyDeviceSelected;
  */
 public class StatusPanel extends javax.swing.JPanel {
 
+    private final Logger log = LoggerFactory.getLogger(getClass());
     private final RootEventBus eventBus = RootEventBus.getDefault();
+    private AtomicBoolean dirty = new AtomicBoolean(false);
+    private final Timer t = new Timer();
+    private final Object LOCK = new Object();
+    private final TimerTask tt = new TimerTask() {
+        @Override
+        public void run() {
+            synchronized(LOCK) {
+                boolean old = dirty.getAndSet(false);
+                if (old) {
+                    log.info("Clear status message");
+                    lastStatusMsgLabel.setText("");
+                }
+            }
+        }
+    };
     
     /**
      * Creates new form StatusPanel
@@ -38,15 +59,22 @@ public class StatusPanel extends javax.swing.JPanel {
         initComponents();
         eventBus.register(this);
         eventBus.registerSticky(new StickyDeviceSelected());
+        t.schedule(tt, 5000, 10000);
     }
     
     public void onEvent(EventDeviceAdded event) {
-        
-        lastStatusMsgLabel.setText("Added: "+event.getDeviceConfig().getDescription()+" ("+event.getDeviceConfig().getIndividualAddress()+")");
+        showText("Added: "+event.getDeviceConfig().getDescription()+" ("+event.getDeviceConfig().getIndividualAddress()+")");
     }
     
     public void onEvent(EventBackgroundThread event) {
-        lastStatusMsgLabel.setText(event.getTask().getAction()+" "+String.format("% 3d",(int)(event.getTask().getProgress()*100d))+"%");
+        showText(event.getTask().getAction()+" "+String.format("% 3d",(int)(event.getTask().getProgress()*100d))+"%");
+    }
+    
+    private void showText(String text) {
+        synchronized(LOCK) {
+            lastStatusMsgLabel.setText(text);
+            dirty.set(true);
+        }
     }
 
     /**

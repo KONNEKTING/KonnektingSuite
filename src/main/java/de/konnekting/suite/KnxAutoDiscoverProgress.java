@@ -8,12 +8,17 @@ package de.konnekting.suite;
 import de.root1.slicknx.AutoDiscoverProgressListener;
 import de.root1.slicknx.Knx;
 import de.root1.slicknx.KnxException;
+import de.root1.slicknx.KnxInterfaceDevice;
 import java.awt.Frame;
+import java.lang.reflect.InvocationTargetException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -21,8 +26,7 @@ import javax.swing.JOptionPane;
  */
 public class KnxAutoDiscoverProgress extends javax.swing.JDialog implements AutoDiscoverProgressListener {
 
-    private NetworkInterface ni;
-    private InetAddress mcast;
+    private List<KnxInterfaceDevice> deviceList = new ArrayList<>();
 
     /**
      * Creates new form KnxAutoDiscoverProgress
@@ -31,6 +35,9 @@ public class KnxAutoDiscoverProgress extends javax.swing.JDialog implements Auto
         super(parent, modal);
         initComponents();
         setLocationRelativeTo(parent);
+        progressbar.setIndeterminate(true);
+        progressbar.setMaximum(0);
+        progressbar.setValue(0);
     }
 
     @Override
@@ -42,7 +49,7 @@ public class KnxAutoDiscoverProgress extends javax.swing.JDialog implements Auto
                 @Override
                 public void run() {
                     try {
-                        Knx.autoDiscover(tthis);
+                        Knx.discoverInterfaceDevices(10, tthis);
                     } catch (KnxException ex) {
                         ex.printStackTrace();
                     }
@@ -63,6 +70,7 @@ public class KnxAutoDiscoverProgress extends javax.swing.JDialog implements Auto
 
         progressbar = new javax.swing.JProgressBar();
         knxAutoDiscoverInProgress = new javax.swing.JLabel();
+        messageLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -76,101 +84,81 @@ public class KnxAutoDiscoverProgress extends javax.swing.JDialog implements Auto
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(progressbar, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
+                    .addComponent(progressbar, javax.swing.GroupLayout.DEFAULT_SIZE, 517, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(knxAutoDiscoverInProgress)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(messageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(knxAutoDiscoverInProgress)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(knxAutoDiscoverInProgress)
+                    .addComponent(messageLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(progressbar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(progressbar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(KnxAutoDiscoverProgress.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(KnxAutoDiscoverProgress.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(KnxAutoDiscoverProgress.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(KnxAutoDiscoverProgress.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                KnxAutoDiscoverProgress dialog = new KnxAutoDiscoverProgress(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel knxAutoDiscoverInProgress;
+    private javax.swing.JLabel messageLabel;
     private javax.swing.JProgressBar progressbar;
     // End of variables declaration//GEN-END:variables
 
     @Override
     public void onProgress(int i, int max, NetworkInterface iface, InetAddress address) {
+
+        if (max > 2) {
+            progressbar.setIndeterminate(false);
+        }
         progressbar.setMaximum(max);
         progressbar.setValue(i);
-        progressbar.setString(address.toString() + " @ " + iface.toString());
-        progressbar.setStringPainted(true);
+        
+        String networkname = iface.getName();
+        if (!networkname.equals(iface.getDisplayName())) {
+            networkname+="/"+iface.getDisplayName();
+        }
+        messageLabel.setText(networkname);
     }
 
     @Override
-    public void done(NetworkInterface ni, String individualAddress, String name, String knxMediumString, InetAddress mcast, String macAddressString) {
-        this.ni = ni;
-        this.mcast = mcast;
-        setVisible(false);
-        JOptionPane.showMessageDialog((Frame) getParent(),
-                "Gefunden: " + individualAddress + " / " + name + " / " + knxMediumString + " / " + mcast + " / " + ni);
+    public void done(List<KnxInterfaceDevice> devices) {
+        try {
+            SwingUtilities.invokeAndWait(new Runnable() {
+                @Override
+                public void run() {
+                    setVisible(false);
+                }
+            });
+        } catch (InterruptedException ex) {
+        } catch (InvocationTargetException ex) {
+        }
+        deviceList = devices;
     }
 
     @Override
     public void noResult() {
-        setVisible(false);
-            JOptionPane.showMessageDialog((Frame) getParent(),
-                "Nichts gefunden.");
+        try {
+            SwingUtilities.invokeAndWait(new Runnable() {
+                @Override
+                public void run() {
+                    setVisible(false);
+                }
+            });
+        } catch (InterruptedException ex) {
+        } catch (InvocationTargetException ex) {
+        }
     }
 
-    public NetworkInterface getNetworkInterface() {
-        return ni;
+    public List<KnxInterfaceDevice> getDeviceList() {
+        return deviceList;
     }
 
-    public String getMulticast() {
-        return mcast.getHostAddress();
-    }
 }

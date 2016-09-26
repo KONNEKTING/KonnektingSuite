@@ -135,10 +135,9 @@ public class Main extends javax.swing.JFrame {
         projectSaver = new ProjectSaver(this);
 
 //        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
         // let the exit handle by WindowAdapter
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        
+
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -161,6 +160,57 @@ public class Main extends javax.swing.JFrame {
         addDeviceButton.setEnabled(false);
         eventbus.register(this);
 
+        monitor = new GroupMonitorFrame(this);
+        connectKnx();
+
+        Dimension size = new Dimension();
+        size.width = Integer.parseInt(PROPERTIES.getProperty("windowwidth", "1024"));
+        size.height = Integer.parseInt(PROPERTIES.getProperty("windowheight", "768"));
+        super.setSize(size);
+        Point location = new Point();
+        location.x = Integer.parseInt(PROPERTIES.getProperty("windowx", "" + Integer.MIN_VALUE));
+        location.y = Integer.parseInt(PROPERTIES.getProperty("windowy", "" + Integer.MIN_VALUE));
+        if (location.x == Integer.MIN_VALUE && location.y == Integer.MIN_VALUE) {
+            super.setLocationRelativeTo(null);
+        } else {
+            super.setLocation(location);
+        }
+        topSplitPane.setDividerLocation(Integer.parseInt(PROPERTIES.getProperty("topsplitpanedividerlocation", "180")));
+        bottomSplitPane.setDividerLocation(Integer.parseInt(PROPERTIES.getProperty("bottomsplitpanedividerlocation", "300")));
+
+
+        boolean lastFolder = Boolean.parseBoolean(PROPERTIES.getProperty(SettingsDialog.PROP_STARTUP_LASTFOLDER, "false"));
+        boolean askFolder = Boolean.parseBoolean(PROPERTIES.getProperty(SettingsDialog.PROP_STARTUP_ASKFOLDER, "true"));
+
+        if (askFolder) {
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    openProjectButton.doClick();
+                }
+            });
+
+        } else if (lastFolder) {
+            projectFolder = new File(PROPERTIES.getProperty("projectfolder", System.getProperty("user.home")));
+            eventbus.post(new EventProjectOpened(projectFolder));
+        }
+
+        List<Image> iconList = new ArrayList<>();
+        try {
+            iconList.add(ImageIO.read(getClass().getClassLoader().getResource("de/konnekting/suite/icons/KONNEKTING-Suite-16x16-Icon.png")));
+            iconList.add(ImageIO.read(getClass().getClassLoader().getResource("de/konnekting/suite/icons/KONNEKTING-Suite-32x32-Icon.png")));
+            iconList.add(ImageIO.read(getClass().getClassLoader().getResource("de/konnekting/suite/icons/KONNEKTING-Suite-64x64-Icon.png")));
+            iconList.add(ImageIO.read(getClass().getClassLoader().getResource("de/konnekting/suite/icons/KONNEKTING-Suite-128x128-Icon.png")));
+            iconList.add(ImageIO.read(getClass().getClassLoader().getResource("de/konnekting/suite/icons/KONNEKTING-Suite-256x256-Icon.png")));
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        setIconImages(iconList);
+
+        setVisible(true);
+    }
+
+    private void connectKnx() {
         String access = PROPERTIES.getProperty(SettingsDialog.PROP_ACCESS, SettingsDialog.ACCESS_ROUTING);
         String routingMulticast = PROPERTIES.getProperty(SettingsDialog.PROP_ROUTING_MULTICASTIP, "224.0.23.12");
         String tunnelingIp = PROPERTIES.getProperty(SettingsDialog.PROP_TUNNELING_IP, "192.168.0.100");
@@ -221,6 +271,8 @@ public class Main extends javax.swing.JFrame {
                         knx.removeGroupAddressListener("*", this);
                     }
                 });
+                
+                monitor.setKnx(knx);
             }
 
         } catch (KnxException ex) {
@@ -230,56 +282,6 @@ public class Main extends javax.swing.JFrame {
             RootEventBus.getDefault().post(new EventConsoleMessage("Fehler beim Öffnen der KNX Verbindung.", ex));
             log.error("Error creating knx access.", ex);
         }
-
-        Dimension size = new Dimension();
-        size.width = Integer.parseInt(PROPERTIES.getProperty("windowwidth", "1024"));
-        size.height = Integer.parseInt(PROPERTIES.getProperty("windowheight", "768"));
-        super.setSize(size);
-        Point location = new Point();
-        location.x = Integer.parseInt(PROPERTIES.getProperty("windowx", "" + Integer.MIN_VALUE));
-        location.y = Integer.parseInt(PROPERTIES.getProperty("windowy", "" + Integer.MIN_VALUE));
-        if (location.x == Integer.MIN_VALUE && location.y == Integer.MIN_VALUE) {
-            super.setLocationRelativeTo(null);
-        } else {
-            super.setLocation(location);
-        }
-        topSplitPane.setDividerLocation(Integer.parseInt(PROPERTIES.getProperty("topsplitpanedividerlocation", "180")));
-        bottomSplitPane.setDividerLocation(Integer.parseInt(PROPERTIES.getProperty("bottomsplitpanedividerlocation", "300")));
-
-        monitor = new GroupMonitorFrame(this);
-        if (knx != null) {
-            monitor.setKnx(knx);
-        }
-
-        boolean lastFolder = Boolean.parseBoolean(PROPERTIES.getProperty(SettingsDialog.PROP_STARTUP_LASTFOLDER, "false"));
-        boolean askFolder = Boolean.parseBoolean(PROPERTIES.getProperty(SettingsDialog.PROP_STARTUP_ASKFOLDER, "true"));
-
-        if (askFolder) {
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    openProjectButton.doClick();
-                }
-            });
-
-        } else if (lastFolder) {
-            projectFolder = new File(PROPERTIES.getProperty("projectfolder", System.getProperty("user.home")));
-            eventbus.post(new EventProjectOpened(projectFolder));
-        }
-
-        List<Image> iconList = new ArrayList<>();
-        try {
-            iconList.add(ImageIO.read(getClass().getClassLoader().getResource("de/konnekting/suite/icons/KONNEKTING-Suite-16x16-Icon.png")));
-            iconList.add(ImageIO.read(getClass().getClassLoader().getResource("de/konnekting/suite/icons/KONNEKTING-Suite-32x32-Icon.png")));
-            iconList.add(ImageIO.read(getClass().getClassLoader().getResource("de/konnekting/suite/icons/KONNEKTING-Suite-64x64-Icon.png")));
-            iconList.add(ImageIO.read(getClass().getClassLoader().getResource("de/konnekting/suite/icons/KONNEKTING-Suite-128x128-Icon.png")));
-            iconList.add(ImageIO.read(getClass().getClassLoader().getResource("de/konnekting/suite/icons/KONNEKTING-Suite-256x256-Icon.png")));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        setIconImages(iconList);
-
-        setVisible(true);
     }
 
     private void saveSettings() {
@@ -292,9 +294,25 @@ public class Main extends javax.swing.JFrame {
     }
 
     public void onEvent(EventSaveSettings evt) {
-        saveSettings();
+        new BackgroundTask("Saving settings...") {
+            @Override
+            public void run() {
+                setStepsToDo(3);
+                saveSettings();
+                stepDone();
+                if (knx != null) {
+                    log.info("Replacing KNX connection NOW");
+                    knx.close();
+                    stepDone();
+                    connectKnx();
+                    stepDone();
+                    setDone();
+                    log.info("Replacing KNX connection NOW *DONE*");
+                }
+            }
+        };
     }
-    
+
     public void onEvent(EventDeviceAdded evt) {
         log.info("Added device: {}", evt.getDeviceConfig());
         projectSaver.add(evt.getDeviceConfig());
@@ -332,11 +350,11 @@ public class Main extends javax.swing.JFrame {
 
     public void onEvent(EventDeviceChanged evt) {
         updateProgButtons();
-        if (evt.getDeviceConfig()!=null) {
+        if (evt.getDeviceConfig() != null) {
             projectSaver.add(evt.getDeviceConfig());
         }
     }
-    
+
     public void onEvent(EventDeviceRemoved evt) {
         updateProgButtons();
         projectSaver.remove(evt.getDevice());
@@ -734,6 +752,28 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_aboutButtonActionPerformed
 
     /**
+     * Load/Reload user setting properties
+     */
+    private static void loadProperties() {
+        try {
+            PROPERTIES.clear();
+            PROPERTIES.load(new FileReader(propertiesFile));
+
+            Iterator<Map.Entry<Object, Object>> iter = PROPERTIES.entrySet().iterator();
+            while (iter.hasNext()) {
+                Map.Entry<Object, Object> entry = iter.next();
+                log.info("Property: {}={}", entry.getKey(), entry.getValue());
+            }
+
+        } catch (FileNotFoundException ex) {
+            log.info("Properties file not found. Skip to defaults.");
+        } catch (IOException ex) {
+            log.error("Error reading setting properties", ex);
+        }
+
+    }
+
+    /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
@@ -764,25 +804,7 @@ public class Main extends javax.swing.JFrame {
         Thread t = new Thread("Load properties") {
             @Override
             public void run() {
-                try {
-                    Thread.sleep(300);
-                } catch (InterruptedException ex) {
-
-                }
-                try {
-                    PROPERTIES.load(new FileReader(propertiesFile));
-
-                    Iterator<Map.Entry<Object, Object>> iter = PROPERTIES.entrySet().iterator();
-                    while (iter.hasNext()) {
-                        Map.Entry<Object, Object> entry = iter.next();
-                        log.info("Property: {}={}", entry.getKey(), entry.getValue());
-                    }
-
-                } catch (FileNotFoundException ex) {
-                    log.info("Properties file not found. Skip to defaults.");
-                } catch (IOException ex) {
-                    log.error("Error reading setting properties", ex);
-                }
+                loadProperties();
                 try {
                     applicationProperties.load(getClass().getResourceAsStream("/properties/application.properties"));
                 } catch (IOException ex) {
@@ -790,6 +812,7 @@ public class Main extends javax.swing.JFrame {
                 }
                 splashPanel.setVersionText("Version " + applicationProperties.getProperty("application.version", "n/a") + " Build " + applicationProperties.getProperty("application.build", "n/a") + (Boolean.getBoolean("de.root1.slicknx.konnekting.debug") ? " DEBUG MODE!" : ""));
             }
+
         };
         t.start();
 
