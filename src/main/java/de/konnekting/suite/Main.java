@@ -161,7 +161,15 @@ public class Main extends javax.swing.JFrame {
         eventbus.register(this);
 
         monitor = new GroupMonitorFrame(this);
-        connectKnx();
+        new BackgroundTask(bundle.getString("MainWindow.connectKnx")) {
+            @Override
+            public void run() {
+                setStepsToDo(1);
+                connectKnx();
+                stepDone();
+                setDone();
+            }
+        };
 
         Dimension size = new Dimension();
         size.width = Integer.parseInt(PROPERTIES.getProperty("windowwidth", "1024"));
@@ -210,6 +218,9 @@ public class Main extends javax.swing.JFrame {
         setVisible(true);
     }
 
+    /**
+     * connect to knx. this might block during connection establishing...
+     */
     private void connectKnx() {
         String access = PROPERTIES.getProperty(SettingsDialog.PROP_ACCESS, SettingsDialog.ACCESS_ROUTING);
         String routingMulticast = PROPERTIES.getProperty(SettingsDialog.PROP_ROUTING_MULTICASTIP, "224.0.23.12");
@@ -294,7 +305,7 @@ public class Main extends javax.swing.JFrame {
     }
 
     public void onEvent(EventSaveSettings evt) {
-        new BackgroundTask("Saving settings...") {
+        new BackgroundTask(bundle.getString("MainWindow.saveSettings")) {
             @Override
             public void run() {
                 setStepsToDo(3);

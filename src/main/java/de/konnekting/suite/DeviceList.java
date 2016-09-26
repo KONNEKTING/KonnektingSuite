@@ -39,8 +39,9 @@ import org.xml.sax.SAXException;
  * @author achristian
  */
 public class DeviceList extends javax.swing.JPanel {
-    
-    private Logger log = LoggerFactory.getLogger(getClass());
+
+    private final java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/i18n/language"); // NOI18N
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     private final RootEventBus eventBus = RootEventBus.getDefault();
     private File projectFolder;
@@ -55,6 +56,21 @@ public class DeviceList extends javax.swing.JPanel {
 
     }
 
+    private String getLangString(String key, Object... values) {
+        String completeKey = getClass().getSimpleName() + "." + key;
+        try {
+            String s = bundle.getString(completeKey);
+            return String.format(s, values);
+        } catch (Exception ex) {
+            log.error("Problem reading/using key '" + completeKey + "'", ex);
+            return "<" + completeKey + ">";
+        }
+    }
+
+    private String getLangString(String key) {
+        return bundle.getString(getClass().getSimpleName() + "." + key);
+    }
+
     public void onEvent(EventDeviceListRefresh event) {
         deviceList.invalidate();
         repaint();
@@ -64,17 +80,21 @@ public class DeviceList extends javax.swing.JPanel {
         DeviceConfigContainer device = event.getDeviceConfig();
         deviceListModel.addElement(device);
         eventBus.post(new EventDeviceAdded(device));
-        eventBus.post(new EventConsoleMessage("Gerät hinzugefügt: "+device.getIndividualAddress()+" "+device.getDescription()));
+        eventBus.post(new EventConsoleMessage(getLangString("onevent.adddevice",device.getIndividualAddress(), device.getDescription())));
         deviceList.invalidate();
         repaint();
     }
 
     public void onEvent(EventProjectOpened projectOpened) {
         projectFolder = projectOpened.getProjectFolder();
-        new BackgroundTask("Opening project '" + projectFolder.getName() + "'", Thread.NORM_PRIORITY) {
+        new BackgroundTask(getLangString("task.openproject", projectFolder.getName()), Thread.NORM_PRIORITY
+        
+            ) {
 
             @Override
-            public void run() {
+            public void run
+            
+                () {
                 deviceListModel.clear();
                 File[] deviceFiles = projectFolder.listFiles((File pathname) -> pathname.isFile() && pathname.getName().endsWith(".kconfig.xml"));
 
@@ -164,15 +184,14 @@ public class DeviceList extends javax.swing.JPanel {
         // kleinster Index wird als Button ganz rechts angeordnet, größter ganz links
         Object[] options = {
             /* 0 */"Abbrechen",
-            /* 1 */ "Löschen",
-            };
+            /* 1 */ "Löschen",};
         int result = JOptionPane.showOptionDialog(getParent(),
-            "Soll die Gerätekonfiguration gelöscht werden?",
-            "Löschen bestätigen",
-            JOptionPane.YES_NO_CANCEL_OPTION,
-            JOptionPane.QUESTION_MESSAGE,
-            null,
-            options, options[0]);
+                "Soll die Gerätekonfiguration gelöscht werden?",
+                "Löschen bestätigen",
+                JOptionPane.YES_NO_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options, options[0]);
 
         switch (result) {
             case 1:
