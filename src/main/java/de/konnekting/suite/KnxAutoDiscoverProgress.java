@@ -15,10 +15,9 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -26,6 +25,7 @@ import javax.swing.SwingUtilities;
  */
 public class KnxAutoDiscoverProgress extends javax.swing.JDialog implements AutoDiscoverProgressListener {
 
+    private final Logger log = LoggerFactory.getLogger(getClass());
     private List<KnxInterfaceDevice> deviceList = new ArrayList<>();
 
     /**
@@ -34,10 +34,10 @@ public class KnxAutoDiscoverProgress extends javax.swing.JDialog implements Auto
     public KnxAutoDiscoverProgress(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        setLocationRelativeTo(parent);
         progressbar.setIndeterminate(true);
-        progressbar.setMaximum(0);
         progressbar.setValue(0);
+        progressbar.setMaximum(0);
+        setLocationRelativeTo(parent);
     }
 
     @Override
@@ -118,6 +118,7 @@ public class KnxAutoDiscoverProgress extends javax.swing.JDialog implements Auto
     @Override
     public void onProgress(int i, int max, NetworkInterface iface, InetAddress address) {
 
+        log.info("i={}, max={}, iface={} addr={}", new Object[]{i, max, iface, address});
         if (max > 2) {
             progressbar.setIndeterminate(false);
         }
@@ -133,6 +134,7 @@ public class KnxAutoDiscoverProgress extends javax.swing.JDialog implements Auto
 
     @Override
     public void done(List<KnxInterfaceDevice> devices) {
+        deviceList = devices;
         try {
             SwingUtilities.invokeAndWait(new Runnable() {
                 @Override
@@ -143,7 +145,6 @@ public class KnxAutoDiscoverProgress extends javax.swing.JDialog implements Auto
         } catch (InterruptedException ex) {
         } catch (InvocationTargetException ex) {
         }
-        deviceList = devices;
     }
 
     @Override

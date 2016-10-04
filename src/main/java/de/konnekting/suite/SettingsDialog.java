@@ -19,6 +19,7 @@
 package de.konnekting.suite;
 
 import de.konnekting.suite.events.EventSaveSettings;
+import de.konnekting.suite.utils.Language;
 import de.konnekting.suite.utils.SelectionItem;
 import de.konnekting.suite.utils.Utils;
 import de.root1.rooteventbus.RootEventBus;
@@ -46,25 +47,25 @@ import org.slf4j.LoggerFactory;
  * @author achristian
  */
 public class SettingsDialog extends javax.swing.JDialog {
-
+    
     private final Logger log = LoggerFactory.getLogger(getClass());
     private final Properties p = Main.getProperties();
-
+    
     public static final String ACCESS_OFF = "OFF";
     public static final String ACCESS_ROUTING = "ROUTING";
     public static final String ACCESS_TUNNELING = "TUNNELING";
     public static final String ACCESS_TPUART = "TPUART";
-
+    
     public static final String PROP_STARTUP_LASTFOLDER = "startup.lastfolder";
     public static final String PROP_STARTUP_ASKFOLDER = "startup.askfolder";
-
+    
     public static final String PROP_ACCESS = "knx.access";
     public static final String PROP_ROUTING_MULTICASTIP = "knx.routing.multicast";
     public static final String PROP_ROUTING_MULTICASTNETWORKINTERFACE = "knx.routing.networkinterface";
     public static final String PROP_TUNNELING_IP = "knx.tunneling.ip";
     public static final String PROP_TPUART_DEVICE = "knx.tpuart.device";
     public static final String PROP_INDIVIDUALADDRESS = "knx.individualaddress";
-
+    
     private final List<NetworkInterfaceItem> networkInterfaces = new ArrayList<>();
 
     /**
@@ -75,16 +76,16 @@ public class SettingsDialog extends javax.swing.JDialog {
     public SettingsDialog(java.awt.Frame parent) {
         super(parent, true);
         initComponents();
-
+        
         boolean lastFolder = Boolean.parseBoolean(p.getProperty(PROP_STARTUP_LASTFOLDER, "false"));
         boolean askFolder = Boolean.parseBoolean(p.getProperty(PROP_STARTUP_ASKFOLDER, "true"));
-
+        
         String access = p.getProperty(PROP_ACCESS, ACCESS_OFF);
         String routingMulticast = p.getProperty(PROP_ROUTING_MULTICASTIP, "224.0.23.12");
         String tunnelingIp = p.getProperty(PROP_TUNNELING_IP, "192.168.0.100");
         String tpuartDevice = p.getProperty(PROP_TPUART_DEVICE, "COM3");
         String individualAddress = p.getProperty(PROP_INDIVIDUALADDRESS, "1.0.254");
-
+        
         switch (access.toUpperCase()) {
             case ACCESS_OFF:
                 offlineRadioButton.setSelected(true);
@@ -99,31 +100,31 @@ public class SettingsDialog extends javax.swing.JDialog {
                 tpuartRadioButton.setSelected(true);
                 break;
         }
-
+        
         ipRoutingMulticasttextField.setText(routingMulticast);
         ipTunnelingIpTextField.setText(tunnelingIp);
         tpuartDevicetextField.setText(tpuartDevice);
-
+        
         individualAddressTextField.setText(individualAddress);
-
+        
         setEnableAll(offlinePanel, offlineRadioButton.isSelected());
         setEnableAll(ipRoutingPanel, ipRoutingRadioButton.isSelected());
         setEnableAll(ipTunnelingPanel, ipTunnelingRadioButton.isSelected());
         setEnableAll(tpuartPanel, tpuartRadioButton.isSelected());
-
+        
         askFolderCheckbox.setSelected(askFolder);
         lastFolderCheckbox.setSelected(lastFolder);
-
+        
         try {
             Enumeration<NetworkInterface> networkInterfaces1 = NetworkInterface.getNetworkInterfaces();
-
+            
             while (networkInterfaces1.hasMoreElements()) {
                 networkInterfaces.add(new NetworkInterfaceItem(networkInterfaces1.nextElement()));
             }
-
+            
         } catch (SocketException ex) {
         }
-
+        
         ipRoutingNetworkCombobox.setModel(new DefaultComboBoxModel(networkInterfaces.toArray()));
 
         // make default selection, based in properties
@@ -135,15 +136,15 @@ public class SettingsDialog extends javax.swing.JDialog {
                 break;
             }
         }
-
+        
         if (Utils.isLinux()) {
             tpuartRadioButton.setEnabled(false);
-            tpuartRadioButton.setText(tpuartRadioButton.getText()+" -> not yet available on linux");
+            tpuartRadioButton.setText(tpuartRadioButton.getText() + " -> not yet available on linux");
             setEnableAll(tpuartPanel, false);
         }
-
+        
         updateOpenCheckboxes();
-
+        
     }
 
     /**
@@ -476,7 +477,7 @@ public class SettingsDialog extends javax.swing.JDialog {
     private void lastFolderCheckboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lastFolderCheckboxActionPerformed
         updateOpenCheckboxes();
     }//GEN-LAST:event_lastFolderCheckboxActionPerformed
-
+    
     private void setEnableAll(JComponent c, boolean enabled) {
         c.setEnabled(enabled);
         Component[] components = c.getComponents();
@@ -508,20 +509,20 @@ public class SettingsDialog extends javax.swing.JDialog {
         setEnableAll(tpuartPanel, false);
         p.setProperty(PROP_ACCESS, ACCESS_ROUTING);
     }//GEN-LAST:event_ipRoutingRadioButtonActionPerformed
-
+    
     private void doSave() {
         p.setProperty(PROP_ROUTING_MULTICASTIP, ipRoutingMulticasttextField.getText());
-
+        
         NetworkInterfaceItem nii = (NetworkInterfaceItem) ipRoutingNetworkCombobox.getSelectedItem();
-
+        
         p.setProperty(PROP_ROUTING_MULTICASTNETWORKINTERFACE, nii.getNetworkInterface().getName());
         p.setProperty(PROP_TPUART_DEVICE, tpuartDevicetextField.getText());
         p.setProperty(PROP_TUNNELING_IP, ipTunnelingIpTextField.getText());
         p.setProperty(PROP_INDIVIDUALADDRESS, individualAddressTextField.getText());
-
+        
         p.setProperty(PROP_STARTUP_LASTFOLDER, lastFolderCheckbox.isSelected() + "");
         p.setProperty(PROP_STARTUP_ASKFOLDER, askFolderCheckbox.isSelected() + "");
-
+        
         RootEventBus.getDefault().post(new EventSaveSettings());
     }
 
@@ -547,20 +548,20 @@ public class SettingsDialog extends javax.swing.JDialog {
 
         // start progress
         kadp.setVisible(true);
-
+        
         List<KnxInterfaceDevice> deviceList = kadp.getDeviceList();
-
+        
         if (!deviceList.isEmpty()) {
-
+            
             SelectionItem[] items = new SelectionItem[deviceList.size()];
-
+            
             int selectedIndex = 0;
-
+            
             for (int i = 0; i < items.length; i++) {
                 KnxInterfaceDevice kid = deviceList.get(i);
-
+                
                 InetAddress addr;
-
+                
                 if (kid.getType() == KnxInterfaceDeviceType.ROUTING) {
                     KnxRoutingDevice r = (KnxRoutingDevice) kid;
                     addr = r.getMulticastAddress();
@@ -569,28 +570,28 @@ public class SettingsDialog extends javax.swing.JDialog {
                     KnxTunnelingDevice t = (KnxTunnelingDevice) kid;
                     addr = t.getIp();
                 }
-
+                
                 items[i] = new SelectionItem("[" + kid.getType().name() + "]  " + kid.getName() + " - " + addr.getHostAddress() + " (MAC: " + kid.getMac() + ")", kid);
             }
-
-            SelectionItem selected = (SelectionItem) JOptionPane.showInputDialog(null, "Choose now...",
-                    "The Choice of a Lifetime", JOptionPane.QUESTION_MESSAGE, null, // Use
+            
+            SelectionItem selected = (SelectionItem) JOptionPane.showInputDialog(null, Language.getText(this, "messagedialog.message.chooseinterface"),
+                    Language.getText(this, "messagedialog.title.interfacesfound"), JOptionPane.QUESTION_MESSAGE, null, // Use
                     // default
                     // icon
                     items, // Array of choices
                     items[selectedIndex]); // Initial choice
             log.info("Selected knxconnection: {}", selected);
-
+            
             if (selected != null) {
                 KnxInterfaceDevice kid = (KnxInterfaceDevice) selected.getObject();
-
+                
                 switch (kid.getType()) {
                     case ROUTING:
                         ipRoutingRadioButton.doClick();
                         KnxRoutingDevice r = (KnxRoutingDevice) selected.getObject();
                         ipRoutingMulticasttextField.setText(r.getMulticastAddress().getHostAddress());
                         ipRoutingNetworkCombobox.setSelectedIndex(0);
-
+                        
                         for (int i = 0; i < networkInterfaces.size(); i++) {
                             NetworkInterfaceItem nii = (NetworkInterfaceItem) ipRoutingNetworkCombobox.getModel().getElementAt(i);
                             if (nii.getNetworkInterface().getName().equals(kid.getNetworkInterface().getName())) {
@@ -598,21 +599,21 @@ public class SettingsDialog extends javax.swing.JDialog {
                                 break;
                             }
                         }
-
+                        
                         break;
-
+                    
                     case TUNNELING:
                         ipTunnelingRadioButton.doClick();
                         KnxTunnelingDevice t = (KnxTunnelingDevice) selected.getObject();
                         ipTunnelingIpTextField.setText(t.getIp().getHostAddress());
                         break;
-
+                    
                 }
             }
-
+            
         } else {
             JOptionPane.showMessageDialog((Frame) getParent(),
-                    "Nichts gefunden.");
+                    Language.getText(this, "messagedialog.nothingfound"));
         }
 //        if (ni!=null) {
 //            ipRoutingNetworkCombobox.setSelectedItem(new NetworkInterfaceItem(ni));
