@@ -23,7 +23,6 @@ import de.konnekting.deviceconfig.DeviceConfigContainer;
 import de.konnekting.deviceconfig.exception.InvalidAddressFormatException;
 import de.konnekting.xml.konnektingdevice.v0.CommObject;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -215,43 +214,32 @@ public class CommObjectTableModel extends DefaultTableModel {
 
     public void refreshCommObjVisibility() {
 
-        if (!commObjects.isEmpty()) {
+        if (!device.getAllCommObjects().isEmpty()) {
             // sort by id
-            commObjects.sort(new ReflectionIdComparator());
-            log.info("Sort by ID");
+//            commObjects.sort(new ReflectionIdComparator());
+//            log.info("Sort by ID");
+
+            commObjects.clear();
 
             final Set<CommObject> enabled = new HashSet<>();
             final Set<CommObject> disabled = new HashSet<>();
 
-            // sort by visibility
-            commObjects.sort(new Comparator<CommObject>() {
-
-                @Override
-                public int compare(CommObject o1, CommObject o2) {
-                    boolean o1Enabled = device.isCommObjectEnabled(o1);
-                    boolean o2Enabled = device.isCommObjectEnabled(o2);
-                    if (o1Enabled && !o2Enabled) {
-                        enabled.add(o1);
-                        disabled.add(o2);
-                        return -1;
-                    } else if (o2Enabled && !o1Enabled) {
-                        disabled.add(o1);
-                        enabled.add(o2);
-                        return 1;
-                    } else if (o1Enabled && o2Enabled) {
-                        enabled.add(o1);
-                        enabled.add(o2);
-                        return 0;
-                    } else if (!o1Enabled && !o2Enabled) {
-                        disabled.add(o1);
-                        disabled.add(o2);
-                        return 0;
-                    } else {
-                        return 0;
-                    }
+            
+            for (CommObject commObject : device.getAllCommObjects()) {
+                if (device.isCommObjectEnabled(commObject)) {
+                    log.info("{}: {} is enabled", commObject.getId(), commObject.getName());
+                    enabled.add(commObject);
+                } else {
+                    log.info("{}: {} is disabled", commObject.getId(), commObject.getName());
+                    disabled.add(commObject);
                 }
-
-            });
+                
+            }
+            
+            commObjects.addAll(enabled);
+            
+            // sort by id
+            commObjects.sort(new ReflectionIdComparator());
             log.info("Sort by enabled/disabled: {} vs. {}", enabled.size(), disabled.size());
             rows = enabled.size();
         }
