@@ -22,12 +22,18 @@ import de.konnekting.deviceconfig.DeviceConfigContainer;
 import de.root1.rooteventbus.RootEventBus;
 import de.konnekting.suite.events.EventDeviceListRefresh;
 import de.konnekting.suite.events.StickyDeviceSelected;
+import java.awt.Component;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author achristian
  */
 public class DeviceEditor extends javax.swing.JPanel {
+
+    private final Logger log = LoggerFactory.getLogger(getClass());
+    private DeviceConfigContainer device;
 
     /**
      * Creates new form DeviceEditor
@@ -38,7 +44,10 @@ public class DeviceEditor extends javax.swing.JPanel {
     }
 
     public void onEvent(StickyDeviceSelected event) {
-        DeviceConfigContainer device = event.getDeviceConfig();
+        store();
+
+        device = event.getDeviceConfig();
+
         if (device == null) {
             userdescriptionTextField.setText("");
             userdescriptionTextField.setEnabled(false);
@@ -55,7 +64,7 @@ public class DeviceEditor extends javax.swing.JPanel {
         }
         repaint();
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -182,10 +191,7 @@ public class DeviceEditor extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void userdescriptionChanged(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userdescriptionChanged
-        StickyDeviceSelected event = RootEventBus.getDefault().getStickyEvent(StickyDeviceSelected.class);
-        DeviceConfigContainer device = event.getDeviceConfig();
-        device.setDescription(userdescriptionTextField.getText());
-        RootEventBus.getDefault().post(new EventDeviceListRefresh());
+        store();
     }//GEN-LAST:event_userdescriptionChanged
 
     private void userdescriptionTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_userdescriptionTextFieldFocusLost
@@ -207,4 +213,12 @@ public class DeviceEditor extends javax.swing.JPanel {
     private javax.swing.JPanel propertiesPanel;
     private javax.swing.JTextField userdescriptionTextField;
     // End of variables declaration//GEN-END:variables
+
+    private void store() {
+        if (device!=null) {
+            individualAddressInputPanel.stateChanged(null);
+            device.setDescription(userdescriptionTextField.getText());
+            RootEventBus.getDefault().post(new EventDeviceListRefresh());
+        }
+    }
 }
