@@ -59,6 +59,8 @@ public class CommObjectTable extends javax.swing.JPanel {
         table.getColumnModel().getColumn(4).setPreferredWidth(150);
         table.getColumnModel().getColumn(5).setPreferredWidth(150);
         
+        table.putClientProperty("terminateEditOnFocusLost", true);
+        
         
     }
     
@@ -66,8 +68,8 @@ public class CommObjectTable extends javax.swing.JPanel {
         
         // save all current data, end input
         if (table.isEditing()) {
-            table.getCellEditor().cancelCellEditing();
-            log.debug("Cancel cell editing before aplying new device to table");
+            table.getCellEditor().stopCellEditing();
+            log.debug("Stop editing before applying new device to table");
         }
         
         // set new device data
