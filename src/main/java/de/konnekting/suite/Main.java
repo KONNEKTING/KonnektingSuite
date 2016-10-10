@@ -151,6 +151,7 @@ public class Main extends javax.swing.JFrame {
         log.info(versionMsg);
         RootEventBus.getDefault().post(new EventConsoleMessage(versionMsg));
         RootEventBus.getDefault().post(new EventConsoleMessage(bundle.getString("MainWindow.ConsoleMsg.operatingSystem") + ": " + System.getProperty("os.name")));
+        log.info("Running on: {}", System.getProperty("os.name"));
 
         removeDeviceButton.setEnabled(false);
         programmAllButton.setEnabled(false);
