@@ -47,6 +47,10 @@ public class CommObjectTableModel extends DefaultTableModel {
 
     public CommObjectTableModel() {
     }
+    
+    public DeviceConfigContainer getDeviceData() {
+        return device;
+    }
 
     public void setDeviceData(DeviceConfigContainer device) {
         this.device = device;
@@ -157,7 +161,15 @@ public class CommObjectTableModel extends DefaultTableModel {
             case 4:
                 return device.getCommObjectDescription(commObjects.get(rowIndex).getId());
             case 5:
-                return device.getCommObjectGroupAddress(commObjects.get(rowIndex).getId());
+                List<String> commObjectGroupAddress = device.getCommObjectGroupAddress(commObjects.get(rowIndex).getId());
+                StringBuffer sb = new StringBuffer();
+                for(int i=0;i<commObjectGroupAddress.size();i++) {
+                    sb.append(commObjectGroupAddress.get(i));
+                    if (i<commObjectGroupAddress.size()-1) {
+                        sb.append(", ");
+                    }
+                }
+                return sb.toString();
             default:
                 throw new IllegalArgumentException("Column " + columnIndex + " not known");
         }
@@ -186,12 +198,8 @@ public class CommObjectTableModel extends DefaultTableModel {
                 fireTableCellUpdated(rowIndex, columnIndex);
                 break;
             case 5:
-                try {
-                    device.setCommObjectGroupAddress(id, value);
-                    fireTableCellUpdated(rowIndex, columnIndex);
-                } catch (InvalidAddressFormatException ex) {
-                    ex.printStackTrace();
-                }
+                // nothing to set, as data has been set by GroupAddressDialog directly into deviceconfigcontainer
+                fireTableCellUpdated(rowIndex, columnIndex);
                 break;
             default:
                 throw new IllegalArgumentException("Column " + columnIndex + " not known");
@@ -224,7 +232,6 @@ public class CommObjectTableModel extends DefaultTableModel {
             final Set<CommObject> enabled = new HashSet<>();
             final Set<CommObject> disabled = new HashSet<>();
 
-            
             for (CommObject commObject : device.getAllCommObjects()) {
                 if (device.isCommObjectEnabled(commObject)) {
                     log.info("{}: {} is enabled", commObject.getId(), commObject.getName());
@@ -233,11 +240,11 @@ public class CommObjectTableModel extends DefaultTableModel {
                     log.info("{}: {} is disabled", commObject.getId(), commObject.getName());
                     disabled.add(commObject);
                 }
-                
+
             }
-            
+
             commObjects.addAll(enabled);
-            
+
             // sort by id
             commObjects.sort(new ReflectionIdComparator());
             log.info("Sort by enabled/disabled: {} vs. {}", enabled.size(), disabled.size());

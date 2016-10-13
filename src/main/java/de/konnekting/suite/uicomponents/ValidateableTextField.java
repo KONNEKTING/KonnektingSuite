@@ -97,7 +97,7 @@ public abstract class ValidateableTextField extends JTextField implements Valida
             setToolTipText(getValidationErrorMessage());
             String textValue = getText();
             if (textValue != null && !textValue.equals(lastTextValue)) {
-                RootEventBus.getDefault().post(new EventConsoleMessage("Ungültige Eingabe: "+getValidationErrorMessage()));
+                // RootEventBus.getDefault().post(new EventConsoleMessage("Ungültige Eingabe: "+getValidationErrorMessage()));
             }
             lastTextValue = textValue;
         } else {
