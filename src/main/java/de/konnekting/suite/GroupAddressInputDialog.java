@@ -5,18 +5,13 @@
  */
 package de.konnekting.suite;
 
-import de.konnekting.deviceconfig.DeviceConfigContainer;
-import de.konnekting.deviceconfig.utils.Helper;
 import de.konnekting.suite.utils.Utils;
 import de.konnekting.xml.konnektingdevice.v0.CommObjectConfiguration;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Collections;
 import java.util.List;
-import javax.swing.InputVerifier;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -63,11 +58,16 @@ public class GroupAddressInputDialog extends javax.swing.JDialog {
             }
         });
     }
+    
+    private void updateButtons() {
+        removeButton.setEnabled(!conf.getGroupAddress().isEmpty());
+    }
 
     public void setCommObjectConfig(CommObjectConfiguration conf) {
         this.conf = conf;
         Collections.sort(conf.getGroupAddress());
         gaList.setListData(conf.getGroupAddress().toArray());
+        updateButtons();
     }
     
     public CommObjectConfiguration getCommObjectConfig() {
@@ -210,6 +210,7 @@ public class GroupAddressInputDialog extends javax.swing.JDialog {
             List selectedForRemove = gaList.getSelectedValuesList();
             conf.getGroupAddress().removeAll(selectedForRemove);
             gaList.setListData(conf.getGroupAddress().toArray());
+            updateButtons();
         }
     }//GEN-LAST:event_removeButtonActionPerformed
 
@@ -225,6 +226,7 @@ public class GroupAddressInputDialog extends javax.swing.JDialog {
             gaList.setListData(conf.getGroupAddress().toArray());
             groupAddressTextField1.setText(""); // clear input
             groupAddressTextField1.requestFocus(); // switch focus back to input
+            updateButtons();
         }
     }//GEN-LAST:event_associateButtonActionPerformed
 
