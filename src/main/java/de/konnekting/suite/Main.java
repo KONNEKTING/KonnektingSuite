@@ -71,7 +71,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 import tuwien.auto.calimero.exception.KNXIllegalArgumentException;
-import com.bulenkov.darcula.*;
+//import com.bulenkov.darcula.*;
 
 /**
  *
@@ -402,12 +402,8 @@ public class Main extends javax.swing.JFrame {
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
         aboutButton = new javax.swing.JButton();
         exitButton = new javax.swing.JButton();
-        statusPanel = new de.konnekting.suite.StatusPanel();
         bottomSplitPane = new javax.swing.JSplitPane();
         topSplitPane = new javax.swing.JSplitPane();
-        deviceList = new de.konnekting.suite.DeviceList();
-        deviceEditor = new de.konnekting.suite.DeviceEditor();
-        consolePanel = new de.konnekting.suite.ConsolePanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/i18n/language"); // NOI18N
@@ -578,28 +574,13 @@ public class Main extends javax.swing.JFrame {
                 topDividerChange(evt);
             }
         });
-
-        deviceList.setMinimumSize(new java.awt.Dimension(120, 80));
-        deviceList.setPreferredSize(new java.awt.Dimension(180, 300));
-        topSplitPane.setLeftComponent(deviceList);
-
-        deviceEditor.setMinimumSize(new java.awt.Dimension(300, 300));
-        deviceEditor.setPreferredSize(new java.awt.Dimension(400, 300));
-        topSplitPane.setRightComponent(deviceEditor);
-
         bottomSplitPane.setLeftComponent(topSplitPane);
-
-        consolePanel.setMinimumSize(new java.awt.Dimension(180, 27));
-        consolePanel.setName(""); // NOI18N
-        consolePanel.setPreferredSize(new java.awt.Dimension(80, 300));
-        bottomSplitPane.setRightComponent(consolePanel);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(statusPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(bottomSplitPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
@@ -608,9 +589,7 @@ public class Main extends javax.swing.JFrame {
                 .addComponent(jToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(bottomSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 518, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(statusPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(4, 4, 4))
+                .addGap(26, 26, 26))
         );
 
         pack();
@@ -663,13 +642,13 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_openProjectButtonActionPerformed
 
     private void removeDeviceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeDeviceButtonActionPerformed
-        try {
-            StickyDeviceSelected d = RootEventBus.getDefault().getStickyEvent(StickyDeviceSelected.class);
-            deviceList.removeSelectedDevice();
-            RootEventBus.getDefault().post(new EventConsoleMessage("Gerät entfernt: " + d.getDeviceConfig()));
-        } catch (JAXBException | SAXException ex) {
-            RootEventBus.getDefault().post(new EventConsoleMessage("Fehler beim Entfernen des Gerätes.", ex));
-        }
+//        try {
+//            StickyDeviceSelected d = RootEventBus.getDefault().getStickyEvent(StickyDeviceSelected.class);
+////            deviceList.removeSelectedDevice();
+//            RootEventBus.getDefault().post(new EventConsoleMessage("Gerät entfernt: " + d.getDeviceConfig()));
+//        } catch (JAXBException | SAXException ex) {
+//            RootEventBus.getDefault().post(new EventConsoleMessage("Fehler beim Entfernen des Gerätes.", ex));
+//        }
     }//GEN-LAST:event_removeDeviceButtonActionPerformed
 
     private void addDeviceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addDeviceButtonActionPerformed
@@ -874,9 +853,6 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JButton aboutButton;
     private javax.swing.JButton addDeviceButton;
     private javax.swing.JSplitPane bottomSplitPane;
-    private de.konnekting.suite.ConsolePanel consolePanel;
-    private de.konnekting.suite.DeviceEditor deviceEditor;
-    private de.konnekting.suite.DeviceList deviceList;
     private javax.swing.JButton exitButton;
     private javax.swing.Box.Filler filler1;
     private javax.swing.JButton groupmonitorButton;
@@ -892,7 +868,6 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JButton programmDataOnlyButton;
     private javax.swing.JButton removeDeviceButton;
     private javax.swing.JButton settingsButton;
-    private de.konnekting.suite.StatusPanel statusPanel;
     private javax.swing.JSplitPane topSplitPane;
     // End of variables declaration//GEN-END:variables
 }

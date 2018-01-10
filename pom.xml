@@ -98,11 +98,11 @@
         </dependency>
         
         <!-- Darcula LAF -->
-        <dependency>
+<!--        <dependency>
             <groupId>com.bulenkov</groupId>
             <artifactId>darcula</artifactId>
             <version>1.0.0</version>
-        </dependency>        
+        </dependency>        -->
         
     </dependencies>
     
@@ -145,7 +145,7 @@
     </build>
     
     <repositories>
-        <repository>
+<!--        <repository>
             <id>lib</id>
             <name>lib</name>
             <releases>
@@ -156,6 +156,14 @@
                 <enabled>false</enabled>
             </snapshots>
             <url>file:///${project.basedir}/lib</url>
+        </repository>-->
+        <repository>
+            <id>root1-releases</id>
+            <url>http://maven.root1.de/repository/releases/</url>
+        </repository>
+        <repository>
+            <id>root1-snapshots</id>
+            <url>http://maven.root1.de/repository/snapshots/</url>
         </repository>
     </repositories>
     
@@ -164,12 +172,12 @@
         <repository>
             <id>root1-releases</id>
             <name>internal releases</name>
-            <url>ftp://maven.root1.de/releases/</url>
+            <url>http://maven.root1.de/repository/releases/</url>
         </repository>
         <snapshotRepository>
             <id>root1-snapshots</id>
             <name>internal snapshots</name>
-            <url>ftp://maven.root1.de/snapshots/</url>
+            <url>http://maven.root1.de/repository/snapshots/</url>
         </snapshotRepository>      
-    </distributionManagement> 
+    </distributionManagement>  
 </project>
