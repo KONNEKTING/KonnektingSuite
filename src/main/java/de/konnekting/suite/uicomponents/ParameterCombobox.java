@@ -60,7 +60,7 @@ public class ParameterCombobox extends JComboBox<ParameterCombobox.ComboboxItem>
             String representation = st.nextToken();
             ComboboxItem cbi = new ComboboxItem(val, representation);
             cbitems.add(cbi);
-            if (val.equals(Helper.bytesToHex(currentValRaw))) {
+            if (val.equalsIgnoreCase(Helper.bytesToHex(currentValRaw))) {
                 selectedIndex = i;
             }
         }

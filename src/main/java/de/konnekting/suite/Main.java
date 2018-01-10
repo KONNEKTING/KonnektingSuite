@@ -63,12 +63,15 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.filechooser.FileFilter;
+import javax.swing.plaf.basic.BasicLookAndFeel;
 import javax.xml.bind.JAXBException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 import tuwien.auto.calimero.exception.KNXIllegalArgumentException;
+import com.bulenkov.darcula.*;
 
 /**
  *
@@ -187,7 +190,6 @@ public class Main extends javax.swing.JFrame {
         topSplitPane.setDividerLocation(Integer.parseInt(PROPERTIES.getProperty("topsplitpanedividerlocation", "180")));
         bottomSplitPane.setDividerLocation(Integer.parseInt(PROPERTIES.getProperty("bottomsplitpanedividerlocation", "300")));
 
-
         boolean lastFolder = Boolean.parseBoolean(PROPERTIES.getProperty(SettingsDialog.PROP_STARTUP_LASTFOLDER, "false"));
         boolean askFolder = Boolean.parseBoolean(PROPERTIES.getProperty(SettingsDialog.PROP_STARTUP_ASKFOLDER, "true"));
 
@@ -243,8 +245,10 @@ public class Main extends javax.swing.JFrame {
                     break;
                 case SettingsDialog.ACCESS_TUNNELING:
                     log.info("Starting in TUNNELING mode: {}@{}", individualAddress, tunnelingIp);
-                    RootEventBus.getDefault().post(new EventConsoleMessage(bundle.getString("MainWindow.ConsoleMsg.knxConnection") + "IP-Interface: " + individualAddress + "@" + tunnelingIp));
+                    RootEventBus.getDefault().post(new EventConsoleMessage(bundle.getString("MainWindow.ConsoleMsg.knxConnection") + "IP-Interface: " + individualAddress + "@" + tunnelingIp + " [" + InetAddress.getByName(tunnelingIp) + "]"));
+
                     knx = new Knx(InetAddress.getByName(tunnelingIp));
+
                     break;
                 case SettingsDialog.ACCESS_TPUART:
                     log.info("Starting in TPUART mode: {}@{}", individualAddress, tpuartDevice);
@@ -283,7 +287,7 @@ public class Main extends javax.swing.JFrame {
                         knx.removeGroupAddressListener("*", this);
                     }
                 });
-                
+
                 monitor.setKnx(knx);
             }
 
@@ -671,7 +675,9 @@ public class Main extends javax.swing.JFrame {
     private void addDeviceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addDeviceButtonActionPerformed
         JFileChooser jfc;
 
-        if (PROPERTIES.get("projectfolder") != null) {
+        if (PROPERTIES.getProperty("lastOpenFolder") != null) {
+            jfc = new JFileChooser(PROPERTIES.getProperty("lastOpenFolder"));
+        } else if (PROPERTIES.get("projectfolder") != null) {
             jfc = new JFileChooser(PROPERTIES.getProperty("projectfolder"));
         } else {
             jfc = new JFileChooser();
@@ -695,6 +701,9 @@ public class Main extends javax.swing.JFrame {
         if (returnVal != JFileChooser.ABORT && jfc.getSelectedFile() != null) {
 
             File selectedFile = jfc.getSelectedFile();
+
+            PROPERTIES.setProperty("lastOpenFolder", selectedFile.getParentFile().getAbsolutePath());
+
             try {
                 DeviceConfigContainer device = new DeviceConfigContainer(selectedFile);
                 SaveDeviceAsDialog.showDialog(this, projectFolder, device);
@@ -799,18 +808,32 @@ public class Main extends javax.swing.JFrame {
         });
 
         log.info("Locale: {}", Locale.getDefault());
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                log.info("LaF Name: '" + info.getName() + "'");
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            System.err.println("Error setting Nimbus LaF. Continue with default.");
-        }
 
+        
+//        try {
+////        BasicLookAndFeel darcula = new DarculaLaf();
+////        UIManager.setLookAndFeel(darcula);
+//            javax.swing.UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
+//        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+//            System.err.println("Error setting Nimbus LaF. Continue with default.");
+//        }
+//        try {
+//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//                log.info("LaF Name: '" + info.getName() + "'");
+//                if ("Nimbus".equals(info.getName())) {
+//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+////                if ("GTK+".equals(info.getName())) {
+////                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//////                    break;
+////                }
+//            }
+//        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+//            System.err.println("Error setting Nimbus LaF. Continue with default.");
+//        }
+
+//WebLookAndFeel.install ();
         final SplashPanel splashPanel = new SplashPanel();
 
         Thread t = new Thread("Load properties") {
