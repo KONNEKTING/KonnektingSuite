@@ -118,17 +118,29 @@
             </plugin>
         </plugins>
     </build>
+    <repositories>
+        <repository>
+            <id>root1-releases</id>
+            <url>http://maven.root1.de/repository/releases/</url>
+        </repository>
+        <repository>
+            <id>root1-snapshots</id>
+            <url>http://maven.root1.de/repository/snapshots/</url>
+        </repository>
+    </repositories>
+
     <!-- upload informations for deploying the jar -->
     <distributionManagement>
         <repository>
             <id>root1-releases</id>
             <name>internal releases</name>
-            <url>ftp://maven.root1.de/releases/</url>
+            <url>http://maven.root1.de/repository/releases/</url>
         </repository>
         <snapshotRepository>
             <id>root1-snapshots</id>
             <name>internal snapshots</name>
-            <url>ftp://maven.root1.de/snapshots/</url>
-        </snapshotRepository>      
-    </distributionManagement> 
+            <url>http://maven.root1.de/repository/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
 </project>
