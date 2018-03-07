@@ -63,15 +63,12 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 import javax.swing.filechooser.FileFilter;
-import javax.swing.plaf.basic.BasicLookAndFeel;
 import javax.xml.bind.JAXBException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 import tuwien.auto.calimero.exception.KNXIllegalArgumentException;
-//import com.bulenkov.darcula.*;
 
 /**
  *
@@ -115,12 +112,12 @@ public class Main extends javax.swing.JFrame {
         System.out.println("ENABLING LOGGING *DONE*");
 //        JulFormatter.set();
     }
-    private final static Logger log = LoggerFactory.getLogger(Main.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(Main.class);
     private final java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/i18n/language"); // NOI18N
 
     private File projectFolder;
     private final RootEventBus eventbus = RootEventBus.getDefault();
-    private static final Properties PROPERTIES = new Properties();
+    private static final Properties properties = new Properties();
     static Properties applicationProperties = new Properties();
     static File propertiesFile = new File(new File(System.getProperty("user.home")), "KonnektingSuite.properties");
     private Knx knx;
@@ -128,7 +125,7 @@ public class Main extends javax.swing.JFrame {
     private final ProjectSaver projectSaver;
 
     public static Properties getProperties() {
-        return PROPERTIES;
+        return properties;
     }
 
     /**
@@ -151,10 +148,10 @@ public class Main extends javax.swing.JFrame {
 
         boolean debug = Boolean.getBoolean("de.root1.slicknx.konnekting.debug");
         String versionMsg = "KONNEKTING Suite - Version " + applicationProperties.getProperty("application.version", "n/a") + " Build " + applicationProperties.getProperty("application.build", "n/a") + (debug ? " DEBUG MODE!" : "");
-        log.info(versionMsg);
+        LOGGER.info(versionMsg);
         RootEventBus.getDefault().post(new EventConsoleMessage(versionMsg));
         RootEventBus.getDefault().post(new EventConsoleMessage(bundle.getString("MainWindow.ConsoleMsg.operatingSystem") + ": " + System.getProperty("os.name")));
-        log.info("Running on: {}", System.getProperty("os.name"));
+        LOGGER.info("Running on: {}", System.getProperty("os.name"));
 
         removeDeviceButton.setEnabled(false);
         programmAllButton.setEnabled(false);
@@ -176,22 +173,22 @@ public class Main extends javax.swing.JFrame {
         };
 
         Dimension size = new Dimension();
-        size.width = Integer.parseInt(PROPERTIES.getProperty("windowwidth", "1024"));
-        size.height = Integer.parseInt(PROPERTIES.getProperty("windowheight", "768"));
+        size.width = Integer.parseInt(properties.getProperty("windowwidth", "1024"));
+        size.height = Integer.parseInt(properties.getProperty("windowheight", "768"));
         super.setSize(size);
         Point location = new Point();
-        location.x = Integer.parseInt(PROPERTIES.getProperty("windowx", "" + Integer.MIN_VALUE));
-        location.y = Integer.parseInt(PROPERTIES.getProperty("windowy", "" + Integer.MIN_VALUE));
+        location.x = Integer.parseInt(properties.getProperty("windowx", "" + Integer.MIN_VALUE));
+        location.y = Integer.parseInt(properties.getProperty("windowy", "" + Integer.MIN_VALUE));
         if (location.x == Integer.MIN_VALUE && location.y == Integer.MIN_VALUE) {
             super.setLocationRelativeTo(null);
         } else {
             super.setLocation(location);
         }
-        topSplitPane.setDividerLocation(Integer.parseInt(PROPERTIES.getProperty("topsplitpanedividerlocation", "180")));
-        bottomSplitPane.setDividerLocation(Integer.parseInt(PROPERTIES.getProperty("bottomsplitpanedividerlocation", "300")));
+        topSplitPane.setDividerLocation(Integer.parseInt(properties.getProperty("topsplitpanedividerlocation", "180")));
+        bottomSplitPane.setDividerLocation(Integer.parseInt(properties.getProperty("bottomsplitpanedividerlocation", "300")));
 
-        boolean lastFolder = Boolean.parseBoolean(PROPERTIES.getProperty(SettingsDialog.PROP_STARTUP_LASTFOLDER, "false"));
-        boolean askFolder = Boolean.parseBoolean(PROPERTIES.getProperty(SettingsDialog.PROP_STARTUP_ASKFOLDER, "true"));
+        boolean lastFolder = Boolean.parseBoolean(properties.getProperty(SettingsDialog.PROP_STARTUP_LASTFOLDER, "false"));
+        boolean askFolder = Boolean.parseBoolean(properties.getProperty(SettingsDialog.PROP_STARTUP_ASKFOLDER, "true"));
 
         if (askFolder) {
             SwingUtilities.invokeLater(new Runnable() {
@@ -202,7 +199,7 @@ public class Main extends javax.swing.JFrame {
             });
 
         } else if (lastFolder) {
-            projectFolder = new File(PROPERTIES.getProperty("projectfolder", System.getProperty("user.home")));
+            projectFolder = new File(properties.getProperty("projectfolder", System.getProperty("user.home")));
             eventbus.post(new EventProjectOpened(projectFolder));
         }
 
@@ -225,43 +222,43 @@ public class Main extends javax.swing.JFrame {
      * connect to knx. this might block during connection establishing...
      */
     private void connectKnx() {
-        String access = PROPERTIES.getProperty(SettingsDialog.PROP_ACCESS, SettingsDialog.ACCESS_ROUTING);
-        String routingMulticast = PROPERTIES.getProperty(SettingsDialog.PROP_ROUTING_MULTICASTIP, "224.0.23.12");
-        String tunnelingIp = PROPERTIES.getProperty(SettingsDialog.PROP_TUNNELING_IP, "192.168.0.100");
-        String tpuartDevice = PROPERTIES.getProperty(SettingsDialog.PROP_TPUART_DEVICE, "COM3");
-        String individualAddress = PROPERTIES.getProperty(SettingsDialog.PROP_INDIVIDUALADDRESS, "1.0.254");
+        String access = properties.getProperty(SettingsDialog.PROP_ACCESS, SettingsDialog.ACCESS_ROUTING);
+        String routingMulticast = properties.getProperty(SettingsDialog.PROP_ROUTING_MULTICASTIP, "224.0.23.12");
+        String tunnelingIp = properties.getProperty(SettingsDialog.PROP_TUNNELING_IP, "192.168.0.100");
+        String tpuartDevice = properties.getProperty(SettingsDialog.PROP_TPUART_DEVICE, "COM3");
+        String individualAddress = properties.getProperty(SettingsDialog.PROP_INDIVIDUALADDRESS, "1.0.254");
 
         try {
 
             String defaultNi = NetworkInterface.getNetworkInterfaces().nextElement().getName();
-            String routingNetworkinterface = PROPERTIES.getProperty(SettingsDialog.PROP_ROUTING_MULTICASTNETWORKINTERFACE, defaultNi);
+            String routingNetworkinterface = properties.getProperty(SettingsDialog.PROP_ROUTING_MULTICASTNETWORKINTERFACE, defaultNi);
 
             switch (access.toUpperCase()) {
                 case SettingsDialog.ACCESS_ROUTING:
-                    log.info("Starting in ROUTING mode: {}@{} on {}", individualAddress, routingMulticast, routingNetworkinterface);
+                    LOGGER.info("Starting in ROUTING mode: {}@{} on {}", individualAddress, routingMulticast, routingNetworkinterface);
                     RootEventBus.getDefault().post(new EventConsoleMessage(bundle.getString("MainWindow.ConsoleMsg.knxConnection") + "IP-Router: " + individualAddress + "@" + routingMulticast + "/" + routingNetworkinterface));
                     knx = new Knx(de.konnekting.suite.utils.Utils.getNetworkinterfaceByName(routingNetworkinterface), InetAddress.getByName(routingMulticast));
                     knx.setLoopbackMode(true);
                     break;
                 case SettingsDialog.ACCESS_TUNNELING:
-                    log.info("Starting in TUNNELING mode: {}@{}", individualAddress, tunnelingIp);
+                    LOGGER.info("Starting in TUNNELING mode: {}@{}", individualAddress, tunnelingIp);
                     RootEventBus.getDefault().post(new EventConsoleMessage(bundle.getString("MainWindow.ConsoleMsg.knxConnection") + "IP-Interface: " + individualAddress + "@" + tunnelingIp + " [" + InetAddress.getByName(tunnelingIp) + "]"));
 
                     knx = new Knx(InetAddress.getByName(tunnelingIp));
 
                     break;
                 case SettingsDialog.ACCESS_TPUART:
-                    log.info("Starting in TPUART mode: {}@{}", individualAddress, tpuartDevice);
+                    LOGGER.info("Starting in TPUART mode: {}@{}", individualAddress, tpuartDevice);
                     RootEventBus.getDefault().post(new EventConsoleMessage(bundle.getString("MainWindow.ConsoleMsg.knxConnection") + "TPUART: " + individualAddress + "@" + tpuartDevice));
                     knx = new Knx(Knx.SerialType.TPUART, tpuartDevice);
                     break;
                 case SettingsDialog.ACCESS_OFF:
-                    log.info("Starting in offline mode");
+                    LOGGER.info("Starting in offline mode");
                     RootEventBus.getDefault().post(new EventConsoleMessage(bundle.getString("MainWindow.ConsoleMsg.knxConnection") + "OFFLINE"));
                     knx = null;
                     break;
                 default:
-                    log.info("Error. Unknown ACCESS TYPE: " + access);
+                    LOGGER.info("Error. Unknown ACCESS TYPE: " + access);
                     System.exit(1);
             }
 
@@ -293,17 +290,17 @@ public class Main extends javax.swing.JFrame {
 
         } catch (KnxException ex) {
             RootEventBus.getDefault().post(new EventConsoleMessage("Fehler beim Öffnen der KNX Verbindung: " + access, ex));
-            log.error("Error creating knx access.", ex);
+            LOGGER.error("Error creating knx access.", ex);
         } catch (KNXIllegalArgumentException | UnknownHostException | SocketException ex) {
             RootEventBus.getDefault().post(new EventConsoleMessage("Fehler beim Öffnen der KNX Verbindung.", ex));
-            log.error("Error creating knx access.", ex);
+            LOGGER.error("Error creating knx access.", ex);
         }
     }
 
     private void saveSettings() {
         try {
-            log.info("Saving settings");
-            PROPERTIES.store(new FileWriter(propertiesFile), "This is KONNEKTING Suite configuration file");
+            LOGGER.info("Saving settings");
+            properties.store(new FileWriter(propertiesFile), "This is KONNEKTING Suite configuration file");
         } catch (IOException ex) {
             RootEventBus.getDefault().post(new EventConsoleMessage("Fehler beim Schreiben der Einstellungen.", ex));
         }
@@ -317,20 +314,20 @@ public class Main extends javax.swing.JFrame {
                 saveSettings();
                 stepDone();
                 if (knx != null) {
-                    log.info("Replacing KNX connection NOW");
+                    LOGGER.info("Replacing KNX connection NOW");
                     knx.close();
                     stepDone();
                     connectKnx();
                     stepDone();
                     setDone();
-                    log.info("Replacing KNX connection NOW *DONE*");
+                    LOGGER.info("Replacing KNX connection NOW *DONE*");
                 }
             }
         };
     }
 
     public void onEvent(EventDeviceAdded evt) {
-        log.info("Added device: {}", evt.getDeviceConfig());
+        LOGGER.info("Added device: {}", evt.getDeviceConfig());
         projectSaver.add(evt.getDeviceConfig());
     }
 
@@ -404,6 +401,9 @@ public class Main extends javax.swing.JFrame {
         exitButton = new javax.swing.JButton();
         bottomSplitPane = new javax.swing.JSplitPane();
         topSplitPane = new javax.swing.JSplitPane();
+        deviceList1 = new de.konnekting.suite.DeviceList();
+        deviceEditor1 = new de.konnekting.suite.DeviceEditor();
+        consolePanel1 = new de.konnekting.suite.ConsolePanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/i18n/language"); // NOI18N
@@ -574,7 +574,11 @@ public class Main extends javax.swing.JFrame {
                 topDividerChange(evt);
             }
         });
+        topSplitPane.setLeftComponent(deviceList1);
+        topSplitPane.setRightComponent(deviceEditor1);
+
         bottomSplitPane.setLeftComponent(topSplitPane);
+        bottomSplitPane.setRightComponent(consolePanel1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -598,34 +602,34 @@ public class Main extends javax.swing.JFrame {
     private void topDividerChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_topDividerChange
         if (evt.getPropertyName().equals(JSplitPane.DIVIDER_LOCATION_PROPERTY)) {
             int newValue = (int) evt.getNewValue();
-            PROPERTIES.put("topsplitpanedividerlocation", Integer.toString(newValue));
+            properties.put("topsplitpanedividerlocation", Integer.toString(newValue));
         }
     }//GEN-LAST:event_topDividerChange
 
     private void bottomDividerChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_bottomDividerChange
         if (evt.getPropertyName().equals(JSplitPane.DIVIDER_LOCATION_PROPERTY)) {
             int newValue = (int) evt.getNewValue();
-            PROPERTIES.put("bottomsplitpanedividerlocation", Integer.toString(newValue));
+            properties.put("bottomsplitpanedividerlocation", Integer.toString(newValue));
         }
     }//GEN-LAST:event_bottomDividerChange
 
     private void windowResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_windowResized
         Dimension size = getSize();
-        PROPERTIES.put("windowwidth", Integer.toString(size.width));
-        PROPERTIES.put("windowheight", Integer.toString(size.height));
+        properties.put("windowwidth", Integer.toString(size.width));
+        properties.put("windowheight", Integer.toString(size.height));
     }//GEN-LAST:event_windowResized
 
     private void windowMoved(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_windowMoved
         Point location = getLocation();
-        PROPERTIES.put("windowx", Integer.toString(location.x));
-        PROPERTIES.put("windowy", Integer.toString(location.y));
+        properties.put("windowx", Integer.toString(location.x));
+        properties.put("windowy", Integer.toString(location.y));
     }//GEN-LAST:event_windowMoved
 
     private void openProjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openProjectButtonActionPerformed
         JFileChooser jfc;
 
-        if (PROPERTIES.get("projectfolder") != null) {
-            jfc = new JFileChooser(PROPERTIES.getProperty("projectfolder"));
+        if (properties.get("projectfolder") != null) {
+            jfc = new JFileChooser(properties.getProperty("projectfolder"));
         } else {
             jfc = new JFileChooser();
         }
@@ -636,7 +640,7 @@ public class Main extends javax.swing.JFrame {
         if (returnVal != JFileChooser.ABORT && jfc.getSelectedFile() != null) {
 
             projectFolder = jfc.getSelectedFile();
-            PROPERTIES.put("projectfolder", projectFolder.getAbsolutePath());
+            properties.put("projectfolder", projectFolder.getAbsolutePath());
             eventbus.post(new EventProjectOpened(projectFolder));
         }
     }//GEN-LAST:event_openProjectButtonActionPerformed
@@ -654,10 +658,10 @@ public class Main extends javax.swing.JFrame {
     private void addDeviceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addDeviceButtonActionPerformed
         JFileChooser jfc;
 
-        if (PROPERTIES.getProperty("lastOpenFolder") != null) {
-            jfc = new JFileChooser(PROPERTIES.getProperty("lastOpenFolder"));
-        } else if (PROPERTIES.get("projectfolder") != null) {
-            jfc = new JFileChooser(PROPERTIES.getProperty("projectfolder"));
+        if (properties.getProperty("lastOpenFolder") != null) {
+            jfc = new JFileChooser(properties.getProperty("lastOpenFolder"));
+        } else if (properties.get("projectfolder") != null) {
+            jfc = new JFileChooser(properties.getProperty("projectfolder"));
         } else {
             jfc = new JFileChooser();
         }
@@ -681,7 +685,7 @@ public class Main extends javax.swing.JFrame {
 
             File selectedFile = jfc.getSelectedFile();
 
-            PROPERTIES.setProperty("lastOpenFolder", selectedFile.getParentFile().getAbsolutePath());
+            properties.setProperty("lastOpenFolder", selectedFile.getParentFile().getAbsolutePath());
 
             try {
                 DeviceConfigContainer device = new DeviceConfigContainer(selectedFile);
@@ -727,7 +731,7 @@ public class Main extends javax.swing.JFrame {
         projectSaver.setVisible(true);
         saveSettings();
         dispose();
-        log.info("SUITE EXITING");
+        LOGGER.info("SUITE EXITING");
         System.exit(0);
     }//GEN-LAST:event_exitButtonActionPerformed
 
@@ -756,19 +760,19 @@ public class Main extends javax.swing.JFrame {
      */
     private static void loadProperties() {
         try {
-            PROPERTIES.clear();
-            PROPERTIES.load(new FileReader(propertiesFile));
+            properties.clear();
+            properties.load(new FileReader(propertiesFile));
 
-            Iterator<Map.Entry<Object, Object>> iter = PROPERTIES.entrySet().iterator();
+            Iterator<Map.Entry<Object, Object>> iter = properties.entrySet().iterator();
             while (iter.hasNext()) {
                 Map.Entry<Object, Object> entry = iter.next();
-                log.info("Property: {}={}", entry.getKey(), entry.getValue());
+                LOGGER.info("Property: {}={}", entry.getKey(), entry.getValue());
             }
 
         } catch (FileNotFoundException ex) {
-            log.info("Properties file not found. Skip to defaults.");
+            LOGGER.info("Properties file not found. Skip to defaults.");
         } catch (IOException ex) {
-            log.error("Error reading setting properties", ex);
+            LOGGER.error("Error reading setting properties", ex);
         }
 
     }
@@ -781,12 +785,12 @@ public class Main extends javax.swing.JFrame {
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
             @Override
             public void uncaughtException(Thread t, Throwable e) {
-                log.error("Uncaught exception occured in thread [" + t.getName() + "]", e);
+                LOGGER.error("Uncaught exception occured in thread [" + t.getName() + "]", e);
                 RootEventBus.getDefault().post(new EventConsoleMessage("Uncaught exception occured in thread [" + t.getName() + "]", e));
             }
         });
 
-        log.info("Locale: {}", Locale.getDefault());
+        LOGGER.info("Locale: {}", Locale.getDefault());
 
         
 //        try {
@@ -796,21 +800,21 @@ public class Main extends javax.swing.JFrame {
 //        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
 //            System.err.println("Error setting Nimbus LaF. Continue with default.");
 //        }
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                log.info("LaF Name: '" + info.getName() + "'");
-//                if ("Nimbus".equals(info.getName())) {
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                LOGGER.info("LaF Name: '" + info.getName() + "'");
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+//                if ("GTK+".equals(info.getName())) {
 //                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
+////                    break;
 //                }
-////                if ("GTK+".equals(info.getName())) {
-////                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//////                    break;
-////                }
-//            }
-//        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-//            System.err.println("Error setting Nimbus LaF. Continue with default.");
-//        }
+            }
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+            System.err.println("Error setting Nimbus LaF. Continue with default.");
+        }
 
 //WebLookAndFeel.install ();
         final SplashPanel splashPanel = new SplashPanel();
@@ -822,7 +826,7 @@ public class Main extends javax.swing.JFrame {
                 try {
                     applicationProperties.load(getClass().getResourceAsStream("/properties/application.properties"));
                 } catch (IOException ex) {
-                    log.error("Error reading application properties", ex);
+                    LOGGER.error("Error reading application properties", ex);
                 }
                 splashPanel.setVersionText("Version " + applicationProperties.getProperty("application.version", "n/a") + " Build " + applicationProperties.getProperty("application.build", "n/a") + (Boolean.getBoolean("de.root1.slicknx.konnekting.debug") ? " DEBUG MODE!" : ""));
             }
@@ -853,6 +857,9 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JButton aboutButton;
     private javax.swing.JButton addDeviceButton;
     private javax.swing.JSplitPane bottomSplitPane;
+    private de.konnekting.suite.ConsolePanel consolePanel1;
+    private de.konnekting.suite.DeviceEditor deviceEditor1;
+    private de.konnekting.suite.DeviceList deviceList1;
     private javax.swing.JButton exitButton;
     private javax.swing.Box.Filler filler1;
     private javax.swing.JButton groupmonitorButton;
