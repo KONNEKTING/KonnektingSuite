@@ -98,12 +98,11 @@
         </dependency>
         
         <!-- Darcula LAF -->
-<!--        <dependency>
-            <groupId>com.bulenkov</groupId>
+        <dependency>
+            <groupId>bulenkov</groupId>
             <artifactId>darcula</artifactId>
             <version>1.0.0</version>
-        </dependency>        -->
-        
+        </dependency>        
     </dependencies>
     
     <build>
