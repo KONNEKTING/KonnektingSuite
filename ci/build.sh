@@ -14,7 +14,7 @@ pushd .
 trap popd EXIT
 cd $BASEDIR
 
-echo +++++ CLONING into $BASEDIR
+echo "+++++ CLONING into $BASEDIR"
 
 for i in $TOOLS; do 
   git clone https://github.com/tuxedo0801/$i ;
@@ -28,16 +28,16 @@ for i in $REPOS; do
   fi;
 done
 
-echo +++++ PATCHING
+echo "+++++ PATCHING"
 # java seems to have changes conversion warnings to errors
 sed -i "s/conf.setId(id);/conf.setId((short)id);/g" KonnektingDeviceConfig/src/main/java/de/konnekting/deviceconfig/DeviceConfigContainer.java 
 
 
-echo +++++ INSTALLING
+echo "+++++ INSTALLING"
 for i in $TOOLS $REPOS; do
   cd $BASEDIR/$i
   mvn install 
 done
 
-echo done. leaving from $BASEDIR.
+echo "+++++ done. leaving from $BASEDIR."
 
