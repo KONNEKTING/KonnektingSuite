@@ -30,6 +30,10 @@ import de.konnekting.suite.events.EventProjectOpened;
 import de.konnekting.suite.events.EventSaveSettings;
 import de.konnekting.suite.events.StickyDeviceSelected;
 import de.konnekting.suite.uicomponents.groupmonitor.GroupMonitorFrame;
+import de.root1.knxprojparser.FileNotSupportedException;
+import de.root1.knxprojparser.KnxProjParser;
+import de.root1.knxprojparser.ParserException;
+import de.root1.knxprojparser.Project;
 import de.root1.slicknx.GroupAddressEvent;
 import de.root1.slicknx.GroupAddressListener;
 import de.root1.slicknx.Knx;
@@ -45,6 +49,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.InetAddress;
@@ -127,6 +132,7 @@ public class Main extends javax.swing.JFrame {
     private Knx knx;
     private final GroupMonitorFrame monitor;
     private final ProjectSaver projectSaver;
+    private final Project knxProject;
 
     public static Properties getProperties() {
         return properties;
@@ -135,7 +141,8 @@ public class Main extends javax.swing.JFrame {
     /**
      * Creates new form Main
      */
-    public Main() {
+    public Main(StartupContainer sc) {
+        knxProject = sc.knxProject;
         projectSaver = new ProjectSaver(this);
 
 //        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -589,14 +596,14 @@ public class Main extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(bottomSplitPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+            .addComponent(bottomSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 723, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(bottomSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 518, Short.MAX_VALUE)
+                .addComponent(bottomSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 524, Short.MAX_VALUE)
                 .addGap(26, 26, 26))
         );
 
@@ -839,8 +846,9 @@ public class Main extends javax.swing.JFrame {
 
 
         final SplashPanel splashPanel = new SplashPanel();
+        final StartupContainer sc = new StartupContainer();
 
-        Thread t = new Thread("Load properties") {
+        Thread t = new Thread("Startup") {
             @Override
             public void run() {
                 loadProperties();
@@ -850,6 +858,34 @@ public class Main extends javax.swing.JFrame {
                     LOGGER.error("Error reading application properties", ex);
                 }
                 splashPanel.setVersionText("Version " + applicationProperties.getProperty("application.version", "n/a") + " Build " + applicationProperties.getProperty("application.build", "n/a") + (Boolean.getBoolean("de.root1.slicknx.konnekting.debug") ? " DEBUG MODE!" : ""));
+
+                
+                File projectFolder = new File(properties.getProperty("projectfolder", System.getProperty("user.home")));
+                
+                File[] knxprojFiles = projectFolder.listFiles(new FilenameFilter() {
+                    @Override
+                    public boolean accept(File dir, String name) {
+                        return name.endsWith(".knxproj");
+                    }
+                });
+                
+                if (knxprojFiles.length!=0) {
+                    try {
+                        KnxProjParser knxProjParser = new KnxProjParser();
+                        knxProjParser.parse(knxprojFiles[0]);
+                        sc.knxProject = knxProjParser.getProject();
+                        
+                        RootEventBus.getDefault().postSticky(sc.knxProject);
+                    } 
+                    catch (ParserException ex) {
+                        ex.printStackTrace();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    } catch (FileNotSupportedException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+
             }
 
         };
@@ -869,7 +905,7 @@ public class Main extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                new Main();
+                new Main(sc);
             }
         });
     }

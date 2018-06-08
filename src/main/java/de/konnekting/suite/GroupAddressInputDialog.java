@@ -5,8 +5,12 @@
  */
 package de.konnekting.suite;
 
+import de.konnekting.suite.uicomponents.AutoCompleteTextFieldAddon;
 import de.konnekting.suite.utils.Utils;
 import de.konnekting.xml.konnektingdevice.v0.CommObjectConfiguration;
+import de.root1.knxprojparser.GroupAddress;
+import de.root1.knxprojparser.KnxProjParser;
+import de.root1.knxprojparser.Project;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Collections;
@@ -14,6 +18,9 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import de.root1.rooteventbus.RootEventBus;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  *
@@ -22,12 +29,15 @@ import javax.swing.event.DocumentListener;
 public class GroupAddressInputDialog extends javax.swing.JDialog {
 
     private CommObjectConfiguration conf;
+    private Project knxProject;
+    private JFrame frame;
 
     /**
      * Creates new form GroupAddressInputDialog
      */
     public GroupAddressInputDialog(java.awt.Frame parent) {
         super(parent, true);
+        this.frame = frame;
         initComponents();
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -40,25 +50,61 @@ public class GroupAddressInputDialog extends javax.swing.JDialog {
 
         });
 
-        groupAddressTextField1.getDocument().addDocumentListener(new DocumentListener() {
+        groupAddressInput.getDocument().addDocumentListener(new DocumentListener() {
+
+            public void inputCompletion() {
+
+            }
 
             @Override
             public void insertUpdate(DocumentEvent e) {
-                associateButton.setEnabled(groupAddressTextField1.isInputValid());
+                associateButton.setEnabled(groupAddressInput.isInputValid());
+                inputCompletion();
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                associateButton.setEnabled(groupAddressTextField1.isInputValid());
+                associateButton.setEnabled(groupAddressInput.isInputValid());
+                inputCompletion();
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-                associateButton.setEnabled(groupAddressTextField1.isInputValid());
+                associateButton.setEnabled(groupAddressInput.isInputValid());
+                inputCompletion();
+            }
+        });
+
+        knxProject = RootEventBus.getDefault().getStickyEvent(Project.class);
+        AutoCompleteTextFieldAddon actfa = new AutoCompleteTextFieldAddon(groupAddressInput, knxProject.getGroupaddressList());
+        actfa.setValueComparer(new AutoCompleteTextFieldAddon.AutoCompleteCompare<GroupAddress>() {
+            @Override
+            public boolean match(String input, GroupAddress value) {
+                return value.getAddress().contains(input) || value.getName().contains(input);
+            }
+        });
+        actfa.setValueRenderer(new AutoCompleteTextFieldAddon.AutoCompleteValueRenderer<GroupAddress>() {
+            @Override
+            public String renderSuggestion(GroupAddress value) {
+                return value.getAddress() + "  -  " + value.getName();
+            }
+
+            @Override
+            public String renderSelectionResult(GroupAddress value) {
+                return value.getAddress();
+            }
+        }
+        );
+        
+        actfa.setActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                getRootPane().setDefaultButton(associateButton);
+                associateButton.requestFocus();
             }
         });
     }
-    
+
     private void updateButtons() {
         removeButton.setEnabled(!conf.getGroupAddress().isEmpty());
     }
@@ -69,7 +115,7 @@ public class GroupAddressInputDialog extends javax.swing.JDialog {
         gaList.setListData(conf.getGroupAddress().toArray());
         updateButtons();
     }
-    
+
     public CommObjectConfiguration getCommObjectConfig() {
         return conf;
     }
@@ -85,7 +131,8 @@ public class GroupAddressInputDialog extends javax.swing.JDialog {
 
         jPanel1 = new javax.swing.JPanel();
         associateButton = new javax.swing.JButton();
-        groupAddressTextField1 = new de.konnekting.suite.uicomponents.GroupAddressTextField();
+        groupAddressInput = new de.konnekting.suite.uicomponents.GroupAddressTextField();
+        openListButton = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         gaList = new javax.swing.JList();
@@ -104,9 +151,16 @@ public class GroupAddressInputDialog extends javax.swing.JDialog {
             }
         });
 
-        groupAddressTextField1.addActionListener(new java.awt.event.ActionListener() {
+        groupAddressInput.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                groupAddressTextField1ActionPerformed(evt);
+                groupAddressInputActionPerformed(evt);
+            }
+        });
+
+        openListButton.setText(bundle.getString("GroupAddressInputDialog.button.openList")); // NOI18N
+        openListButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openListButtonActionPerformed(evt);
             }
         });
 
@@ -116,7 +170,9 @@ public class GroupAddressInputDialog extends javax.swing.JDialog {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(groupAddressTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(groupAddressInput, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(openListButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(associateButton)
                 .addContainerGap())
@@ -127,7 +183,8 @@ public class GroupAddressInputDialog extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(associateButton)
-                    .addComponent(groupAddressTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(groupAddressInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(openListButton))
                 .addContainerGap())
         );
 
@@ -138,6 +195,7 @@ public class GroupAddressInputDialog extends javax.swing.JDialog {
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
+        gaList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(gaList);
 
         removeButton.setText(bundle.getString("GroupAddressInputDialog.button.remove")); // NOI18N
@@ -220,24 +278,29 @@ public class GroupAddressInputDialog extends javax.swing.JDialog {
 
     private void associateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_associateButtonActionPerformed
         if (conf != null) {
-            conf.getGroupAddress().add(groupAddressTextField1.getText());
+            conf.getGroupAddress().add(groupAddressInput.getText());
             Utils.removeDuplicates(conf.getGroupAddress());
             Collections.sort(conf.getGroupAddress());
             gaList.setListData(conf.getGroupAddress().toArray());
-            groupAddressTextField1.setText(""); // clear input
-            groupAddressTextField1.requestFocus(); // switch focus back to input
+            groupAddressInput.setText(""); // clear input
+            groupAddressInput.requestFocus(); // switch focus back to input
             updateButtons();
         }
     }//GEN-LAST:event_associateButtonActionPerformed
 
-    private void groupAddressTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_groupAddressTextField1ActionPerformed
+    private void groupAddressInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_groupAddressInputActionPerformed
         associateButton.doClick();
-    }//GEN-LAST:event_groupAddressTextField1ActionPerformed
+    }//GEN-LAST:event_groupAddressInputActionPerformed
+
+    private void openListButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openListButtonActionPerformed
+        GroupAddressListDialog dialog = new GroupAddressListDialog(this);
+        dialog.setVisible(true);
+    }//GEN-LAST:event_openListButtonActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String args[]) throws Exception {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -261,6 +324,10 @@ public class GroupAddressInputDialog extends javax.swing.JDialog {
         }
         //</editor-fold>
 
+        KnxProjParser parser = new KnxProjParser();
+        parser.parse(new java.io.File("/home/achristian/bigdisk/Programming/Arduino/KONNEKTING/KonnektingSampleProjectFolder/KnxProjParser-ExampleProject.knxproj"));
+        RootEventBus.getDefault().postSticky(parser.getProject());
+
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -280,10 +347,16 @@ public class GroupAddressInputDialog extends javax.swing.JDialog {
     private javax.swing.JButton associateButton;
     private javax.swing.JButton closeButton;
     private javax.swing.JList gaList;
-    private de.konnekting.suite.uicomponents.GroupAddressTextField groupAddressTextField1;
+    private de.konnekting.suite.uicomponents.GroupAddressTextField groupAddressInput;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton openListButton;
     private javax.swing.JButton removeButton;
     // End of variables declaration//GEN-END:variables
+
+    void setInput(GroupAddress groupAddress) {
+        groupAddressInput.setText(groupAddress.getAddress());
+        associateButton.requestFocus();
+    }
 }

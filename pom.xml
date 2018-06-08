@@ -102,7 +102,13 @@
             <groupId>bulenkov</groupId>
             <artifactId>darcula</artifactId>
             <version>1.0.0</version>
-        </dependency>        
+        </dependency>
+        
+        <dependency>
+            <groupId>de.root1</groupId>
+            <artifactId>knxproj-parser</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
     
     <build>
