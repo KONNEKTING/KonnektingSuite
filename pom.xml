@@ -15,8 +15,7 @@
     </properties>
     <dependencies>
         
-        <!-- basic dependencies -->
-        
+        <!-- basic dependencies -->        
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -58,30 +57,7 @@
             <version>4.10</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>de.root1</groupId>
-            <artifactId>rxtx-rebundled</artifactId>
-            <version>2.1-7r2-6</version>
-        </dependency>
-<!--        <dependency>
-            <groupId>com.github.calimero</groupId>
-            <artifactId>calimero-rxtx</artifactId>
-            <version>2.3</version>
-            <exclusions>
-                <exclusion>
-                     This is handled by de.root1:rxtx-rebundled 
-                    <groupId>org.rxtx</groupId>
-                    <artifactId>rxtx</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>-->
-<!--        <dependency>
-            <groupId>com.github.calimero</groupId>
-            <artifactId>calimero-core</artifactId>
-            <version>2.3-AC0</version>
-            <version>2.4-rc1</version>
-        </dependency>-->
-        
+
         <!-- LAF tests -->
         <dependency>
             <groupId>com.weblookandfeel</groupId>
