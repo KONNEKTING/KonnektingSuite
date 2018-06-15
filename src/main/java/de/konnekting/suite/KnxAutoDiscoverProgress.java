@@ -115,22 +115,22 @@ public class KnxAutoDiscoverProgress extends javax.swing.JDialog implements Auto
     private javax.swing.JProgressBar progressbar;
     // End of variables declaration//GEN-END:variables
 
-    @Override
-    public void onProgress(int i, int max, NetworkInterface iface, InetAddress address) {
-
-        log.info("i={}, max={}, iface={} addr={}", new Object[]{i, max, iface, address});
-        if (max > 2) {
-            progressbar.setIndeterminate(false);
-        }
-        progressbar.setMaximum(max);
-        progressbar.setValue(i);
-        
-        String networkname = iface.getName();
-        if (!networkname.equals(iface.getDisplayName())) {
-            networkname+="/"+iface.getDisplayName();
-        }
-        messageLabel.setText(networkname);
-    }
+//    @Override
+//    public void onProgress(int i, int max, NetworkInterface iface, InetAddress address) {
+//
+//        log.info("i={}, max={}, iface={} addr={}", new Object[]{i, max, iface, address});
+//        if (max > 2) {
+//            progressbar.setIndeterminate(false);
+//        }
+//        progressbar.setMaximum(max);
+//        progressbar.setValue(i);
+//        
+//        String networkname = iface.getName();
+//        if (!networkname.equals(iface.getDisplayName())) {
+//            networkname+="/"+iface.getDisplayName();
+//        }
+//        messageLabel.setText(networkname);
+//    }
 
     @Override
     public void done(List<KnxInterfaceDevice> devices) {
@@ -164,5 +164,16 @@ public class KnxAutoDiscoverProgress extends javax.swing.JDialog implements Auto
     public List<KnxInterfaceDevice> getDeviceList() {
         return deviceList;
     }
+
+  @Override
+  public void found(KnxInterfaceDevice device) {
+        log.info("found: {}", device);
+        
+        String networkname = device.getNetworkInterface().getName();
+        if (!networkname.equals(device.getNetworkInterface().getDisplayName())) {
+            networkname+="/"+device.getNetworkInterface().getDisplayName();
+        }
+        messageLabel.setText(networkname);
+  }
 
 }

@@ -31,8 +31,7 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Component id="jToolBar" max="32767" attributes="0"/>
-          <Component id="statusPanel" alignment="0" max="32767" attributes="0"/>
-          <Component id="bottomSplitPane" alignment="0" pref="0" max="32767" attributes="0"/>
+          <Component id="bottomSplitPane" alignment="0" pref="723" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -40,10 +39,8 @@
           <Group type="102" alignment="0" attributes="0">
               <Component id="jToolBar" min="-2" pref="25" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="bottomSplitPane" pref="518" max="32767" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="statusPanel" min="-2" pref="16" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
+              <Component id="bottomSplitPane" pref="524" max="32767" attributes="0"/>
+              <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -253,8 +250,6 @@
         </Component>
       </SubComponents>
     </Container>
-    <Component class="de.konnekting.suite.StatusPanel" name="statusPanel">
-    </Component>
     <Container class="javax.swing.JSplitPane" name="bottomSplitPane">
       <Properties>
         <Property name="dividerLocation" type="int" value="300"/>
@@ -290,30 +285,14 @@
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout"/>
           <SubComponents>
-            <Component class="de.konnekting.suite.DeviceList" name="deviceList">
-              <Properties>
-                <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                  <Dimension value="[120, 80]"/>
-                </Property>
-                <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                  <Dimension value="[180, 300]"/>
-                </Property>
-              </Properties>
+            <Component class="de.konnekting.suite.DeviceList" name="deviceList1">
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout$JSplitPaneConstraintsDescription">
                   <JSplitPaneConstraints position="left"/>
                 </Constraint>
               </Constraints>
             </Component>
-            <Component class="de.konnekting.suite.DeviceEditor" name="deviceEditor">
-              <Properties>
-                <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                  <Dimension value="[300, 300]"/>
-                </Property>
-                <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                  <Dimension value="[400, 300]"/>
-                </Property>
-              </Properties>
+            <Component class="de.konnekting.suite.DeviceEditor" name="deviceEditor1">
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout$JSplitPaneConstraintsDescription">
                   <JSplitPaneConstraints position="right"/>
@@ -322,16 +301,7 @@
             </Component>
           </SubComponents>
         </Container>
-        <Component class="de.konnekting.suite.ConsolePanel" name="consolePanel">
-          <Properties>
-            <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[180, 27]"/>
-            </Property>
-            <Property name="name" type="java.lang.String" value="" noResource="true"/>
-            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[80, 300]"/>
-            </Property>
-          </Properties>
+        <Component class="de.konnekting.suite.ConsolePanel" name="consolePanel1">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout$JSplitPaneConstraintsDescription">
               <JSplitPaneConstraints position="right"/>

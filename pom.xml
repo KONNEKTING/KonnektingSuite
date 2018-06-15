@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.konnekting</groupId>
     <artifactId>konnekting-suite</artifactId>
-    <version>1.0.0-BETA4</version>
+    <version>1.0.0-BETA5-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>KONNEKTING Suite ${project.version}</name>
     <properties>
@@ -15,8 +15,7 @@
     </properties>
     <dependencies>
         
-        <!-- basic dependencies -->
-        
+        <!-- basic dependencies -->        
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -58,26 +57,36 @@
             <version>4.10</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- LAF tests -->
+        <dependency>
+            <groupId>com.weblookandfeel</groupId>
+            <artifactId>weblaf-parent</artifactId>
+            <version>1.2.8</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>com.weblookandfeel</groupId>
+            <artifactId>weblaf-ui</artifactId>
+            <version>1.2.8</version>
+        </dependency>
+        <dependency>
+            <groupId>com.weblookandfeel</groupId>
+            <artifactId>weblaf-core</artifactId>
+            <version>1.2.8</version>
+        </dependency>
+        
+        <!-- Darcula LAF -->
+        <dependency>
+            <groupId>bulenkov</groupId>
+            <artifactId>darcula</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        
         <dependency>
             <groupId>de.root1</groupId>
-            <artifactId>rxtx-rebundled</artifactId>
-            <version>2.1-7r2-6</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.calimero</groupId>
-            <artifactId>calimero-rxtx</artifactId>
-            <version>2.3-beta</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.rxtx</groupId>
-                    <artifactId>rxtx</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.github.calimero</groupId>
-            <artifactId>calimero-core</artifactId>
-            <version>2.3-beta-AC0</version>
+            <artifactId>knxproj-parser</artifactId>
+            <version>1.0.0</version>
         </dependency>
     </dependencies>
     
@@ -118,6 +127,7 @@
             </plugin>
         </plugins>
     </build>
+
     <repositories>
         <repository>
             <id>root1-releases</id>
@@ -129,7 +139,7 @@
         </repository>
     </repositories>
 
-    <!-- upload informations for deploying the jar -->
+  <!-- upload informations for deploying the jar -->
     <distributionManagement>
         <repository>
             <id>root1-releases</id>
@@ -140,7 +150,7 @@
             <id>root1-snapshots</id>
             <name>internal snapshots</name>
             <url>http://maven.root1.de/repository/snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
 
+        </snapshotRepository>      
+    </distributionManagement>  
 </project>

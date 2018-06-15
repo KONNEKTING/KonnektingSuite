@@ -22,6 +22,9 @@ import java.awt.Color;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -86,6 +89,13 @@ public class Utils {
             }
         }
         throw new SocketException("Interface with name '" + name + "' not found.");
+    }
+    
+    public static void removeDuplicates(List list) {
+        Set noDuplicates = new HashSet();
+        noDuplicates.addAll(list);
+        list.clear();
+        list.addAll(noDuplicates);
     }
 
 }

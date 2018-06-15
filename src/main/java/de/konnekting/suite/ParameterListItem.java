@@ -43,7 +43,7 @@ public class ParameterListItem extends javax.swing.JPanel {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     private JComponent comp;
-    private short id;
+    private int id;
 
 
     /**
@@ -90,7 +90,7 @@ public class ParameterListItem extends javax.swing.JPanel {
 
     
 
-    void setParam(short id, DeviceConfigContainer device) {
+    void setParam(int id, DeviceConfigContainer device) {
         this.id = id;
 
         Parameter param = device.getParameter(id);

@@ -18,16 +18,29 @@
  */
 package de.konnekting.suite;
 
+import de.konnekting.deviceconfig.DeviceConfigContainer;
 import de.konnekting.deviceconfig.utils.Helper;
 import de.konnekting.suite.events.EventParameterChanged;
 import de.konnekting.suite.events.StickyDeviceSelected;
 import de.konnekting.suite.uicomponents.GroupAddressTextField;
+import de.konnekting.xml.konnektingdevice.v0.CommObjectConfiguration;
 import de.root1.rooteventbus.RootEventBus;
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.List;
+import javax.swing.AbstractCellEditor;
 import javax.swing.DefaultCellEditor;
 import javax.swing.InputVerifier;
 import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.table.TableCellEditor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,18 +50,108 @@ import org.slf4j.LoggerFactory;
  * @author achristian
  */
 public class CommObjectTable extends javax.swing.JPanel {
-    
+
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    private final DefaultCellEditor gaEditor;
+    class GaEditor extends AbstractCellEditor implements TableCellEditor {
+
+        @Override
+        public Object getCellEditorValue() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+    }
+
+    private final TableCellEditor gaEditor = new GaEditor() {
+
+        JLabel label = new JLabel();
+        private CommObjectConfiguration conf;
+
+        // constructor
+        {
+            label.addMouseListener(new MouseListener() {
+
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if (e.getClickCount() == 2) {
+                        GroupAddressInputDialog dialog = new GroupAddressInputDialog((JFrame) SwingUtilities.getWindowAncestor(label));
+                        dialog.setCommObjectConfig(conf);
+                        dialog.setVisible(true);
+
+                        updateLabel();
+
+                        fireEditingStopped();
+                    }
+                }
+
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    // ignore
+                }
+
+                @Override
+                public void mouseReleased(MouseEvent e) {
+                    // ignore
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    // ignore
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    // ignore
+                }
+            });
+        }
+
+        private void updateLabel() {
+            StringBuffer sb = new StringBuffer();
+            for (int i = 0; i < conf.getGroupAddress().size(); i++) {
+                sb.append(conf.getGroupAddress().get(i));
+                if (i < conf.getGroupAddress().size() - 1) {
+                    sb.append(", ");
+                }
+            }
+            label.setText(sb.toString());
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+            /**
+             * this method is called by fireEditingStopped() to get the value from editor and place it into model
+             * As the "conf" object is direclty modified by this editor
+             * 
+             * this is more like a hack, but makes life easier if the underlying data changes (not only GA, but also name?!)
+             */
+            return ""; 
+        }
+
+        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+            DeviceConfigContainer device = dataModel.getDeviceData();
+
+            int comObjId = (Short)dataModel.getValueAt(row, 0);
+
+            this.conf = device.getCommObjectConfiguration(comObjId);
+
+            updateLabel();
+
+            return label;
+        }
+
+    };
 
     /**
      * Creates new form CommObjectTable
      */
     public CommObjectTable() {
         RootEventBus.getDefault().registerSticky(this);
-        InputVerifier gaVerifier = getGaInputVerifier();
-        gaEditor = getGaTableCellEditor(gaVerifier);
 
         initComponents();
         table.setRowHeight(27); // enough space for textfields
@@ -58,73 +161,26 @@ public class CommObjectTable extends javax.swing.JPanel {
         table.getColumnModel().getColumn(3).setPreferredWidth(60);
         table.getColumnModel().getColumn(4).setPreferredWidth(150);
         table.getColumnModel().getColumn(5).setPreferredWidth(150);
-        
+
         table.putClientProperty("terminateEditOnFocusLost", true);
-        
-        
+
     }
-    
+
     public void onEvent(StickyDeviceSelected ev) {
-        
+
         // save all current data, end input
         if (table.isEditing()) {
             table.getCellEditor().stopCellEditing();
             log.debug("Stop editing before applying new device to table");
         }
-        
+
         // set new device data
         dataModel.setDeviceData(ev.getDeviceConfig());
     }
-    
+
     // Update comobj table when parameter has changed (check dependencies...)
     public void onEvent(EventParameterChanged ev) {
         dataModel.refreshCommObjVisibility();
-    }
-
-    private InputVerifier getGaInputVerifier() {
-        InputVerifier verifier = new InputVerifier() {
-
-            @Override
-            public boolean verify(JComponent input) {
-                JTextField field = (JTextField) input;
-                String text = field.getText();
-                return Helper.checkValidGa(text);
-            }
-
-            @Override
-            public boolean shouldYieldFocus(JComponent input) {
-                boolean valid = verify(input);
-                if (!valid) {
-                    JOptionPane.showMessageDialog(input.getParent(), "Invalid group address");
-                }
-                return valid;
-            }
-        };
-        return verifier;
-    }
-
-    private DefaultCellEditor getGaTableCellEditor(final InputVerifier verifier) {
-        DefaultCellEditor editor = new DefaultCellEditor(new GroupAddressTextField()) {
-            {
-                getComponent().setInputVerifier(verifier);
-            }
-
-            @Override
-            public boolean stopCellEditing() {
-                if (!verifier.shouldYieldFocus(getComponent())) {
-                    return false;
-                }
-                System.out.println("Stopped editing: "+getComponent().getText());
-                return super.stopCellEditing();
-            }
-
-            @Override
-            public JTextField getComponent() {
-                return (JTextField) super.getComponent();
-            }
-
-        };
-        return editor;
     }
 
     /**
