@@ -77,7 +77,7 @@ import javax.xml.bind.JAXBException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
-import tuwien.auto.calimero.exception.KNXIllegalArgumentException;
+//import tuwien.auto.calimero.exception.KNXIllegalArgumentException;
 
 /**
  *
@@ -302,7 +302,7 @@ public class Main extends javax.swing.JFrame {
         } catch (KnxException ex) {
             RootEventBus.getDefault().post(new EventConsoleMessage("Fehler beim Öffnen der KNX Verbindung: " + access, ex));
             LOGGER.error("Error creating knx access.", ex);
-        } catch (KNXIllegalArgumentException | UnknownHostException | SocketException ex) {
+        } catch ( UnknownHostException | SocketException ex) {
             RootEventBus.getDefault().post(new EventConsoleMessage("Fehler beim Öffnen der KNX Verbindung.", ex));
             LOGGER.error("Error creating knx access.", ex);
         }
@@ -869,7 +869,7 @@ public class Main extends javax.swing.JFrame {
                     }
                 });
                 
-                if (knxprojFiles.length!=0) {
+                if (knxprojFiles!=null && knxprojFiles.length!=0) {
                     try {
                         KnxProjParser knxProjParser = new KnxProjParser();
                         knxProjParser.parse(knxprojFiles[0]);

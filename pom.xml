@@ -63,23 +63,26 @@
             <artifactId>rxtx-rebundled</artifactId>
             <version>2.1-7r2-6</version>
         </dependency>
-        <dependency>
+<!--        <dependency>
             <groupId>com.github.calimero</groupId>
             <artifactId>calimero-rxtx</artifactId>
             <version>2.3</version>
             <exclusions>
                 <exclusion>
-                    <!-- This is handled by de.root1:rxtx-rebundled -->
+                     This is handled by de.root1:rxtx-rebundled 
                     <groupId>org.rxtx</groupId>
                     <artifactId>rxtx</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-        <dependency>
+        </dependency>-->
+<!--        <dependency>
             <groupId>com.github.calimero</groupId>
             <artifactId>calimero-core</artifactId>
             <version>2.3-AC0</version>
-        </dependency>
+            <version>2.4-rc1</version>
+        </dependency>-->
+        
+        <!-- LAF tests -->
         <dependency>
             <groupId>com.weblookandfeel</groupId>
             <artifactId>weblaf-parent</artifactId>
@@ -150,18 +153,6 @@
     </build>
     
     <repositories>
-<!--        <repository>
-            <id>lib</id>
-            <name>lib</name>
-            <releases>
-                <enabled>true</enabled>
-                <checksumPolicy>ignore</checksumPolicy>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <url>file:///${project.basedir}/lib</url>
-        </repository>-->
         <repository>
             <id>root1-releases</id>
             <url>http://maven.root1.de/repository/releases/</url>

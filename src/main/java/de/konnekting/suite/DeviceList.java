@@ -40,90 +40,89 @@ import org.xml.sax.SAXException;
  */
 public class DeviceList extends javax.swing.JPanel {
 
-    private final java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/i18n/language"); // NOI18N
-    private final Logger log = LoggerFactory.getLogger(getClass());
+  private final java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/i18n/language"); // NOI18N
+  private final Logger log = LoggerFactory.getLogger(getClass());
 
-    private final RootEventBus eventBus = RootEventBus.getDefault();
-    private File projectFolder;
-    private int oldSelectedIndex = -1;
+  private final RootEventBus eventBus = RootEventBus.getDefault();
+  private File projectFolder;
+  private int oldSelectedIndex = -1;
 
-    /**
-     * Creates new form DeviceList
-     */
-    public DeviceList() {
-        initComponents();
-        eventBus.register(this);
+  /**
+   * Creates new form DeviceList
+   */
+  public DeviceList() {
+    initComponents();
+    eventBus.register(this);
 
+  }
+
+  private String getLangString(String key, Object... values) {
+    String completeKey = getClass().getSimpleName() + "." + key;
+    try {
+      String s = bundle.getString(completeKey);
+      return String.format(s, values);
+    } catch (Exception ex) {
+      log.error("Problem reading/using key '" + completeKey + "'", ex);
+      return "<" + completeKey + ">";
     }
+  }
 
-    private String getLangString(String key, Object... values) {
-        String completeKey = getClass().getSimpleName() + "." + key;
-        try {
-            String s = bundle.getString(completeKey);
-            return String.format(s, values);
-        } catch (Exception ex) {
-            log.error("Problem reading/using key '" + completeKey + "'", ex);
-            return "<" + completeKey + ">";
-        }
-    }
+  private String getLangString(String key) {
+    return bundle.getString(getClass().getSimpleName() + "." + key);
+  }
 
-    private String getLangString(String key) {
-        return bundle.getString(getClass().getSimpleName() + "." + key);
-    }
+  public void onEvent(EventDeviceListRefresh event) {
+    deviceList.invalidate();
+    repaint();
+  }
 
-    public void onEvent(EventDeviceListRefresh event) {
-        deviceList.invalidate();
-        repaint();
-    }
+  public void onEvent(EventAddDevice event) {
+    DeviceConfigContainer device = event.getDeviceConfig();
+    deviceListModel.addElement(device);
+    eventBus.post(new EventDeviceAdded(device));
+    eventBus.post(new EventConsoleMessage(getLangString("onevent.adddevice", device.getIndividualAddress(), device.getDescription())));
+    deviceList.invalidate();
+    repaint();
+  }
 
-    public void onEvent(EventAddDevice event) {
-        DeviceConfigContainer device = event.getDeviceConfig();
-        deviceListModel.addElement(device);
-        eventBus.post(new EventDeviceAdded(device));
-        eventBus.post(new EventConsoleMessage(getLangString("onevent.adddevice",device.getIndividualAddress(), device.getDescription())));
-        deviceList.invalidate();
-        repaint();
-    }
+  public void onEvent(EventProjectOpened projectOpened) {
+    projectFolder = projectOpened.getProjectFolder();
+    new BackgroundTask(getLangString("task.openproject", projectFolder.getName()), Thread.NORM_PRIORITY
+    ) {
 
-    public void onEvent(EventProjectOpened projectOpened) {
-        projectFolder = projectOpened.getProjectFolder();
-        new BackgroundTask(getLangString("task.openproject", projectFolder.getName()), Thread.NORM_PRIORITY
-        
-            ) {
+      @Override
+      public void run() {
+        deviceListModel.clear();
+        File[] deviceFiles = projectFolder.listFiles((File pathname) -> pathname.isFile() && pathname.getName().endsWith(".kconfig.xml"));
 
-            @Override
-            public void run
-            
-                () {
-                deviceListModel.clear();
-                File[] deviceFiles = projectFolder.listFiles((File pathname) -> pathname.isFile() && pathname.getName().endsWith(".kconfig.xml"));
-
-                setStepsToDo(deviceFiles.length);
-                for (File deviceFile : deviceFiles) {
-                    try {
-                        DeviceConfigContainer device = new DeviceConfigContainer(deviceFile);
-                        if (device.hasConfiguration()) {
-                            eventBus.post(new EventDeviceAdded(device));
-                            deviceListModel.addElement(device);
-                        }
-                        stepDone();
-                    } catch (JAXBException | SAXException ex) {
-                        RootEventBus.getDefault().post(new EventConsoleMessage("Fehler beim Lesen der Datei ", ex));
-                    }
-
-                }
-                setDone();
-
+        setStepsToDo(deviceFiles == null ? 0 : deviceFiles.length);
+        if (deviceFiles != null) {
+          for (File deviceFile : deviceFiles) {
+            try {
+              DeviceConfigContainer device = new DeviceConfigContainer(deviceFile);
+              if (device.hasConfiguration()) {
+                eventBus.post(new EventDeviceAdded(device));
+                deviceListModel.addElement(device);
+              }
+              stepDone();
+            } catch (JAXBException | SAXException ex) {
+              RootEventBus.getDefault().post(new EventConsoleMessage("Fehler beim Lesen der Datei ", ex));
             }
-        };
-    }
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
-    @SuppressWarnings("unchecked")
+          }
+        }
+        setDone();
+
+      }
+    };
+  }
+
+  /**
+   * This method is called from within the constructor to initialize the form.
+   * WARNING: Do NOT modify this code. The content of this method is always
+   * regenerated by the Form Editor.
+   */
+  @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -155,19 +154,19 @@ public class DeviceList extends javax.swing.JPanel {
 
     private void selectionChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_selectionChanged
 
-        int selectedIndex = deviceList.getSelectedIndex();
+      int selectedIndex = deviceList.getSelectedIndex();
 
-        log.trace("Device selection changed: " + selectedIndex);
+      log.trace("Device selection changed: " + selectedIndex);
 
-        if (oldSelectedIndex != selectedIndex) {
-            if (selectedIndex == -1) {
-                eventBus.postSticky(new StickyDeviceSelected(null));
-            } else {
-                DeviceConfigContainer selectedDevice = deviceListModel.getElementAt(selectedIndex);
-                eventBus.postSticky(new StickyDeviceSelected(selectedDevice));
-            }
+      if (oldSelectedIndex != selectedIndex) {
+        if (selectedIndex == -1) {
+          eventBus.postSticky(new StickyDeviceSelected(null));
+        } else {
+          DeviceConfigContainer selectedDevice = deviceListModel.getElementAt(selectedIndex);
+          eventBus.postSticky(new StickyDeviceSelected(selectedDevice));
         }
-        oldSelectedIndex = selectedIndex;
+      }
+      oldSelectedIndex = selectedIndex;
     }//GEN-LAST:event_selectionChanged
 
 
@@ -178,31 +177,31 @@ public class DeviceList extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane;
     // End of variables declaration//GEN-END:variables
 
-    void removeSelectedDevice() throws JAXBException, SAXException {
-        int selectedIndex = deviceList.getSelectedIndex();
-        DeviceConfigContainer device = deviceListModel.get(selectedIndex);
-        // kleinster Index wird als Button ganz rechts angeordnet, größter ganz links
-        Object[] options = {
-            /* 0 */"Abbrechen",
-            /* 1 */ "Löschen",};
-        int result = JOptionPane.showOptionDialog(getParent(),
-                "Soll die Gerätekonfiguration gelöscht werden?",
-                "Löschen bestätigen",
-                JOptionPane.YES_NO_CANCEL_OPTION,
-                JOptionPane.QUESTION_MESSAGE,
-                null,
-                options, options[0]);
+  void removeSelectedDevice() throws JAXBException, SAXException {
+    int selectedIndex = deviceList.getSelectedIndex();
+    DeviceConfigContainer device = deviceListModel.get(selectedIndex);
+    // kleinster Index wird als Button ganz rechts angeordnet, größter ganz links
+    Object[] options = {
+      /* 0 */"Abbrechen",
+      /* 1 */ "Löschen",};
+    int result = JOptionPane.showOptionDialog(getParent(),
+            "Soll die Gerätekonfiguration gelöscht werden?",
+            "Löschen bestätigen",
+            JOptionPane.YES_NO_CANCEL_OPTION,
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            options, options[0]);
 
-        switch (result) {
-            case 1:
-                device.remove();
-                deviceListModel.remove(selectedIndex);
-                RootEventBus.getDefault().post(new EventDeviceRemoved(device));
-                break;
-            case 0:
-            case JOptionPane.CLOSED_OPTION:
-                // just do nothing
-                break;
-        }
+    switch (result) {
+      case 1:
+        device.remove();
+        deviceListModel.remove(selectedIndex);
+        RootEventBus.getDefault().post(new EventDeviceRemoved(device));
+        break;
+      case 0:
+      case JOptionPane.CLOSED_OPTION:
+        // just do nothing
+        break;
     }
+  }
 }
