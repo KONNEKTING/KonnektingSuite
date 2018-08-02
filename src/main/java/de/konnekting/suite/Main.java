@@ -712,7 +712,7 @@ public class Main extends javax.swing.JFrame {
     private void programmAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_programmAllButtonActionPerformed
         StickyDeviceSelected selectdDevice = eventbus.getStickyEvent(StickyDeviceSelected.class);
         ProgramDialog pd = new ProgramDialog(this);
-        pd.prepare(knx, true, true, true);
+        pd.prepare(knx, true, true, true); // ALL
         pd.addDeviceToprogram(selectdDevice.getDeviceConfig());
         pd.setVisible(true);
     }//GEN-LAST:event_programmAllButtonActionPerformed
@@ -720,7 +720,7 @@ public class Main extends javax.swing.JFrame {
     private void programmDataOnlyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_programmDataOnlyButtonActionPerformed
         StickyDeviceSelected selectdDevice = eventbus.getStickyEvent(StickyDeviceSelected.class);
         ProgramDialog pd = new ProgramDialog(this);
-        pd.prepare(knx, false, true, true);
+        pd.prepare(knx, false, true, true); // all but, IA
         pd.addDeviceToprogram(selectdDevice.getDeviceConfig());
         pd.setVisible(true);
     }//GEN-LAST:event_programmDataOnlyButtonActionPerformed
@@ -802,48 +802,18 @@ public class Main extends javax.swing.JFrame {
         });
 
         LOGGER.info("Locale: {}", Locale.getDefault());
-
         
-//        try {
-        BasicLookAndFeel darcula = new com.bulenkov.darcula.DarculaLaf();
         try {
-            UIManager.setLookAndFeel(darcula);
-//            javax.swing.UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
-//        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-//            System.err.println("Error setting Nimbus LaF. Continue with default.");
-//        }
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                LOGGER.info("LaF Name: '" + info.getName() + "'");
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-////                if ("GTK+".equals(info.getName())) {
-////                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//////                    break;
-////                }
-//            }
-//        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-//            System.err.println("Error setting Nimbus LaF. Continue with default.");
-//        }
-        } catch (UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                LOGGER.info("LaF Name: '" + info.getName() + "'");
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+            System.err.println("Error setting Nimbus LaF. Continue with default.");
         }
-
-
-// You should work with UI (including installing L&F) inside Event Dispatch Thread (EDT)
-//        SwingUtilities.invokeLater ( new Runnable ()
-//        {
-//            public void run ()
-//            {
-//                // Install WebLaF as application L&F
-//                WebLookAndFeel.install ();
-//                // Create you Swing application here
-//                // JFrame frame = ...
-//            }
-//        } );
-
 
         final SplashPanel splashPanel = new SplashPanel();
         final StartupContainer sc = new StartupContainer();

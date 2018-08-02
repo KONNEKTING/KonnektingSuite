@@ -84,6 +84,12 @@
         </dependency>
         
         <dependency>
+            <groupId>com.github.arnabk</groupId>
+            <artifactId>pgslookandfeel</artifactId>
+            <version>1.1.4</version>
+        </dependency>
+        
+        <dependency>
             <groupId>de.root1</groupId>
             <artifactId>knxproj-parser</artifactId>
             <version>1.0.0</version>

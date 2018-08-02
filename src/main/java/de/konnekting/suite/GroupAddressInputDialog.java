@@ -80,7 +80,7 @@ public class GroupAddressInputDialog extends javax.swing.JDialog {
         actfa.setValueComparer(new AutoCompleteTextFieldAddon.AutoCompleteCompare<GroupAddress>() {
             @Override
             public boolean match(String input, GroupAddress value) {
-                return value.getAddress().contains(input) || value.getName().contains(input);
+                return value.getAddress().contains(input) || value.getName().toLowerCase().contains(input.toLowerCase());
             }
         });
         actfa.setValueRenderer(new AutoCompleteTextFieldAddon.AutoCompleteValueRenderer<GroupAddress>() {
