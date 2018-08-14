@@ -18,7 +18,6 @@
  */
 package de.konnekting.suite;
 
-import com.alee.laf.WebLookAndFeel;
 import de.konnekting.deviceconfig.DeviceConfigContainer;
 import de.konnekting.deviceconfig.EventDeviceChanged;
 import de.konnekting.deviceconfig.utils.Helper;

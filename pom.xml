@@ -57,37 +57,6 @@
             <version>4.10</version>
             <scope>test</scope>
         </dependency>
-
-        <!-- LAF tests -->
-        <dependency>
-            <groupId>com.weblookandfeel</groupId>
-            <artifactId>weblaf-parent</artifactId>
-            <version>1.2.8</version>
-            <type>pom</type>
-        </dependency>
-        <dependency>
-            <groupId>com.weblookandfeel</groupId>
-            <artifactId>weblaf-ui</artifactId>
-            <version>1.2.8</version>
-        </dependency>
-        <dependency>
-            <groupId>com.weblookandfeel</groupId>
-            <artifactId>weblaf-core</artifactId>
-            <version>1.2.8</version>
-        </dependency>
-        
-        <!-- Darcula LAF -->
-        <dependency>
-            <groupId>bulenkov</groupId>
-            <artifactId>darcula</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>com.github.arnabk</groupId>
-            <artifactId>pgslookandfeel</artifactId>
-            <version>1.1.4</version>
-        </dependency>
         
         <dependency>
             <groupId>de.root1</groupId>
