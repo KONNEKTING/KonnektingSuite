@@ -30,7 +30,7 @@
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="Ger&#xe4;tedaten">
+            <TitledBorder title="Device Data">
               <ResourceString PropertyName="titleX" bundle="de/konnekting/suite/i18n/language.properties" key="DeviceInformationPanel.deviceInfoPanel.border.title" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
             </TitledBorder>
           </Border>
@@ -57,11 +57,16 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="deviceRevisionLabel" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="revisionTextField" pref="57" max="32767" attributes="0"/>
+                          <Component id="revisionTextField" min="-2" pref="70" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="systemTypeTextField" pref="132" max="32767" attributes="0"/>
                       </Group>
-                      <Component id="devicenameTextField" alignment="0" max="32767" attributes="0"/>
                       <Component id="manufacturernameTextField" alignment="0" max="32767" attributes="0"/>
+                      <Component id="devicenameTextField" max="32767" attributes="0"/>
                   </Group>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -75,6 +80,8 @@
                       <Component id="deviceIdTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="deviceRevisionLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="revisionTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="systemTypeTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
@@ -86,7 +93,7 @@
                       <Component id="deviceNameLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="devicenameTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace pref="26" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -156,6 +163,20 @@
         <Component class="javax.swing.JTextField" name="devicenameTextField">
           <Properties>
             <Property name="editable" type="boolean" value="false"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel1">
+          <Properties>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="de/konnekting/suite/Bundle.properties" key="DeviceInformationPanel.jLabel1.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+            </Property>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="systemTypeTextField">
+          <Properties>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="de/konnekting/suite/Bundle.properties" key="DeviceInformationPanel.systemTypeTextField.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+            </Property>
           </Properties>
         </Component>
       </SubComponents>

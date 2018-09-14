@@ -42,6 +42,7 @@ public class DeviceInformationPanel extends javax.swing.JPanel {
             manufacturerIdTextField.setText("");
             deviceIdTextField.setText("");
             revisionTextField.setText("");
+            systemTypeTextField.setText("");
 
             manufacturernameTextField.setText("");
             devicenameTextField.setText("");
@@ -49,6 +50,7 @@ public class DeviceInformationPanel extends javax.swing.JPanel {
             manufacturerIdTextField.setText(String.format("0x%04x", device.getManufacturerId()));
             deviceIdTextField.setText(String.format("0x%02x", device.getDeviceId()));
             revisionTextField.setText(String.format("0x%02x", device.getRevision()));
+            systemTypeTextField.setText(String.format("0x%02x", device.getSystemType()));
 
             manufacturernameTextField.setText(device.getManufacturerName());
             devicenameTextField.setText(device.getDeviceName());
@@ -80,6 +82,8 @@ public class DeviceInformationPanel extends javax.swing.JPanel {
         revisionTextField = new javax.swing.JTextField();
         manufacturernameTextField = new javax.swing.JTextField();
         devicenameTextField = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        systemTypeTextField = new javax.swing.JTextField();
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/i18n/language"); // NOI18N
         deviceInfoPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("DeviceInformationPanel.deviceInfoPanel.border.title"))); // NOI18N
@@ -106,6 +110,11 @@ public class DeviceInformationPanel extends javax.swing.JPanel {
 
         devicenameTextField.setEditable(false);
 
+        java.util.ResourceBundle bundle1 = java.util.ResourceBundle.getBundle("de/konnekting/suite/Bundle"); // NOI18N
+        jLabel1.setText(bundle1.getString("DeviceInformationPanel.jLabel1.text")); // NOI18N
+
+        systemTypeTextField.setText(bundle1.getString("DeviceInformationPanel.systemTypeTextField.text")); // NOI18N
+
         javax.swing.GroupLayout deviceInfoPanelLayout = new javax.swing.GroupLayout(deviceInfoPanel);
         deviceInfoPanel.setLayout(deviceInfoPanelLayout);
         deviceInfoPanelLayout.setHorizontalGroup(
@@ -126,9 +135,14 @@ public class DeviceInformationPanel extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(deviceRevisionLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(revisionTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 57, Short.MAX_VALUE))
-                    .addComponent(devicenameTextField)
-                    .addComponent(manufacturernameTextField)))
+                        .addComponent(revisionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(systemTypeTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE))
+                    .addComponent(manufacturernameTextField)
+                    .addComponent(devicenameTextField))
+                .addContainerGap())
         );
         deviceInfoPanelLayout.setVerticalGroup(
             deviceInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -139,7 +153,9 @@ public class DeviceInformationPanel extends javax.swing.JPanel {
                     .addComponent(deviceIdLabel)
                     .addComponent(deviceIdTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(deviceRevisionLabel)
-                    .addComponent(revisionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(revisionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1)
+                    .addComponent(systemTypeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(deviceInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(manufacturerNameLabel)
@@ -148,7 +164,7 @@ public class DeviceInformationPanel extends javax.swing.JPanel {
                 .addGroup(deviceInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(deviceNameLabel)
                     .addComponent(devicenameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(26, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -171,10 +187,12 @@ public class DeviceInformationPanel extends javax.swing.JPanel {
     private javax.swing.JLabel deviceNameLabel;
     private javax.swing.JLabel deviceRevisionLabel;
     private javax.swing.JTextField devicenameTextField;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel manufacturerIdLabel;
     private javax.swing.JTextField manufacturerIdTextField;
     private javax.swing.JLabel manufacturerNameLabel;
     private javax.swing.JTextField manufacturernameTextField;
     private javax.swing.JTextField revisionTextField;
+    private javax.swing.JTextField systemTypeTextField;
     // End of variables declaration//GEN-END:variables
 }
