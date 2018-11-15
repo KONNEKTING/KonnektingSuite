@@ -5,24 +5,17 @@
  */
 package de.konnekting.suite;
 
-import de.konnekting.suite.utils.Utils;
-import de.konnekting.xml.konnektingdevice.v0.CommObjectConfiguration;
 import de.root1.knxprojparser.GroupAddress;
 import de.root1.knxprojparser.KnxProjParser;
 import de.root1.knxprojparser.Project;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Collections;
-import java.util.List;
 import javax.swing.JFrame;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import de.root1.rooteventbus.RootEventBus;
 import java.awt.Component;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.ListCellRenderer;
 
 /**
  *
@@ -38,7 +31,7 @@ public class GroupAddressListDialog extends javax.swing.JDialog {
      */
     public GroupAddressListDialog(GroupAddressInputDialog parent) {
         super(parent, true);
-        initComponents();        
+        initComponents();
         inputDialog = parent;
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -52,24 +45,24 @@ public class GroupAddressListDialog extends javax.swing.JDialog {
         });
 
         knxProject = RootEventBus.getDefault().getStickyEvent(Project.class);
-        
-        Object[] data = knxProject.getGroupaddressList().toArray();
-        
-        gaList.setListData(data);
+
+        if (knxProject != null) {
+            gaList.setListData(knxProject.getGroupaddressList().toArray());
+        }
         gaList.enableInputMethods(true);
-        gaList.setCellRenderer(new DefaultListCellRenderer(){
+        gaList.setCellRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 JLabel comp = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                
+
                 GroupAddress ga = (GroupAddress) value;
-                comp.setText(ga.getAddress()+"  -  "+ga.getName());
+                comp.setText(ga.getAddress() + "  -  " + ga.getName());
                 return comp;
             }
-            
+
         });
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -146,8 +139,8 @@ public class GroupAddressListDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void selectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectButtonActionPerformed
-        if (inputDialog!=null){
-            inputDialog.setInput((GroupAddress)gaList.getSelectedValue());
+        if (inputDialog != null) {
+            inputDialog.setInput((GroupAddress) gaList.getSelectedValue());
         }
         dispose();
     }//GEN-LAST:event_selectButtonActionPerformed
@@ -185,7 +178,7 @@ public class GroupAddressListDialog extends javax.swing.JDialog {
         KnxProjParser parser = new KnxProjParser();
         parser.parse(new java.io.File("/home/achristian/bigdisk/Programming/Arduino/KONNEKTING/KonnektingSampleProjectFolder/KnxProjParser-ExampleProject.knxproj"));
         RootEventBus.getDefault().postSticky(parser.getProject());
-        
+
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {

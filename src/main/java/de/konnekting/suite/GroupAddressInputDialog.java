@@ -21,6 +21,7 @@ import javax.swing.event.DocumentListener;
 import de.root1.rooteventbus.RootEventBus;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 /**
  *
@@ -76,7 +77,10 @@ public class GroupAddressInputDialog extends javax.swing.JDialog {
         });
 
         knxProject = RootEventBus.getDefault().getStickyEvent(Project.class);
-        AutoCompleteTextFieldAddon actfa = new AutoCompleteTextFieldAddon(groupAddressInput, knxProject.getGroupaddressList());
+        
+        openListButton.setEnabled(knxProject!=null);
+        
+        AutoCompleteTextFieldAddon actfa = new AutoCompleteTextFieldAddon(groupAddressInput, (knxProject!=null?knxProject.getGroupaddressList():new ArrayList<GroupAddress>()));
         actfa.setValueComparer(new AutoCompleteTextFieldAddon.AutoCompleteCompare<GroupAddress>() {
             @Override
             public boolean match(String input, GroupAddress value) {
