@@ -31,14 +31,13 @@ public class GroupAddressInputDialog extends javax.swing.JDialog {
 
     private CommObjectConfiguration conf;
     private Project knxProject;
-    private JFrame frame;
 
     /**
      * Creates new form GroupAddressInputDialog
+     * @param parent
      */
     public GroupAddressInputDialog(java.awt.Frame parent) {
         super(parent, true);
-        this.frame = frame;
         initComponents();
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
