@@ -18,8 +18,6 @@
  */
 package de.konnekting.suite.uicomponents;
 
-import de.konnekting.suite.events.EventConsoleMessage;
-import de.root1.rooteventbus.RootEventBus;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;

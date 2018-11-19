@@ -50,7 +50,7 @@ public class GroupAddressInputDialog extends javax.swing.JDialog {
             }
 
         });
-
+        associateButton.setEnabled(false);
         groupAddressInput.getDocument().addDocumentListener(new DocumentListener() {
 
             public void inputCompletion() {
@@ -59,19 +59,19 @@ public class GroupAddressInputDialog extends javax.swing.JDialog {
 
             @Override
             public void insertUpdate(DocumentEvent e) {
-                associateButton.setEnabled(groupAddressInput.isInputValid());
+                associateButton.setEnabled(groupAddressInput.isInputValid() && !groupAddressInput.getText().isEmpty());
                 inputCompletion();
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                associateButton.setEnabled(groupAddressInput.isInputValid());
+                associateButton.setEnabled(groupAddressInput.isInputValid() && !groupAddressInput.getText().isEmpty());
                 inputCompletion();
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-                associateButton.setEnabled(groupAddressInput.isInputValid());
+                associateButton.setEnabled(groupAddressInput.isInputValid() && !groupAddressInput.getText().isEmpty());
                 inputCompletion();
             }
         });
