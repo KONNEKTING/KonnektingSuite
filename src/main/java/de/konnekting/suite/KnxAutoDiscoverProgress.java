@@ -131,7 +131,6 @@ public class KnxAutoDiscoverProgress extends javax.swing.JDialog implements Auto
 //        }
 //        messageLabel.setText(networkname);
 //    }
-
     @Override
     public void done(List<KnxInterfaceDevice> devices) {
         deviceList = devices;
@@ -165,15 +164,15 @@ public class KnxAutoDiscoverProgress extends javax.swing.JDialog implements Auto
         return deviceList;
     }
 
-  @Override
-  public void found(KnxInterfaceDevice device) {
+    @Override
+    public void found(KnxInterfaceDevice device) {
         log.info("found: {}", device);
-        
+
         String networkname = device.getNetworkInterface().getName();
         if (!networkname.equals(device.getNetworkInterface().getDisplayName())) {
-            networkname+="/"+device.getNetworkInterface().getDisplayName();
+            networkname += "/" + device.getNetworkInterface().getDisplayName();
         }
         messageLabel.setText(networkname);
-  }
+    }
 
 }

@@ -3,3 +3,6 @@
 /KonnektingSuite.*
 /splash.*
 /hs_err_*.log
+/.settings/
+/.project
+/.classpath

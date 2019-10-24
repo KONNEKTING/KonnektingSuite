@@ -6,13 +6,13 @@
     <version>1.0.0-BETA5-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>KONNEKTING Suite ${project.version}</name>
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <maven.build.timestamp.format>yyyy-MM-dd_HH-mm-ss</maven.build.timestamp.format>
-        <timestamp>${maven.build.timestamp}</timestamp>
-    </properties>
+    
+    <parent>
+        <groupId>de.konnekting</groupId>
+        <artifactId>parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+    
     <dependencies>
         
         <!-- basic dependencies -->        
@@ -57,36 +57,11 @@
             <version>4.10</version>
             <scope>test</scope>
         </dependency>
-
-        <!-- LAF tests -->
-        <dependency>
-            <groupId>com.weblookandfeel</groupId>
-            <artifactId>weblaf-parent</artifactId>
-            <version>1.2.8</version>
-            <type>pom</type>
-        </dependency>
-        <dependency>
-            <groupId>com.weblookandfeel</groupId>
-            <artifactId>weblaf-ui</artifactId>
-            <version>1.2.8</version>
-        </dependency>
-        <dependency>
-            <groupId>com.weblookandfeel</groupId>
-            <artifactId>weblaf-core</artifactId>
-            <version>1.2.8</version>
-        </dependency>
-        
-        <!-- Darcula LAF -->
-        <dependency>
-            <groupId>bulenkov</groupId>
-            <artifactId>darcula</artifactId>
-            <version>1.0.0</version>
-        </dependency>
         
         <dependency>
             <groupId>de.root1</groupId>
             <artifactId>knxproj-parser</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.5</version>
         </dependency>
     </dependencies>
     
@@ -127,30 +102,29 @@
             </plugin>
         </plugins>
     </build>
-
-    <repositories>
+    
+    <repositories>      
         <repository>
             <id>root1-releases</id>
+            <name>root1.de Releases Repository</name>
+            <layout>default</layout>
             <url>http://maven.root1.de/repository/releases/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
         </repository>
         <repository>
             <id>root1-snapshots</id>
+            <name>root1.de Snapshots Repository</name>
+            <layout>default</layout>
             <url>http://maven.root1.de/repository/snapshots/</url>
-        </repository>
-    </repositories>
-
-  <!-- upload informations for deploying the jar -->
-    <distributionManagement>
-        <repository>
-            <id>root1-releases</id>
-            <name>internal releases</name>
-            <url>http://maven.root1.de/repository/releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>root1-snapshots</id>
-            <name>internal snapshots</name>
-            <url>http://maven.root1.de/repository/snapshots/</url>
-
-        </snapshotRepository>      
-    </distributionManagement>  
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>    
+    </repositories>  
+    <properties>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+    </properties>
 </project>

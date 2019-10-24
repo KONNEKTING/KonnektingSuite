@@ -6,9 +6,9 @@
 package de.konnekting.suite;
 
 import de.konnekting.deviceconfig.DeviceConfigContainer;
-import de.konnekting.deviceconfig.Program;
-import de.konnekting.deviceconfig.ProgramException;
-import de.konnekting.deviceconfig.ProgramProgressListener;
+import de.konnekting.mgnt.DeviceManagement;
+import de.konnekting.mgnt.DeviceManagementException;
+import de.konnekting.mgnt.ProgramProgressListener;
 import de.konnekting.suite.events.EventConsoleMessage;
 import de.root1.rooteventbus.RootEventBus;
 import de.root1.slicknx.Knx;
@@ -29,7 +29,7 @@ public class ProgramDialog extends javax.swing.JDialog {
     private final Logger log = LoggerFactory.getLogger(getClass());
     private final java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/i18n/language"); // NOI18N
     private final List<DeviceConfigContainer> deviceList = new ArrayList<>();
-    private Program p;
+    private DeviceManagement devMgmt;
     private boolean doIndividualAddress;
     private boolean doComObjects;
     private boolean doParams;
@@ -140,7 +140,7 @@ public class ProgramDialog extends javax.swing.JDialog {
     }
     
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-        p.abort();
+        devMgmt.abortOperation();
         RootEventBus.getDefault().post(new EventConsoleMessage(getLangString("ConsoleMsg.prefix")+" " + getLangString("ConsoleMsg.cancelRequested")));
         cancelButton.setText(cancelButton.getText() + "...");
         cancelButton.setEnabled(false);
@@ -150,7 +150,7 @@ public class ProgramDialog extends javax.swing.JDialog {
         this.doIndividualAddress = doIndividualAddress;
         this.doComObjects = doComObjects;
         this.doParams = doParams;
-        p = new Program(knx);
+        devMgmt = new DeviceManagement(knx);
     }
     
     void addDeviceToprogram(DeviceConfigContainer device) {
@@ -183,18 +183,18 @@ public class ProgramDialog extends javax.swing.JDialog {
                 public void run() {
                     long start = System.currentTimeMillis();
                     try {
-                        p.addProgressListener(ppl);
+                        devMgmt.addProgressListener(ppl);
                         
                         String name = deviceList.get(0).getIndividualAddress() + " " + deviceList.get(0).getDescription();
                         RootEventBus.getDefault().post(new EventConsoleMessage(getLangString("ConsoleMsg.prefix")+" " + name));
                         deviceNameLabel.setText(name);
                         start = System.currentTimeMillis();
-                        p.program(deviceList.get(0), doIndividualAddress, doComObjects, doParams);
-                    } catch (ProgramException ex) {
+                        devMgmt.program(deviceList.get(0), doIndividualAddress, doComObjects, doParams);
+                    } catch (DeviceManagementException ex) {
                         RootEventBus.getDefault().post(new EventConsoleMessage(getLangString("ConsoleMsg.prefix")+" "+getLangString("ConsoleMsg.errorOccured"), ex));
                     } finally {
                         long stop = System.currentTimeMillis();
-                        p.removeProgressListener(ppl);
+                        devMgmt.removeProgressListener(ppl);
                         dispose();
                         RootEventBus.getDefault().post(new EventConsoleMessage(getLangString("ConsoleMsg.prefix")+" "+getLangString("ConsoleMsg.doneResult", (stop - start)))); // "Fertig! Dauer: " + (stop - start) + "ms")
                     }

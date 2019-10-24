@@ -21,6 +21,7 @@ import javax.swing.event.DocumentListener;
 import de.root1.rooteventbus.RootEventBus;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 /**
  *
@@ -30,14 +31,13 @@ public class GroupAddressInputDialog extends javax.swing.JDialog {
 
     private CommObjectConfiguration conf;
     private Project knxProject;
-    private JFrame frame;
 
     /**
      * Creates new form GroupAddressInputDialog
+     * @param parent
      */
     public GroupAddressInputDialog(java.awt.Frame parent) {
         super(parent, true);
-        this.frame = frame;
         initComponents();
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -49,7 +49,7 @@ public class GroupAddressInputDialog extends javax.swing.JDialog {
             }
 
         });
-
+        associateButton.setEnabled(false);
         groupAddressInput.getDocument().addDocumentListener(new DocumentListener() {
 
             public void inputCompletion() {
@@ -58,29 +58,32 @@ public class GroupAddressInputDialog extends javax.swing.JDialog {
 
             @Override
             public void insertUpdate(DocumentEvent e) {
-                associateButton.setEnabled(groupAddressInput.isInputValid());
+                associateButton.setEnabled(groupAddressInput.isInputValid() && !groupAddressInput.getText().isEmpty());
                 inputCompletion();
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                associateButton.setEnabled(groupAddressInput.isInputValid());
+                associateButton.setEnabled(groupAddressInput.isInputValid() && !groupAddressInput.getText().isEmpty());
                 inputCompletion();
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-                associateButton.setEnabled(groupAddressInput.isInputValid());
+                associateButton.setEnabled(groupAddressInput.isInputValid() && !groupAddressInput.getText().isEmpty());
                 inputCompletion();
             }
         });
 
         knxProject = RootEventBus.getDefault().getStickyEvent(Project.class);
-        AutoCompleteTextFieldAddon actfa = new AutoCompleteTextFieldAddon(groupAddressInput, knxProject.getGroupaddressList());
+        
+        openListButton.setEnabled(knxProject!=null);
+        
+        AutoCompleteTextFieldAddon actfa = new AutoCompleteTextFieldAddon(groupAddressInput, (knxProject!=null?knxProject.getGroupaddressList():new ArrayList<GroupAddress>()));
         actfa.setValueComparer(new AutoCompleteTextFieldAddon.AutoCompleteCompare<GroupAddress>() {
             @Override
             public boolean match(String input, GroupAddress value) {
-                return value.getAddress().contains(input) || value.getName().contains(input);
+                return value.getAddress().contains(input) || value.getName().toLowerCase().contains(input.toLowerCase());
             }
         });
         actfa.setValueRenderer(new AutoCompleteTextFieldAddon.AutoCompleteValueRenderer<GroupAddress>() {
@@ -221,7 +224,7 @@ public class GroupAddressInputDialog extends javax.swing.JDialog {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(removeButton)
                 .addContainerGap())
@@ -244,7 +247,7 @@ public class GroupAddressInputDialog extends javax.swing.JDialog {
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 260, Short.MAX_VALUE)
+                        .addGap(0, 577, Short.MAX_VALUE)
                         .addComponent(closeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
