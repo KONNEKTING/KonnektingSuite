@@ -1,0 +1,32 @@
+variables:
+  MAVEN_OPTS: "-Dhttps.protocols=TLSv1.2 -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true"
+  MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version"
+
+# This template uses jdk13 for verifying and deploying images
+image: maven:3.6.2-jdk-13
+
+# Cache downloaded dependencies and plugins between builds.
+# To keep cache across branches add 'key: "$CI_JOB_NAME"'
+cache:
+  paths:
+    - .m2/repository
+
+# For merge requests do not `deploy` but only run `verify`.
+# See https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html
+verify:
+  stage: test
+  script:
+    - 'mvn $MAVEN_CLI_OPTS verify'
+  except:
+    - master
+
+# For `master` branch run `mvn deploy` automatically.
+deploy:
+  stage: deploy
+  script:
+    - if [ ! -f ci_settings.xml ];
+        then echo "CI settings missing\!";
+      fi
+    - 'mvn $MAVEN_CLI_OPTS deploy -s ci_settings.xml'
+  only:
+    - master
