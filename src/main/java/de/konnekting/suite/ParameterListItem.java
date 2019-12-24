@@ -28,6 +28,8 @@ import de.konnekting.xml.konnektingdevice.v0.Parameter;
 import de.konnekting.xml.konnektingdevice.v0.Parameter.Value;
 import de.konnekting.xml.konnektingdevice.v0.ParameterConfiguration;
 import de.konnekting.xml.konnektingdevice.v0.ParamType;
+import de.konnekting.xml.konnektingdevice.v0.ParameterBase;
+import de.konnekting.xml.konnektingdevice.v0.ParameterSpacer;
 import java.awt.GridBagConstraints;
 import javax.swing.JComponent;
 import javax.swing.JTextField;
@@ -44,7 +46,6 @@ public class ParameterListItem extends javax.swing.JPanel {
 
     private JComponent comp;
     private int id;
-
 
     /**
      * Creates new form ParameterListItem
@@ -88,69 +89,80 @@ public class ParameterListItem extends javax.swing.JPanel {
     private javax.swing.JLabel descriptionLabel;
     // End of variables declaration//GEN-END:variables
 
-    
+    void setParam(ParameterBase baseParam, DeviceConfigContainer device) {
 
-    void setParam(int id, DeviceConfigContainer device) {
-        this.id = id;
+        String desc = "";
 
-        Parameter param = device.getParameter(id);
-
-        String desc = param.getDescription();
-        Value valueObject = param.getValue();
-        String options = valueObject.getOptions();
-
-        descriptionLabel.setText("<html>" + desc + "</html>");
-
-        ParameterConfiguration conf = device.getParameterConfig(id);
-
-        GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
-        if (options == null || options.isEmpty()) {
-
-            JTextField tfield = null;
+        if (baseParam instanceof Parameter) {
             
-            ParamType paramType = param.getValue().getType();
-            switch (paramType) {
-                case STRING_11:
-                    tfield = new StringParameterTextField(device, param, conf);
-                    break;
-                case RAW_1:
-                case RAW_2:
-                case RAW_3:
-                case RAW_4:
-                case RAW_5:
-                case RAW_6:
-                case RAW_7:
-                case RAW_8:
-                case RAW_9:
-                case RAW_10:
-                case RAW_11:
-                    tfield = new RawParameterTextField(device, param, conf);
-                    break;
-                case INT_8:
-                case UINT_8:
-                case INT_16:
-                case UINT_16:
-                case INT_32:
-                case UINT_32:
-                default:
-                    tfield = new NumberParameterTextField(device, param, conf);
+            Parameter p = (Parameter) baseParam;
+            this.id = p.getId();
+            
+            Parameter param = device.getParameter(id);
+            desc = param.getDescription();
+            Value valueObject = param.getValue();
+            String options = valueObject.getOptions();
+
+            ParameterConfiguration conf = device.getParameterConfig(id);
+
+            GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
+            if (options == null || options.isEmpty()) {
+
+                JTextField tfield = null;
+
+                ParamType paramType = param.getValue().getType();
+                switch (paramType) {
+                    case STRING_11:
+                        tfield = new StringParameterTextField(device, param, conf);
+                        break;
+                    case RAW_1:
+                    case RAW_2:
+                    case RAW_3:
+                    case RAW_4:
+                    case RAW_5:
+                    case RAW_6:
+                    case RAW_7:
+                    case RAW_8:
+                    case RAW_9:
+                    case RAW_10:
+                    case RAW_11:
+                        tfield = new RawParameterTextField(device, param, conf);
+                        break;
+                    case INT_8:
+                    case UINT_8:
+                    case INT_16:
+                    case UINT_16:
+                    case INT_32:
+                    case UINT_32:
+                    default:
+                        tfield = new NumberParameterTextField(device, param, conf);
+                }
+                comp = tfield;
+            } else {
+                ParameterCombobox combobox = new ParameterCombobox(device, param, conf);
+                comp = combobox;
             }
-            comp = tfield;
-        } else {
-            ParameterCombobox combobox = new ParameterCombobox(device, param, conf);
-            comp = combobox;
+
+            comp.setMaximumSize(new java.awt.Dimension(230, 27));
+            comp.setMinimumSize(new java.awt.Dimension(230, 27));
+            comp.setPreferredSize(new java.awt.Dimension(230, 27));
+
+            gridBagConstraints.gridx = 1;
+            gridBagConstraints.gridy = 0;
+            gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
+            gridBagConstraints.weighty = 0.1;
+            gridBagConstraints.insets = new java.awt.Insets(2, 0, 1, 3);
+            add(comp, gridBagConstraints);
+
+        } else if (baseParam instanceof ParameterSpacer) {
+            
+            ParameterSpacer spacer = (ParameterSpacer) baseParam;
+//            desc = "<b>" + spacer.getText() + "</b>";
+            desc = "<b><strike>&nbsp;&nbsp;</strike> "+spacer.getText()+" <strike>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strike></b>";
+            
         }
 
-        comp.setMaximumSize(new java.awt.Dimension(230, 27));
-        comp.setMinimumSize(new java.awt.Dimension(230, 27));
-        comp.setPreferredSize(new java.awt.Dimension(230, 27));
-
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
-        gridBagConstraints.weighty = 0.1;
-        gridBagConstraints.insets = new java.awt.Insets(2, 0, 1, 3);
-        add(comp, gridBagConstraints);
+        descriptionLabel.setText("<html>" + desc + "</html>");
 
     }
 
@@ -158,7 +170,7 @@ public class ParameterListItem extends javax.swing.JPanel {
         if (comp instanceof ParameterDependency) {
             ParameterDependency pd = (ParameterDependency) comp;
             boolean parameterVisible = pd.isParameterVisible();
-            
+
             log.info("Setting param #{} to visible={}", id, parameterVisible);
             setVisible(parameterVisible);
             return parameterVisible;

@@ -24,7 +24,6 @@ import de.konnekting.suite.events.EventParameterChanged;
 import de.root1.rooteventbus.RootEventBus;
 import de.konnekting.suite.events.StickyDeviceSelected;
 import de.konnekting.suite.events.StickyParamGroupSelected;
-import de.konnekting.xml.konnektingdevice.v0.Parameter;
 import de.konnekting.xml.konnektingdevice.v0.ParameterGroup;
 import java.util.ArrayList;
 import java.util.Arrays;

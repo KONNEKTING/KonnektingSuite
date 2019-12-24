@@ -23,7 +23,9 @@ import de.konnekting.suite.events.EventParameterChanged;
 import de.root1.rooteventbus.RootEventBus;
 import de.konnekting.suite.events.StickyParamGroupSelected;
 import de.konnekting.suite.utils.Utils;
+import de.konnekting.xml.konnektingdevice.v0.KonnektingDeviceXmlHelper;
 import de.konnekting.xml.konnektingdevice.v0.Parameter;
+import de.konnekting.xml.konnektingdevice.v0.ParameterBase;
 import de.konnekting.xml.konnektingdevice.v0.ParameterGroup;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
@@ -40,7 +42,6 @@ import org.slf4j.LoggerFactory;
 public class ParameterList extends javax.swing.JPanel {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
-//    private List<Parameter> list;
     private final List<ParameterListItem> parameterListItems = new ArrayList<>();
     private DeviceConfigContainer device;
     private final Color colorNormal = new JPanel().getBackground();
@@ -66,25 +67,28 @@ public class ParameterList extends javax.swing.JPanel {
         alreadyUpdating=true;
         group = event.getGroup();
         
-        log.info("Selected Group: id={} name={} params={}", group.getId(), group.getName(), group.getParameter().size());
+        log.info("Selected Group: id={} name={} params={}", group.getId(), group.getName(), group.getSpacerOrParameter().size());
 
         removeAll();
         parameterListItems.clear();
         initComponents();
-        numberOfParamsLabel.setText(java.util.ResourceBundle.getBundle("de/konnekting/suite/i18n/language").getString("ParameterList.numberOfParamsLabel.text") + group.getParameter().size());
+        numberOfParamsLabel.setText(java.util.ResourceBundle.getBundle("de/konnekting/suite/i18n/language").getString("ParameterList.numberOfParamsLabel.text") + KonnektingDeviceXmlHelper.getParameters(group).size());
 
         GridBagConstraints gridBagConstraints;
 
         int i = 0;
 
-        for (Parameter param : group.getParameter()) {
+        for (ParameterBase param : group.getSpacerOrParameter()) {
+            
             ParameterListItem item = new ParameterListItem();
-            parameterListItems.add(item);
-            item.setParam(param.getId(), device);
+            item.setParam(param, device);
+            
             if (i % 2 == 1) {
                 item.setBackground(colorBrighter);
             } 
             i++;
+            
+            parameterListItems.add(item);
 
             gridBagConstraints = new java.awt.GridBagConstraints();
             gridBagConstraints.gridx = 0;
@@ -93,7 +97,10 @@ public class ParameterList extends javax.swing.JPanel {
             gridBagConstraints.weightx = 0.1;
 
             add(item, gridBagConstraints);
-            log.info("Group[{}@{}]: Adding param: {}@{}", new Object[]{group.getId(), group.getName(), param.getId(), param.getIdName()});
+            
+            if (param instanceof Parameter) {
+                log.info("Group[{}@{}]: Adding param: {}@{}", new Object[]{group.getId(), group.getName(), ((Parameter)param).getId(), ((Parameter)param).getIdName()});
+            }
         }
 
         gridBagConstraints = new java.awt.GridBagConstraints();
