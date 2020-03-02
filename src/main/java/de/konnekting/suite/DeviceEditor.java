@@ -22,7 +22,6 @@ import de.konnekting.deviceconfig.DeviceConfigContainer;
 import de.root1.rooteventbus.RootEventBus;
 import de.konnekting.suite.events.EventDeviceListRefresh;
 import de.konnekting.suite.events.StickyDeviceSelected;
-import java.awt.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

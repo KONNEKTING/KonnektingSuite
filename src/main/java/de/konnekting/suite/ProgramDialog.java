@@ -25,14 +25,16 @@ import org.slf4j.LoggerFactory;
  * @author achristian
  */
 public class ProgramDialog extends javax.swing.JDialog {
-    
+    enum ProgrammingTask {
+        ALL,
+        PARTIAL,
+        APPDATA
+    }
     private final Logger log = LoggerFactory.getLogger(getClass());
     private final java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/i18n/language"); // NOI18N
     private final List<DeviceConfigContainer> deviceList = new ArrayList<>();
     private DeviceManagement devMgmt;
-    private boolean doIndividualAddress;
-    private boolean doComObjects;
-    private boolean doParams;
+    private ProgrammingTask progTask;
 
     /**
      * Creates new form ProgramDialog
@@ -146,10 +148,8 @@ public class ProgramDialog extends javax.swing.JDialog {
         cancelButton.setEnabled(false);
     }//GEN-LAST:event_cancelButtonActionPerformed
     
-    public void prepare(Knx knx, boolean doIndividualAddress, boolean doComObjects, boolean doParams) {
-        this.doIndividualAddress = doIndividualAddress;
-        this.doComObjects = doComObjects;
-        this.doParams = doParams;
+    public void prepare(Knx knx, ProgrammingTask task) {
+        this.progTask = task;
         devMgmt = new DeviceManagement(knx);
     }
     
@@ -189,7 +189,23 @@ public class ProgramDialog extends javax.swing.JDialog {
                         RootEventBus.getDefault().post(new EventConsoleMessage(getLangString("ConsoleMsg.prefix")+" " + name));
                         deviceNameLabel.setText(name);
                         start = System.currentTimeMillis();
-                        devMgmt.program(deviceList.get(0), doIndividualAddress, doComObjects, doParams);
+                        
+                        switch(progTask) {
+                            case ALL:
+                                devMgmt.program(deviceList.get(0), true, true, true);
+                                break;
+                            case PARTIAL:
+                                throw new UnsupportedOperationException("Partial programming not yet supported. Sorry. Come back later.");
+                                //break;
+                            case APPDATA:
+                                devMgmt.program(deviceList.get(0), false, true, true);
+                                break;
+                            default:
+                                
+                        }
+                        
+                        
+                        
                     } catch (DeviceManagementException ex) {
                         RootEventBus.getDefault().post(new EventConsoleMessage(getLangString("ConsoleMsg.prefix")+" "+getLangString("ConsoleMsg.errorOccured"), ex));
                     } finally {
