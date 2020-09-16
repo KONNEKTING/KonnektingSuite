@@ -20,7 +20,9 @@ package de.konnekting.suite;
 
 import de.konnekting.deviceconfig.DeviceConfigContainer;
 import de.konnekting.deviceconfig.EventDeviceChanged;
+import de.konnekting.deviceconfig.exception.XMLFormatException;
 import de.konnekting.deviceconfig.utils.Helper;
+import de.konnekting.mgnt.DeviceManagement.ProgrammingTask;
 import de.konnekting.suite.events.EventConsoleMessage;
 import de.konnekting.suite.events.EventDeviceAdded;
 import de.konnekting.suite.events.EventDeviceRemoved;
@@ -682,7 +684,7 @@ public class Main extends javax.swing.JFrame {
                 DeviceConfigContainer device = new DeviceConfigContainer(selectedFile);
                 SaveDeviceAsDialog.showDialog(this, projectFolder, device);
 
-            } catch (JAXBException | SAXException ex) {
+            } catch (XMLFormatException ex) {
                 RootEventBus.getDefault().post(new EventConsoleMessage("Fehler beim Hinzufügen eines Gerätes.", ex));
             }
 
@@ -692,7 +694,7 @@ public class Main extends javax.swing.JFrame {
     private void programmAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_programmAllButtonActionPerformed
         StickyDeviceSelected selectdDevice = eventbus.getStickyEvent(StickyDeviceSelected.class);
         ProgramDialog pd = new ProgramDialog(this);
-        pd.prepare(knx, ProgramDialog.ProgrammingTask.ALL); // ALL
+        pd.prepare(knx, ProgrammingTask.ALL); // ALL
         pd.addDeviceToprogram(selectdDevice.getDeviceConfig());
         pd.setVisible(true);
     }//GEN-LAST:event_programmAllButtonActionPerformed
@@ -700,7 +702,7 @@ public class Main extends javax.swing.JFrame {
     private void programmPartialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_programmPartialActionPerformed
         StickyDeviceSelected selectdDevice = eventbus.getStickyEvent(StickyDeviceSelected.class);
         ProgramDialog pd = new ProgramDialog(this);
-        pd.prepare(knx, ProgramDialog.ProgrammingTask.PARTIAL); // all but, IA
+        pd.prepare(knx, ProgrammingTask.PARTIAL); // all but, IA
         pd.addDeviceToprogram(selectdDevice.getDeviceConfig());
         pd.setVisible(true);
     }//GEN-LAST:event_programmPartialActionPerformed
@@ -729,7 +731,7 @@ public class Main extends javax.swing.JFrame {
     private void programAppDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_programAppDataActionPerformed
         StickyDeviceSelected selectdDevice = eventbus.getStickyEvent(StickyDeviceSelected.class);
         ProgramDialog pd = new ProgramDialog(this);
-        pd.prepare(knx, ProgramDialog.ProgrammingTask.APPDATA);
+        pd.prepare(knx, ProgrammingTask.APPDATA);
         pd.addDeviceToprogram(selectdDevice.getDeviceConfig());
         pd.setVisible(true);
     }//GEN-LAST:event_programAppDataActionPerformed

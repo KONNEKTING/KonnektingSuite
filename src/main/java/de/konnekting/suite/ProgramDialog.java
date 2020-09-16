@@ -6,16 +6,20 @@
 package de.konnekting.suite;
 
 import de.konnekting.deviceconfig.DeviceConfigContainer;
+import de.konnekting.deviceconfig.exception.XMLFormatException;
 import de.konnekting.mgnt.DeviceManagement;
+import de.konnekting.mgnt.DeviceManagement.ProgrammingTask;
 import de.konnekting.mgnt.DeviceManagementException;
 import de.konnekting.mgnt.ProgramProgressListener;
 import de.konnekting.suite.events.EventConsoleMessage;
 import de.root1.rooteventbus.RootEventBus;
 import de.root1.slicknx.Knx;
+import de.root1.slicknx.KnxException;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import javax.swing.JFrame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,11 +29,6 @@ import org.slf4j.LoggerFactory;
  * @author achristian
  */
 public class ProgramDialog extends javax.swing.JDialog {
-    enum ProgrammingTask {
-        ALL,
-        PARTIAL,
-        APPDATA
-    }
     private final Logger log = LoggerFactory.getLogger(getClass());
     private final java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/konnekting/suite/i18n/language"); // NOI18N
     private final List<DeviceConfigContainer> deviceList = new ArrayList<>();
@@ -190,24 +189,20 @@ public class ProgramDialog extends javax.swing.JDialog {
                         deviceNameLabel.setText(name);
                         start = System.currentTimeMillis();
                         
-                        switch(progTask) {
-                            case ALL:
-                                devMgmt.program(deviceList.get(0), true, true, true);
-                                break;
-                            case PARTIAL:
-                                throw new UnsupportedOperationException("Partial programming not yet supported. Sorry. Come back later.");
-                                //break;
-                            case APPDATA:
-                                devMgmt.program(deviceList.get(0), false, true, true);
-                                break;
-                            default:
-                                
-                        }
-                        
-                        
+                        devMgmt.program(deviceList.get(0), progTask);
                         
                     } catch (DeviceManagementException ex) {
-                        RootEventBus.getDefault().post(new EventConsoleMessage(getLangString("ConsoleMsg.prefix")+" "+getLangString("ConsoleMsg.errorOccured"), ex));
+                        if (log.isDebugEnabled()) {
+                            RootEventBus.getDefault().post(new EventConsoleMessage(getLangString("ConsoleMsg.prefix")+" "+getLangString("ConsoleMsg.errorOccured"), ex));
+                        } else {
+                            String msg = ""+ex.getMessage();
+                            Throwable cause = ex.getCause();
+                            while (cause!=null) {
+                                msg+="\n"+cause.getMessage();
+                                cause = cause.getCause();
+                            }
+                            RootEventBus.getDefault().post(new EventConsoleMessage(getLangString("ConsoleMsg.prefix")+" "+getLangString("ConsoleMsg.errorOccured")+". Details: "+msg));
+                        }
                     } finally {
                         long stop = System.currentTimeMillis();
                         devMgmt.removeProgressListener(ppl);
