@@ -6,6 +6,7 @@
 package de.konnekting.suite;
 
 import de.konnekting.deviceconfig.DeviceConfigContainer;
+import de.konnekting.deviceconfig.exception.XMLFormatException;
 import java.util.HashSet;
 import java.util.Set;
 import javax.swing.SwingUtilities;
@@ -46,6 +47,9 @@ public class ProjectSaver extends javax.swing.JDialog {
         super.setVisible(b); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     * called when exactly?
+     */
     private void save() {
         if (devices.isEmpty()) {
             done();
@@ -68,9 +72,7 @@ public class ProjectSaver extends javax.swing.JDialog {
                 
                 onProgress(i, devices.size(), description);
                 device.writeConfig();
-            } catch (JAXBException ex) {
-                ex.printStackTrace();
-            } catch (SAXException ex) {
+            } catch (XMLFormatException ex) {
                 ex.printStackTrace();
             } finally {
                 log.info("Saving: {} *done*", device);

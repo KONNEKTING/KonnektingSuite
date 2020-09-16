@@ -20,6 +20,7 @@ package de.konnekting.suite;
 
 import de.konnekting.suite.events.EventDeviceRemoved;
 import de.konnekting.deviceconfig.DeviceConfigContainer;
+import de.konnekting.deviceconfig.exception.XMLFormatException;
 import de.konnekting.suite.events.EventAddDevice;
 import de.konnekting.suite.events.EventConsoleMessage;
 import de.root1.rooteventbus.RootEventBus;
@@ -105,7 +106,7 @@ public class DeviceList extends javax.swing.JPanel {
                 deviceListModel.addElement(device);
               }
               stepDone();
-            } catch (JAXBException | SAXException ex) {
+            } catch (XMLFormatException ex) {
               RootEventBus.getDefault().post(new EventConsoleMessage("Fehler beim Lesen der Datei ", ex));
             }
 
