@@ -44,7 +44,7 @@ public class KnxAutoDiscoverProgress extends javax.swing.JDialog implements Auto
     public void setVisible(boolean b) {
         if (b) {
             final AutoDiscoverProgressListener tthis = this;
-            new BackgroundTask("KNX Auto Discovery", Thread.NORM_PRIORITY) {
+            BackgroundTask.runTask(new BackgroundTask("KNX Auto Discovery", Thread.NORM_PRIORITY) {
 
                 @Override
                 public void run() {
@@ -57,7 +57,7 @@ public class KnxAutoDiscoverProgress extends javax.swing.JDialog implements Auto
                         ex.printStackTrace();
                     }
                 }
-            };
+            });
         }
         super.setVisible(b); //To change body of generated methods, choose Tools | Templates.
     }

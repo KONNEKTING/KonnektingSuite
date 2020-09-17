@@ -30,41 +30,46 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class BackgroundTask implements Runnable {
 
-    private final Logger log = LoggerFactory.getLogger(BackgroundTask.class);
+    private static final Logger log = LoggerFactory.getLogger(BackgroundTask.class);
 
-    private final RootEventBus eventBus = RootEventBus.getDefault();
 
     private double progress;
     private double step;
     private final String action;
-    private final long start;
     private static final AtomicInteger COUNTER = new AtomicInteger(0);
-    private final int i;
+    private final int priority;
+    
 
     public BackgroundTask(String action) {
         this(action, Thread.NORM_PRIORITY);
     }
-
-    public BackgroundTask(String action, int priority) {
-        i = COUNTER.incrementAndGet();
-        this.start = System.currentTimeMillis();
-        this.action = action;
-        eventBus.post(new EventBackgroundThread(this));
-        Thread t = new Thread(this, "BackgroundTask(" + i + ") '" + action + "'") {
+    
+    public static void runTask(BackgroundTask task) {
+        int i = COUNTER.incrementAndGet();
+        long start = System.currentTimeMillis();
+        
+        RootEventBus.getDefault().post(new EventBackgroundThread(task));
+        
+        Thread t = new Thread(task, "BackgroundTask(" + i + ") '" + task.getAction() + "'") {
 
             @Override
             public void run() {
-                log.debug("Begin task(" + i + ") '" + action + "'");
+                log.debug("Begin task(" + i + ") '" + task.getAction() + "'");
                 try {
                     super.run();
                 } finally {
-                    log.debug("Finished task(" + i + ") '" + action + "' in " + (System.currentTimeMillis() - start) + " ms.");
+                    log.debug("Finished task(" + i + ") '" + task.getAction() + "' in " + (System.currentTimeMillis() - start) + " ms.");
                 }
             }
 
         };
-        t.setPriority(priority);
+        t.setPriority(task.getPriority());
         t.start();
+    }
+
+    public BackgroundTask(String action, int priority) {
+        this.action = action;
+        this.priority = priority;
     }
 
     @Override
@@ -72,7 +77,7 @@ public abstract class BackgroundTask implements Runnable {
 
     public void setProgress(double progress) {
         this.progress = progress;
-        eventBus.post(new EventBackgroundThread(this));
+        RootEventBus.getDefault().post(new EventBackgroundThread(this));
     }
 
     public double getProgress() {
@@ -89,7 +94,7 @@ public abstract class BackgroundTask implements Runnable {
 
     public void setDone() {
         progress = 1;
-        eventBus.post(new EventBackgroundThread(this));
+        RootEventBus.getDefault().post(new EventBackgroundThread(this));
     }
 
     public boolean isDone() {
@@ -99,5 +104,11 @@ public abstract class BackgroundTask implements Runnable {
     public String getAction() {
         return action;
     }
+
+    public int getPriority() {
+        return priority;
+    }
+    
+    
 
 }
