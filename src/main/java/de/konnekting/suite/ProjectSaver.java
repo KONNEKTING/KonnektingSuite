@@ -7,13 +7,11 @@ package de.konnekting.suite;
 
 import de.konnekting.deviceconfig.DeviceConfigContainer;
 import de.konnekting.deviceconfig.exception.XMLFormatException;
+import java.awt.Frame;
 import java.util.HashSet;
 import java.util.Set;
-import javax.swing.SwingUtilities;
-import javax.xml.bind.JAXBException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.xml.sax.SAXException;
 
 /**
  *
@@ -22,65 +20,113 @@ import org.xml.sax.SAXException;
 public class ProjectSaver extends javax.swing.JDialog {
 
     private Logger log = LoggerFactory.getLogger(getClass());
-    private Set<DeviceConfigContainer> devices = new HashSet<>();
+    private final Set<DeviceConfigContainer> devices = new HashSet<>();
+
+    private long lastUserInteraction = System.currentTimeMillis();
+    
+    private final Frame parentwindow;
+    
+    private static final long IDLE_SAVE_DELAY = 10 * 60 * 1000; // 10min
+    
+    private final BackgroundTask saveTask = new BackgroundTask("Save project") {
+        @Override
+        public void run() {
+            synchronized (devices) {
+                if (devices.isEmpty()) {
+                    done();
+                    return;
+                }
+                updateDialogLocation();
+                
+                onProgress(0, devices.size(), "");
+                validate();
+
+                int i = 0;
+
+                log.info("saving: {}", devices.size());
+
+                for (DeviceConfigContainer device : devices) {
+                    log.info("Saving: {}", device);
+                    i++;
+                    try {
+
+                        String description = device.getIndividualAddress() + " - " + device.getDescription();
+
+                        if (description == null || description.length() == 0) {
+                            description = device.getDeviceName() + " [" + device.getManufacturerName() + "]";
+                        }
+
+                        onProgress(i, devices.size(), description);
+                        device.writeConfig();
+                    } catch (XMLFormatException ex) {
+                        ex.printStackTrace();
+                    } finally {
+                        log.info("Saving: {} *done*", device);
+                    }
+                }
+                log.info("save done");
+
+                // finish with empty list
+                devices.clear();
+            }
+            done();
+        }
+    };
+    
+    private void updateDialogLocation() {
+        setLocationRelativeTo(parentwindow);
+    }
 
     /**
      * Creates new form ProjectSaver
      */
     public ProjectSaver(java.awt.Frame parent) {
         super(parent, true);
+        this.parentwindow = parent;
+        setUndecorated(true);
+        
         initComponents();
-        setLocationRelativeTo(parent);
-    }
+        
 
-    @Override
-    public void setVisible(boolean b) {
-        if (b) {
-            new BackgroundTask("Save project", Thread.NORM_PRIORITY) {
-
-                @Override
-                public void run() {
-                    save();
+        Thread t = new Thread("AutoSave") {
+            @Override
+            public void run() {
+                
+                while (true) {
+                    if (System.currentTimeMillis() - lastUserInteraction > IDLE_SAVE_DELAY) {
+                        boolean doSave = false;
+                        synchronized(devices) {
+                            doSave = !devices.isEmpty();
+                        }
+                        if (doSave) {
+                            save();
+                        }
+                        lastUserInteraction = System.currentTimeMillis();
+                    }
+                    try {
+                        Thread.currentThread().sleep(1000);
+                    } catch (InterruptedException ex) {
+                        interrupt();
+                    }
                 }
-            };
-        }
-        super.setVisible(b); //To change body of generated methods, choose Tools | Templates.
+            }
+
+        };
+        t.setDaemon(true);
+        t.start();
     }
 
     /**
-     * called when exactly?
+     * Triggers project save of all "dirty" devices. UI with progressdialog will
+     * show up and disappear once saved. Can be triggered multiple times.
      */
-    private void save() {
-        if (devices.isEmpty()) {
-            done();
-            return;
-        }
-        onProgress(0, devices.size(), "");
-        validate();
-        int i = 0;
-        log.info("saving: {}", devices.size());
-        for (DeviceConfigContainer device : devices) {
-            log.info("Saving: {}", device);
-            i++;
-            try {
-                
-                String description = device.getIndividualAddress()+ " - " + device.getDescription();
+    public void save() {
+        BackgroundTask.runTask(saveTask);
+        setVisible(true);
+    }
 
-                if (description == null || description.length() == 0) {
-                    description = device.getDeviceName() + " [" + device.getManufacturerName() + "]";
-                }
-                
-                onProgress(i, devices.size(), description);
-                device.writeConfig();
-            } catch (XMLFormatException ex) {
-                ex.printStackTrace();
-            } finally {
-                log.info("Saving: {} *done*", device);
-            }
-        }
-        log.info("save done");
-
-        done();
+    public void tellUserInteraction() {
+        lastUserInteraction = System.currentTimeMillis();
     }
 
     /**
@@ -125,7 +171,7 @@ public class ProjectSaver extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel messageLabel;
     private javax.swing.JProgressBar progressbar;
@@ -138,24 +184,29 @@ public class ProjectSaver extends javax.swing.JDialog {
         progressbar.setStringPainted(true);
     }
 
-    public void done() {
+    private void done() {
         setVisible(false);
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                dispose();
-            }
-        });
+        onProgress(0, 0, "");
+//        SwingUtilities.invokeLater(new Runnable() {
+//            @Override
+//            public void run() {
+//                dispose();
+//            }
+//        });
     }
 
     void add(DeviceConfigContainer deviceConfig) {
         log.info("Added dirty: {} -> {}", deviceConfig, deviceConfig.hashCode());
-        devices.add(deviceConfig);
+        synchronized (devices) {
+            devices.add(deviceConfig);
+        }
     }
 
     void remove(DeviceConfigContainer deviceConfig) {
         log.info("Removed dirty: {} -> {}", deviceConfig, deviceConfig.hashCode());
-        devices.remove(deviceConfig);
+        synchronized (devices) {
+            devices.remove(deviceConfig);
+        }
     }
 
 }

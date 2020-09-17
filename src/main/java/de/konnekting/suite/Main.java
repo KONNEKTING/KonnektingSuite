@@ -73,7 +73,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-//import tuwien.auto.calimero.exception.KNXIllegalArgumentException;
 
 /**
  *
@@ -129,7 +128,7 @@ public class Main extends javax.swing.JFrame {
     private final GroupMonitorFrame monitor;
     private final ProjectSaver projectSaver;
     private final Project knxProject;
-
+    
     public static Properties getProperties() {
         return properties;
     }
@@ -329,26 +328,27 @@ public class Main extends javax.swing.JFrame {
                 }
             }
         };
+        projectSaver.tellUserInteraction();
     }
 
     public void onEvent(EventDeviceAdded evt) {
         LOGGER.info("Added device: {}", evt.getDeviceConfig());
         projectSaver.add(evt.getDeviceConfig());
+        projectSaver.tellUserInteraction();
     }
 
     public void onEvent(EventProjectOpened evt) {
-
         setTitle(bundle.getString("MainWindow.Title") + " - " + evt.getProjectFolder().getAbsolutePath());
         addDeviceButton.setEnabled(true);
+        projectSaver.tellUserInteraction();
     }
 
     public void onEvent(StickyDeviceSelected evt) {
-
         DeviceConfigContainer deviceConfig = evt.getDeviceConfig();
-
         // only enable if there is a selection
         removeDeviceButton.setEnabled(deviceConfig != null);
         updateProgButtons();
+        projectSaver.tellUserInteraction();
     }
 
     private void updateProgButtons() {
@@ -370,11 +370,13 @@ public class Main extends javax.swing.JFrame {
         if (evt.getDeviceConfig() != null) {
             projectSaver.add(evt.getDeviceConfig());
         }
+        projectSaver.tellUserInteraction();
     }
 
     public void onEvent(EventDeviceRemoved evt) {
         updateProgButtons();
         projectSaver.remove(evt.getDevice());
+        projectSaver.tellUserInteraction();
     }
 
     /**
@@ -719,7 +721,7 @@ public class Main extends javax.swing.JFrame {
         if (knx != null) {
             knx.close();
         }
-        projectSaver.setVisible(true);
+        projectSaver.save();
         saveSettings();
         dispose();
         LOGGER.info("SUITE EXITING");
