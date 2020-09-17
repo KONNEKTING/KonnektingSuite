@@ -44,15 +44,19 @@ public class ProjectSaver extends javax.swing.JDialog {
                 }
             };
         }
-        super.setVisible(b); //To change body of generated methods, choose Tools | Templates.
+        super.setVisible(b); 
+    }
+    
+    public void doSave() {
+        setVisible(true);
     }
 
     /**
-     * called when exactly?
+     * called when dialog gets visible
      */
     private void save() {
         if (devices.isEmpty()) {
-            done();
+            shutdown();
             return;
         }
         onProgress(0, devices.size(), "");
@@ -80,7 +84,7 @@ public class ProjectSaver extends javax.swing.JDialog {
         }
         log.info("save done");
 
-        done();
+        shutdown();
     }
 
     /**
@@ -138,7 +142,7 @@ public class ProjectSaver extends javax.swing.JDialog {
         progressbar.setStringPainted(true);
     }
 
-    public void done() {
+    public void shutdown() {
         setVisible(false);
         SwingUtilities.invokeLater(new Runnable() {
             @Override

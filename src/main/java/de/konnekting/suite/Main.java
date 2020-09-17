@@ -131,6 +131,8 @@ public class Main extends javax.swing.JFrame {
     private final GroupMonitorFrame monitor;
     private final ProjectSaver projectSaver;
     private final Project knxProject;
+    
+    private final long lastEvent = System.currentTimeMillis();
 
     public static Properties getProperties() {
         return properties;
