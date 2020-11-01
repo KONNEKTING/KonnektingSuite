@@ -166,7 +166,7 @@ public class Main extends javax.swing.JFrame {
         eventbus.register(this);
 
         monitor = new GroupMonitorFrame(this);
-        new BackgroundTask(bundle.getString("MainWindow.connectKnx")) {
+        BackgroundTask.runTask(new BackgroundTask(bundle.getString("MainWindow.connectKnx")) {
             @Override
             public void run() {
                 setStepsToDo(1);
@@ -174,7 +174,7 @@ public class Main extends javax.swing.JFrame {
                 stepDone();
                 setDone();
             }
-        };
+        });
 
         Dimension size = new Dimension();
         size.width = Integer.parseInt(properties.getProperty("windowwidth", "1024"));
@@ -311,7 +311,7 @@ public class Main extends javax.swing.JFrame {
     }
 
     public void onEvent(EventSaveSettings evt) {
-        new BackgroundTask(bundle.getString("MainWindow.saveSettings")) {
+        BackgroundTask.runTask(new BackgroundTask(bundle.getString("MainWindow.saveSettings")) {
             @Override
             public void run() {
                 setStepsToDo(3);
@@ -327,7 +327,7 @@ public class Main extends javax.swing.JFrame {
                     LOGGER.info("Replacing KNX connection NOW *DONE*");
                 }
             }
-        };
+        });
         projectSaver.tellUserInteraction();
     }
 

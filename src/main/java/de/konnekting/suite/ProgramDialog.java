@@ -177,7 +177,7 @@ public class ProgramDialog extends javax.swing.JDialog {
                     RootEventBus.getDefault().post(new EventConsoleMessage(getLangString("ConsoleMsg.prefix")+" "+getLangString("ConsoleMsg.progress")+" " + currentStep + "/" + steps));
                 }
             };
-            new BackgroundTask(getLangString("ConsoleMsg.prefix")) {
+            BackgroundTask.runTask(new BackgroundTask(getLangString("ConsoleMsg.prefix")) {
                 @Override
                 public void run() {
                     long start = System.currentTimeMillis();
@@ -210,7 +210,7 @@ public class ProgramDialog extends javax.swing.JDialog {
                         RootEventBus.getDefault().post(new EventConsoleMessage(getLangString("ConsoleMsg.prefix")+" "+getLangString("ConsoleMsg.doneResult", (stop - start)))); // "Fertig! Dauer: " + (stop - start) + "ms")
                     }
                 }
-            };
+            });
             
         }
         
