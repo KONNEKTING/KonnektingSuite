@@ -112,7 +112,7 @@
         </plugins>
     </build>
     
-        <repositories>
+    <repositories>
         <repository>
             <id>root1-releases</id>
             <url>http://maven.root1.de/repository/releases/</url>
