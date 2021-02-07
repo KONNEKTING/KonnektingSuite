@@ -34,6 +34,7 @@ public class GroupAddressInputDialog extends javax.swing.JDialog {
 
     /**
      * Creates new form GroupAddressInputDialog
+     *
      * @param parent
      */
     public GroupAddressInputDialog(java.awt.Frame parent) {
@@ -76,10 +77,10 @@ public class GroupAddressInputDialog extends javax.swing.JDialog {
         });
 
         knxProject = RootEventBus.getDefault().getStickyEvent(Project.class);
-        
-        openListButton.setEnabled(knxProject!=null);
-        
-        AutoCompleteTextFieldAddon actfa = new AutoCompleteTextFieldAddon(groupAddressInput, (knxProject!=null?knxProject.getGroupaddressList():new ArrayList<GroupAddress>()));
+
+        openListButton.setEnabled(knxProject != null);
+
+        AutoCompleteTextFieldAddon actfa = new AutoCompleteTextFieldAddon(groupAddressInput, (knxProject != null ? knxProject.getGroupaddressList() : new ArrayList<GroupAddress>()));
         actfa.setValueComparer(new AutoCompleteTextFieldAddon.AutoCompleteCompare<GroupAddress>() {
             @Override
             public boolean match(String input, GroupAddress value) {
@@ -98,7 +99,7 @@ public class GroupAddressInputDialog extends javax.swing.JDialog {
             }
         }
         );
-        
+
         actfa.setActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -140,6 +141,8 @@ public class GroupAddressInputDialog extends javax.swing.JDialog {
         jScrollPane1 = new javax.swing.JScrollPane();
         gaList = new javax.swing.JList();
         removeButton = new javax.swing.JButton();
+        markAllButton = new javax.swing.JButton();
+        markNoneButton = new javax.swing.JButton();
         closeButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -198,13 +201,26 @@ public class GroupAddressInputDialog extends javax.swing.JDialog {
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
-        gaList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(gaList);
 
         removeButton.setText(bundle.getString("GroupAddressInputDialog.button.remove")); // NOI18N
         removeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 removeButtonActionPerformed(evt);
+            }
+        });
+
+        markAllButton.setText(bundle.getString("GroupAddressInputDialog.button.markall")); // NOI18N
+        markAllButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                markAllButtonActionPerformed(evt);
+            }
+        });
+
+        markNoneButton.setText(bundle.getString("GroupAddressInputDialog.button.marknone")); // NOI18N
+        markNoneButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                markNoneButtonActionPerformed(evt);
             }
         });
 
@@ -218,6 +234,10 @@ public class GroupAddressInputDialog extends javax.swing.JDialog {
                     .addComponent(jScrollPane1)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(removeButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(markAllButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(markNoneButton)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -226,7 +246,10 @@ public class GroupAddressInputDialog extends javax.swing.JDialog {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(removeButton)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(removeButton)
+                    .addComponent(markAllButton)
+                    .addComponent(markNoneButton))
                 .addContainerGap())
         );
 
@@ -300,6 +323,18 @@ public class GroupAddressInputDialog extends javax.swing.JDialog {
         dialog.setVisible(true);
     }//GEN-LAST:event_openListButtonActionPerformed
 
+    private void markAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_markAllButtonActionPerformed
+        int start = 0;
+        int end = gaList.getModel().getSize() - 1;
+        if (end >= 0) {
+            gaList.setSelectionInterval(start, end);
+        }
+    }//GEN-LAST:event_markAllButtonActionPerformed
+
+    private void markNoneButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_markNoneButtonActionPerformed
+        gaList.clearSelection();
+    }//GEN-LAST:event_markNoneButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -354,6 +389,8 @@ public class GroupAddressInputDialog extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton markAllButton;
+    private javax.swing.JButton markNoneButton;
     private javax.swing.JButton openListButton;
     private javax.swing.JButton removeButton;
     // End of variables declaration//GEN-END:variables
