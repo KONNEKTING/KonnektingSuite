@@ -29,6 +29,8 @@ import de.konnekting.suite.events.EventDeviceListRefresh;
 import de.konnekting.suite.events.EventProjectOpened;
 import de.konnekting.suite.events.StickyDeviceSelected;
 import java.io.File;
+import java.util.Collection;
+import java.util.Collections;
 import javax.swing.JOptionPane;
 import javax.xml.bind.JAXBException;
 import org.slf4j.Logger;
@@ -73,6 +75,7 @@ public class DeviceList extends javax.swing.JPanel {
     }
 
     public void onEvent(EventDeviceListRefresh event) {
+        deviceListModel.sort(); // sort due to changes
         deviceList.invalidate();
         repaint();
     }
