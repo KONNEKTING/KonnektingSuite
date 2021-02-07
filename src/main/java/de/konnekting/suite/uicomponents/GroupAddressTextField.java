@@ -39,7 +39,7 @@ public class GroupAddressTextField extends ValidateableTextField {
             validationError = "";
             return true;
         } else {
-            validationError = "Invalid group address. Format [0..15]/[0..7]/[0..255] required";
+            validationError = "Invalid group address. Format [0..15]/[0..7]/[0..255] required and 15/7/255 is not allowed.";
             return false;
         }
     }
