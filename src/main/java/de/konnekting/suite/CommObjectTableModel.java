@@ -20,10 +20,8 @@ package de.konnekting.suite;
 
 import de.konnekting.deviceconfig.utils.ReflectionIdComparator;
 import de.konnekting.deviceconfig.DeviceConfigContainer;
-import de.konnekting.deviceconfig.exception.InvalidAddressFormatException;
 import de.konnekting.xml.konnektingdevice.v0.CommObject;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -221,7 +219,11 @@ public class CommObjectTableModel extends DefaultTableModel {
     }
 
     public void refreshCommObjVisibility() {
-
+        if (device==null ) { // means: no selected device --> happens f.i. after device deletion 
+            log.debug("No device selected, nothing to refresh");
+            return;
+        }
+        
         if (!device.getAllCommObjects().isEmpty()) {
             // sort by id
 //            commObjects.sort(new ReflectionIdComparator());
