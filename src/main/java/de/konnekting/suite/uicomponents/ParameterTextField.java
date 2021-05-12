@@ -38,7 +38,6 @@ public abstract class ParameterTextField extends ValidateableTextField implement
                 }
             }
         });
-
     }
 
     @Override
