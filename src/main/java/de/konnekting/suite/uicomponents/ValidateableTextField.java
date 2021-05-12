@@ -38,7 +38,7 @@ public abstract class ValidateableTextField extends JTextField implements Valida
 
     private String originalToolTip = null;
     private final List<ChangeListener> listeners = new ArrayList<>();
-    private Object lastValidValue;
+    private String lastValidValue;
     private String lastTextValue;
 
     private void fireChange() {
@@ -99,11 +99,12 @@ public abstract class ValidateableTextField extends JTextField implements Valida
             }
             lastTextValue = textValue;
         } else {
-            Object value = getValue();
+            String value = getText();
             if (originalToolTip != null) {
                 setToolTipText(originalToolTip);
             }
-            if (value != null && !value.equals(lastValidValue)) {
+            // compare based on string text value, as this IS a textfield... no need to compare on raw type
+            if (value != null && lastValidValue!=null && !value.equals(lastValidValue)) {
                 fireChange();
             }
             lastValidValue = value;
