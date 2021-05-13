@@ -12,6 +12,8 @@ import de.konnekting.xml.konnektingdevice.v0.ParameterConfiguration;
 import de.root1.rooteventbus.RootEventBus;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -30,13 +32,36 @@ public abstract class ParameterTextField extends ValidateableTextField implement
         this.param = param;
         this.conf = conf;
 
-        addChangeListener(new ChangeListener() {
+        addFocusListener(new FocusListener() {
             @Override
-            public void stateChanged(ChangeEvent e) {
+            public void focusGained(FocusEvent e) {
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
                 if (isInputValid()) {
                     RootEventBus.getDefault().post(new EventParameterChanged());
                 }
             }
+        });
+
+//        addChangeListener(new ChangeListener() {
+//            @Override
+//            public void stateChanged(ChangeEvent e) {
+//                if (isInputValid()) {
+//                    RootEventBus.getDefault().post(new EventParameterChanged());
+//                }
+//            }
+//        });
+
+        addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (isInputValid()) {
+                    RootEventBus.getDefault().post(new EventParameterChanged());
+                }
+            }
+
         });
     }
 
